@@ -12,11 +12,8 @@ import lombok.*;
 public class Empresa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
-
     //nit de la empresa
-    private int codigo;
+    private int nit;
 
     @Column(nullable = false, length = 150)
     private String nombre;
@@ -27,8 +24,8 @@ public class Empresa {
     @Column(nullable = false, length = 50)
     private String telefono;
 
-    public Empresa(int codigo, String nombre, String direccion, String telefono) {
-        this.codigo = codigo;
+    public Empresa(int nit, String nombre, String direccion, String telefono) {
+        this.nit = nit;
         this.nombre = nombre;
         this.direccion = direccion;
         this.telefono = telefono;

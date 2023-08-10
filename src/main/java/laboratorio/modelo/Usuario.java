@@ -14,13 +14,13 @@ import java.util.List;
 @AllArgsConstructor
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 
-public class Usuario extends Persona implements Serializable {
+public class Usuario implements Serializable {
+
+    @Id
+    private int id;
 
     @Column(nullable = false, length = 200)
     private String direccion;
-
-    @Column(nullable = false, length = 50)
-    private String telefono;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -30,11 +30,30 @@ public class Usuario extends Persona implements Serializable {
     @Enumerated(EnumType.STRING)
     private Estado estado;
 
-    @Column(nullable = false, length = 50)
+    @ManyToMany
+    private List<Obra> obras;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Email
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column
+    private String password;
+
+    @Column
     private String rol;
 
-    public Usuario(Integer cedula, String nombre, @Email String email, String password, String direccion, String telefono, Ciudad ciudad, Estado estado, String rol) {
-        super(cedula, nombre, email, password, rol, telefono);
+    @Column(nullable = false)
+    private  String telefono;
+
+    public Usuario(Integer id, String nombre, @Email String email, String password, String direccion, String telefono, Ciudad ciudad, Estado estado, String rol) {
+        this.id=id;
+        this.nombre=nombre;
+        this.email=email;
+        this.password=password;
         this.direccion = direccion;
         this.telefono = telefono;
         this.ciudad = ciudad;
