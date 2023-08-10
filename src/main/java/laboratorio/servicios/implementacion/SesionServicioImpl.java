@@ -1,6 +1,5 @@
 package laboratorio.servicios.implementacion;
 
-
 import laboratorio.dto.SesionDTO;
 import laboratorio.dto.TokenDTO;
 import laboratorio.seguridad.modelo.UserDetailsImpl;
@@ -24,12 +23,12 @@ public class SesionServicioImpl implements SesionServicio {
 
     @Override
     public TokenDTO login(SesionDTO sesionDTO) throws Exception {
+        System.out.println("pasa por aca y se queda en la autenticacion");
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         sesionDTO.getEmail(),
                         sesionDTO.getPassword())
         );
-
         UserDetails user = (UserDetailsImpl) authentication.getPrincipal();
         String jwtToken = jwtService.generateToken(user);
         return new TokenDTO(jwtToken);

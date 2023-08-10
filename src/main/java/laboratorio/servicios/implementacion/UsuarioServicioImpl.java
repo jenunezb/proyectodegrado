@@ -8,7 +8,9 @@ import laboratorio.repositorios.UsuarioRepo;
 import laboratorio.servicios.excepciones.AttributeException;
 import laboratorio.servicios.interfaces.UsuarioServicio;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,9 @@ import java.util.Optional;
 public class UsuarioServicioImpl implements UsuarioServicio {
 
     private final UsuarioRepo usuarioRepo;
+
+    @Autowired
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public int crearUsuario(UsuarioDTO c) throws Exception {
@@ -32,7 +37,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         cliente.setId(c.getCedula());
         cliente.setNombre( c.getNombre() );
         cliente.setRol(c.getRol());
-        cliente.setPassword(c.getPassword());
+        cliente.setPassword( passwordEncoder.encode(c.getPassword()) );
         cliente.setEstado(c.getEstado());
         cliente.setEmail( c.getEmail());
         cliente.setDireccion( c.getDireccion() );
