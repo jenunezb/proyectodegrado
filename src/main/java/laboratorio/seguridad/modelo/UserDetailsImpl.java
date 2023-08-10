@@ -9,18 +9,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
     private String username, password;
     private Collection<? extends GrantedAuthority> authorities;
     public static UserDetailsImpl build(Usuario user){
         List<GrantedAuthority> authorities = new ArrayList<>();
-        if(user instanceof Usuario){
-            authorities.add( new SimpleGrantedAuthority("CLIENTE") );
+        if(user.getRol().equals("administrador") ){
+            authorities.add( new SimpleGrantedAuthority("USUARIO") );
         }
-//        else if(user instanceof Moderador){
-//            authorities.add( new SimpleGrantedAuthority("MODERADOR") );
-//        }
+        else {
+            System.out.println(user.getRol());
+            authorities.add( new SimpleGrantedAuthority("OTROS") );
+        }
         return new UserDetailsImpl(user.getEmail(), user.getPassword(), authorities);
     }
     @Override
