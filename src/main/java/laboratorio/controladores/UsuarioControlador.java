@@ -20,44 +20,38 @@ public class UsuarioControlador {
 
     private final UsuarioServicio usuarioServicio;
 
-    @PostMapping
-    public ResponseEntity<MensajeDTO> registrar(@Valid @RequestBody UsuarioDTO usuario) throws Exception {
-        usuarioServicio.crearUsuario(usuario);
-       return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false," usuario "+usuario.getNombre()+" Creado exitosamente"));
-    }
+    //   ACTUALIZAR LA INFORMACIÓN DE UN USUARIO DESDE EL ADMIN
+//    @PutMapping("/actualizar/{codigoUsuario}")
+//    public ResponseEntity<MensajeDTO> actualizarUsuario(@PathVariable int codigoUsuario, @RequestBody UsuarioDTO usuarioDTO) throws Exception{
+//        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.actualizarUsuario(codigoUsuario, usuarioDTO)));
+//    }
 
-    @PutMapping("/actualizar/{codigoUsuario}")
-    public ResponseEntity<MensajeDTO> actualizarUsuario(@PathVariable int codigoUsuario, @RequestBody UsuarioDTO usuarioDTO) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.actualizarUsuario(codigoUsuario, usuarioDTO)));
-    }
+    // ELIMINAR UN USUARIO DESDE EL ADMIN (OJO QUE LA ELIMINACIÓN COMO ES EN CASCADA PUEDE FALLAR)
+//    @DeleteMapping("/eliminar/{codigoUsuario}")
+//    public ResponseEntity<MensajeDTO> eliminarUsuario(@PathVariable int codigoUsuario) throws Exception {
+//        usuarioServicio.eliminarUsuario(codigoUsuario);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(new MensajeDTO(HttpStatus.OK, false, "Usuario eliminado correctamente"));
+//    }
 
-    @DeleteMapping("/eliminar/{codigoUsuario}")
-    public ResponseEntity<MensajeDTO> eliminarUsuario(@PathVariable int codigoUsuario) throws Exception {
-        usuarioServicio.eliminarUsuario(codigoUsuario);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new MensajeDTO(HttpStatus.OK, false, "Usuario eliminado correctamente"));
-    }
+    // HACER UNA BUSQUEDA DADO EL CODIGO
+//    @GetMapping("/{codigoUsuario}")
+//    public ResponseEntity<MensajeDTO> obtenerUsuario(@PathVariable int codigoUsuario) throws Exception{
+//        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.obtenerUsuario(codigoUsuario)));
+//    }
 
-    @GetMapping("/{codigoUsuario}")
-    public ResponseEntity<MensajeDTO> obtenerUsuario(@PathVariable int codigoUsuario) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.obtenerUsuario(codigoUsuario)));
-    }
+    // LISTAR TODOS LOS USUSARIOS
+//    @GetMapping()
+//    public List<UsuarioGetDTO> listar()
+//    {
+//        return  usuarioServicio.listarTodos();
+//    }
 
-    @GetMapping()
-    public List<UsuarioGetDTO> listar()
-    {
-        return  usuarioServicio.listarTodos();
-    }
-
-    @GetMapping("/ciudades")
-    public ResponseEntity<Ciudad[]> getCiudades() {
-        return ResponseEntity.status(HttpStatus.OK).body( Ciudad.values());
-    }
-
-    @GetMapping("cedula/{emailUsuario}")
-    public ResponseEntity<MensajeDTO> cedulaUsuario(@PathVariable String emailUsuario) throws Exception{
-        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false, usuarioServicio.cedulaUsuario(emailUsuario)));
-    }
+    // LISTAR LAS CIUDADES NO ES NECESARIO AUN
+//    @GetMapping("/ciudades")
+//    public ResponseEntity<Ciudad[]> getCiudades() {
+//        return ResponseEntity.status(HttpStatus.OK).body( Ciudad.values());
+//    }
 
 }
