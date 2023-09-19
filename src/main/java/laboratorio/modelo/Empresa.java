@@ -3,6 +3,8 @@ package laboratorio.modelo;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +26,6 @@ public class Empresa {
     @Column(nullable = false, length = 50)
     private String telefono;
 
+    @OneToMany(mappedBy = "empresa")
+    private List<Obra> obras;
 }

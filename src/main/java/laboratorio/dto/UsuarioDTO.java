@@ -19,7 +19,7 @@ public class UsuarioDTO {
 
     @NotNull
     @NotBlank
-    @Length(max = 150, message = "El nombre debe tener máximo 100 caracteres")
+    @Length(max = 100, message = "El nombre debe tener máximo 100 caracteres")
     private String nombre;
 
     @NotNull
@@ -31,11 +31,6 @@ public class UsuarioDTO {
     @NotBlank
     @Length(max = 50, message = "La contraseña debe tener máximo 50 caracteres")
     private String password;
-
-    @NotNull
-    @NotBlank
-    @Length(max = 100, message = "La dirección debe tener máximo 100 caracteres")
-    private String direccion;
 
     @NotNull
     @NotBlank

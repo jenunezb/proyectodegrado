@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -35,19 +36,14 @@ public class Obra implements Serializable {
     @Column(nullable = false)
     private Ciudad ciudad;
 
-    @Column
+    @Column(nullable = false)
     private Date fecha_inicio;
 
     @Column
     private Date fecha_fin;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Empresa empresa;
 
-    public Obra(int id, String nombre, String direccion, String telefono) {
-        this.id = id;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
-    }
 }

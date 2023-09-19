@@ -1,11 +1,11 @@
 package laboratorio.modelo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,6 +20,16 @@ public class Muestra {
     private int codigo;
 
     @Column(nullable = false, length = 150)
-    private String nombre;
+    private String material;
+
+    private String descripcion;
+
+    private String localizacion;
+
+    private String cantera;
+
+    private LocalDate fechaToma;
+
+    private LocalDate fechaRecibido;
 
 }
