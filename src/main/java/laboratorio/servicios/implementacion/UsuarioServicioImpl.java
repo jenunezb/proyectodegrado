@@ -40,9 +40,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         cliente.setPassword( passwordEncoder.encode(c.getPassword()) );
         cliente.setEstado(c.getEstado());
         cliente.setEmail( c.getEmail());
-        cliente.setDireccion( c.getDireccion() );
         cliente.setTelefono( c.getTelefono() );
-        cliente.setCiudad(c.getCiudad());
 
 //        emailServicio.enviarEmail(new EmailDTO(
 //                "Creación de cuenta en Unimarket",
@@ -137,9 +135,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
                 usuario.getId(),
                 usuario.getNombre(),
                 usuario.getEmail(),
-                usuario.getDireccion(),
-                usuario.getTelefono(),
-                usuario.getCiudad());
+                usuario.getTelefono());
 
         return usuarioDTO;
     }
@@ -150,10 +146,8 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         usuario.setId(usuarioDTO.getCedula());
         usuario.setNombre( usuarioDTO.getNombre() );
         usuario.setEmail( usuarioDTO.getEmail() );
-        usuario.setDireccion( usuarioDTO.getDireccion() );
         usuario.setTelefono( usuarioDTO.getTelefono() );
         usuario.setPassword( usuarioDTO.getPassword() );
-        usuario.setCiudad( usuarioDTO.getCiudad());
         usuario.setEstado(Estado.INACTIVO);
 
         return usuario;

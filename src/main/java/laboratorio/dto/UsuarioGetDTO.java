@@ -19,12 +19,6 @@ public class UsuarioGetDTO {
 
     private String email;
 
-    private String direccion;
-
     private String telefono;
-
-    private Ciudad ciudad;
-
-
 
 }

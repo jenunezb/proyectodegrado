@@ -24,10 +24,4 @@ public class Empresa {
     @Column(nullable = false, length = 50)
     private String telefono;
 
-    public Empresa(int nit, String nombre, String direccion, String telefono) {
-        this.nit = nit;
-        this.nombre = nombre;
-        this.direccion = direccion;
-        this.telefono = telefono;
-    }
 }

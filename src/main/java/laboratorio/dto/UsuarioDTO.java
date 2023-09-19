@@ -15,9 +15,6 @@ import org.hibernate.validator.constraints.Length;
 public class UsuarioDTO {
 
     @NotNull
-    private Ciudad ciudad;
-
-    @NotNull
     private Integer cedula;
 
     @NotNull
