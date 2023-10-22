@@ -13,10 +13,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Usuario implements Serializable {
+public class Usuario extends Cuenta implements Serializable {
 
-    @Id
-    private int id;
+    @Column(length = 10,  nullable = false)
+    private String cedula;
+
+    @Column(nullable = false)
+    private String nombre;
+
+    @Column(nullable = false)
+    private  String telefono;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -24,21 +30,4 @@ public class Usuario implements Serializable {
 
     @ManyToMany
     private List<Obra> obras;
-
-    @Column(nullable = false)
-    private String nombre;
-
-    @Email
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
-    private String password;
-
-    @Column(nullable = false, unique = true)
-    private String rol;
-
-    @Column(nullable = false)
-    private  String telefono;
-
 }

@@ -1,5 +1,6 @@
 package laboratorio.servicios.implementacion;
 
+import jakarta.transaction.Transactional;
 import laboratorio.dto.UsuarioDTO;
 import laboratorio.dto.UsuarioGetDTO;
 import laboratorio.modelo.*;
@@ -9,27 +10,26 @@ import laboratorio.repositorios.ObraRepo;
 import laboratorio.repositorios.UsuarioRepo;
 import laboratorio.servicios.excepciones.AttributeException;
 import laboratorio.servicios.interfaces.UsuarioServicio;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@Transactional
+@RequiredArgsConstructor
 public class UsuarioServicioImpl implements UsuarioServicio {
 
     private final UsuarioRepo usuarioRepo;
     private final MuestraRepo muestraRepo;
     private final EmpresaRepo empresaRepo;
     private final ObraRepo obraRepo;
-    @Autowired
-    private final PasswordEncoder passwordEncoder;
+
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     //Servicios del Administrador
     @Override public int crearUsuario(UsuarioDTO c) throws Exception {
@@ -40,10 +40,10 @@ public class UsuarioServicioImpl implements UsuarioServicio {
             throw new AttributeException("La cédula "+c.getCedula()+" ya está en uso");
         }
         Usuario cliente = new Usuario();
-        cliente.setId(c.getCedula());
+        cliente.setCodigo(c.getCedula());
         cliente.setNombre( c.getNombre() );
-        cliente.setRol(c.getRol());
-        cliente.setPassword( passwordEncoder.encode(c.getPassword()) );
+        String passwordEncriptada = passwordEncoder.encode( c.getPassword());
+        cliente.setPassword( passwordEncriptada );
         cliente.setEstado(c.getEstado());
         cliente.setEmail( c.getEmail());
         cliente.setTelefono( c.getTelefono() );
@@ -55,7 +55,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
 //                        "acceder a su cuenta",
 //                c.getEmail()));
 
-        return usuarioRepo.save( cliente ).getId();
+        return usuarioRepo.save( cliente ).getCodigo();
     }
     @Override public int eliminarUsuario(int codigo) throws Exception {
         Optional<Usuario> usuarioOptional = usuarioRepo.findById(codigo);
@@ -75,7 +75,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
         validarExiste(codigoUsuario);
 
         Usuario usuario = convertir(usuarioDTO);
-        usuario.setId(codigoUsuario);
+        usuario.setCodigo(codigoUsuario);
 
         return convertir( usuarioRepo.save(usuario) );
     }
@@ -122,7 +122,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private UsuarioGetDTO convertir(Usuario usuario){
 
         UsuarioGetDTO usuarioDTO = new UsuarioGetDTO(
-                usuario.getId(),
+                usuario.getCodigo(),
                 usuario.getNombre(),
                 usuario.getEmail(),
                 usuario.getTelefono());
@@ -132,7 +132,7 @@ public class UsuarioServicioImpl implements UsuarioServicio {
     private Usuario convertir(UsuarioDTO usuarioDTO){
 
         Usuario usuario = new Usuario();
-        usuario.setId(usuarioDTO.getCedula());
+        usuario.setCodigo(usuarioDTO.getCedula());
         usuario.setNombre( usuarioDTO.getNombre() );
         usuario.setEmail( usuarioDTO.getEmail() );
         usuario.setTelefono( usuarioDTO.getTelefono() );
