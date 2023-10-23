@@ -1,10 +1,10 @@
 package laboratorio.modelo;
 
 import jakarta.persistence.*;
+import laboratorio.modelo.ensayo.enums.Ciudad;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class Obra implements Serializable {
     private String telefono;
 
     @ManyToMany(mappedBy = "obras")
-    private List<Usuario> usuarios;
+    private List<Cliente> clientes;
 
     @Column(nullable = false)
     private Ciudad ciudad;

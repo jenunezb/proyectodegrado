@@ -1,32 +1,35 @@
 package laboratorio.modelo;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+import laboratorio.modelo.ensayo.enums.Ciudad;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.List;
 
-@Entity
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@MappedSuperclass
 public class Usuario extends Cuenta implements Serializable {
 
-    @Column(length = 10,  nullable = false)
+    @Column(length = 10, nullable = false)
     private String cedula;
 
     @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
-    private  String telefono;
+    private String telefono;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Ciudad ciudad;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Estado estado;
+    private boolean estado;
 
     @ManyToMany
     private List<Obra> obras;

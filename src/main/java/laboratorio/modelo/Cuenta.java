@@ -1,6 +1,7 @@
 package laboratorio.modelo;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.io.Serializable;
@@ -20,8 +21,11 @@ public class Cuenta implements Serializable {
     @EqualsAndHashCode.Include
     @Column(length = 10)
     private int codigo;
+
+    @Email
     @Column(unique = true, nullable = false)
-    private String email;
+    private String correo;
+
     @Column(nullable = false)
     private String password;
 
