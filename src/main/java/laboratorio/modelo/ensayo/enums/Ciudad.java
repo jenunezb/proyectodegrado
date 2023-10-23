@@ -1,22 +1,23 @@
 package laboratorio.modelo.ensayo.enums;
 
-public enum Ciudad {
-    BOGOTA("Bogotá"),
-    MEDELLIN("Medellín"),
-    CALI("Cali"),
-    BARRANQUILLA("Barranquilla"),
-    ARMENIA("Armenia"),
-    PEREIRA("Pereira"),
-    CALARCA("Calarcá"),
-    MANIZALES("Manizales");
+import jakarta.persistence.*;
+import lombok.*;
 
-    private final String nombreLegible;
+import java.io.Serializable;
 
-    Ciudad(String nombreLegible) {
-        this.nombreLegible = nombreLegible;
-    }
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
+public class Ciudad implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
+    @Column(length = 10)
+    private int codigo;
 
-    public String getNombreLegible() {
-        return nombreLegible;
-    }
+    @Column(nullable = false)
+    private String nombre;
 }

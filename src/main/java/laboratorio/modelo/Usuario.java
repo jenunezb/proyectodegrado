@@ -24,8 +24,8 @@ public class Usuario extends Cuenta implements Serializable {
     @Column(nullable = false)
     private String telefono;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
+    @ManyToOne
     private Ciudad ciudad;
 
     @Column(nullable = false)

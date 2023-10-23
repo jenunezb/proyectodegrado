@@ -5,6 +5,7 @@ import laboratorio.modelo.ensayo.enums.Ciudad;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class Obra implements Serializable {
     @EqualsAndHashCode.Include
     private int id;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, length = 150)
+    private String CR;
+
     @Column(nullable = false, length = 150)
     private String nombre;
 
@@ -33,14 +38,15 @@ public class Obra implements Serializable {
     @ManyToMany(mappedBy = "obras")
     private List<Cliente> clientes;
 
-    @Column(nullable = false)
+    @JoinColumn(nullable = false)
+    @ManyToOne
     private Ciudad ciudad;
 
     @Column(nullable = false)
-    private Date fecha_inicio;
+    private LocalDate fecha_inicio;
 
     @Column
-    private Date fecha_fin;
+    private LocalDate fecha_fin;
 
     @ManyToOne
     @JoinColumn(nullable = false)
