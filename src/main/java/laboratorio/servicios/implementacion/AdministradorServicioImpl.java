@@ -127,18 +127,36 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     @Override
     public int asignarObra(PersonaDTO personaDTO) throws Exception{
+        int retorno = 0;
         Optional<Ingeniero> ingenieroBuscado = ingenieroRepo.findByCedula(personaDTO.cedula());
         Optional<Obra> obraBuscada = obraRepo.findById(personaDTO.codigoObra());
         List<Obra> obras = new ArrayList<>();
-        if (ingenieroBuscado.isEmpty()|| obraBuscada.isEmpty()){
-            throw new Excepciones("El ingeniero u obra no fue encontrado");
+        if (ingenieroBuscado.isEmpty()){
+            Optional<Digitador> digitador = digitadorRepo.findByCedula(personaDTO.cedula());
+            if(digitador.isEmpty()){
+                throw new Excepciones("La persona no fue encontrada");
+            }else {
+                if(obraBuscada.isEmpty()){
+                    throw new Excepciones("La obra no fue encontrada");
+                }else {
+                    obras.add(obraBuscada.get());
+                    digitador.get().setObras(obras);
+                    Digitador digitador1 = digitadorRepo.save(digitador.get());
+                    retorno = digitador1.getCodigo();
+                }
+            }
         }else {
-            obras.add(obraBuscada.get());
-            ingenieroBuscado.get().setObras(obras);
+            if(obraBuscada.isEmpty()){
+                throw new Excepciones("La obra no fue encontrada");
+            }else {
+                obras.add(obraBuscada.get());
+                ingenieroBuscado.get().setObras(obras);
+                Ingeniero ingeniero = ingenieroRepo.save(ingenieroBuscado.get());
+                retorno = ingeniero.getCodigo();
+            }
         }
-        Ingeniero ingeniero = ingenieroRepo.save(ingenieroBuscado.get());
 
-        return ingeniero.getCodigo();
+        return retorno;
     }
 
     public boolean estaRepetidaCedula(String cedula) {
