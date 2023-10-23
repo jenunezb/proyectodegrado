@@ -1,6 +1,7 @@
 package laboratorio.modelo;
 
 import jakarta.persistence.*;
+import laboratorio.modelo.ensayo.MuestraSuelos;
 import lombok.*;
 
 import java.io.Serializable;
@@ -51,6 +52,6 @@ public class Obra implements Serializable {
     private Empresa empresa;
 
     @OneToMany
-    private List<Muestra> muestras;
+    private List<MuestraSuelos> muestraSuelos;
 
 }

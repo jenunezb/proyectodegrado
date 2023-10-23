@@ -1,6 +1,7 @@
-package laboratorio.modelo;
+package laboratorio.modelo.ensayo;
 
 import jakarta.persistence.*;
+import laboratorio.modelo.Obra;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class Muestra {
+public class MuestraSuelos {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
