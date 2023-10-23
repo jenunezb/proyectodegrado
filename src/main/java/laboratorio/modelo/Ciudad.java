@@ -1,4 +1,4 @@
-package laboratorio.modelo.ensayo.enums;
+package laboratorio.modelo;
 
 import jakarta.persistence.*;
 import lombok.*;

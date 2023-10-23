@@ -1,7 +1,6 @@
 package laboratorio.modelo;
 
 import jakarta.persistence.*;
-import laboratorio.modelo.ensayo.enums.Ciudad;
 import lombok.*;
 
 import java.io.Serializable;

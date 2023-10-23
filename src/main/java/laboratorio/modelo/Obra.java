@@ -1,12 +1,10 @@
 package laboratorio.modelo;
 
 import jakarta.persistence.*;
-import laboratorio.modelo.ensayo.enums.Ciudad;
 import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -51,5 +49,8 @@ public class Obra implements Serializable {
     @ManyToOne
     @JoinColumn(nullable = false)
     private Empresa empresa;
+
+    @OneToMany
+    private List<Muestra> muestras;
 
 }

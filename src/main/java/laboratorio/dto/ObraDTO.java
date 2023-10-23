@@ -1,7 +1,7 @@
 package laboratorio.dto;
 
 import laboratorio.modelo.Empresa;
-import laboratorio.modelo.ensayo.enums.Ciudad;
+import laboratorio.modelo.Ciudad;
 
 import java.time.LocalDate;
 

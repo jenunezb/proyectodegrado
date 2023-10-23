@@ -32,4 +32,8 @@ public class Muestra {
 
     private LocalDate fechaRecibido;
 
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Obra obra;
+
 }

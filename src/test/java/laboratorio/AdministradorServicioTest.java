@@ -5,7 +5,7 @@ import laboratorio.dto.EmpresaDTO;
 import laboratorio.dto.ObraDTO;
 import laboratorio.dto.PersonaDTO;
 import laboratorio.modelo.Empresa;
-import laboratorio.modelo.ensayo.enums.Ciudad;
+import laboratorio.modelo.Ciudad;
 import laboratorio.repositorios.CiudadRepo;
 import laboratorio.repositorios.EmpresaRepo;
 import laboratorio.servicios.interfaces.AdministradorServicio;
@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 

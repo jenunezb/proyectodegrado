@@ -159,6 +159,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return retorno;
     }
 
+
+
     public boolean estaRepetidaCedula(String cedula) {
         Optional<Digitador> digitadorBuscado = digitadorRepo.findByCedula(cedula);
         if (!digitadorBuscado.isEmpty()) {
@@ -175,4 +177,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         return digitador != null;
     }
+
+
 }

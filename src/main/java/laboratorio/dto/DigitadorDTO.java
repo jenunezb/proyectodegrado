@@ -1,6 +1,6 @@
 package laboratorio.dto;
 
-import laboratorio.modelo.ensayo.enums.Ciudad;
+import laboratorio.modelo.Ciudad;
 
 public record DigitadorDTO(
 String cedula,
