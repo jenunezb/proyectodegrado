@@ -3,6 +3,7 @@ package laboratorio.servicios.interfaces;
 import laboratorio.dto.DigitadorDTO;
 import laboratorio.dto.EmpresaDTO;
 import laboratorio.dto.ObraDTO;
+import laboratorio.dto.PersonaDTO;
 
 public interface AdministradorServicio {
 
@@ -13,4 +14,6 @@ public interface AdministradorServicio {
     int crearEmpresa(EmpresaDTO empresaDTO) throws Exception;
 
     int crearObra(ObraDTO obraDTO) throws Exception;
+
+    int asignarObra(PersonaDTO personaDTO) throws Exception;
 }

@@ -3,6 +3,7 @@ package laboratorio;
 import laboratorio.dto.DigitadorDTO;
 import laboratorio.dto.EmpresaDTO;
 import laboratorio.dto.ObraDTO;
+import laboratorio.dto.PersonaDTO;
 import laboratorio.modelo.Empresa;
 import laboratorio.modelo.ensayo.enums.Ciudad;
 import laboratorio.repositorios.CiudadRepo;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.parameters.P;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -101,4 +103,17 @@ public class AdministradorServicioTest {
 
         Assertions.assertNotEquals(0,nuevo);
     }
+    @Test
+    @Sql("classpath:dataset.sql")
+    public void asignarObra()throws Exception{
+        PersonaDTO personaDTO = new PersonaDTO(
+                "1",
+                1
+        );
+
+        int nuevo = administradorServicio.asignarObra(personaDTO);
+
+        Assertions.assertNotEquals(0,nuevo);
+    }
+
 }

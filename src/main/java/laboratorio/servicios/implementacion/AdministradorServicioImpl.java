@@ -4,6 +4,7 @@ import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.DigitadorDTO;
 import laboratorio.dto.EmpresaDTO;
 import laboratorio.dto.ObraDTO;
+import laboratorio.dto.PersonaDTO;
 import laboratorio.modelo.Digitador;
 import laboratorio.modelo.Empresa;
 import laboratorio.modelo.Ingeniero;
@@ -17,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -120,6 +123,22 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         return obraNueva.getId();
 
+    }
+
+    @Override
+    public int asignarObra(PersonaDTO personaDTO) throws Exception{
+        Optional<Ingeniero> ingenieroBuscado = ingenieroRepo.findByCedula(personaDTO.cedula());
+        Optional<Obra> obraBuscada = obraRepo.findById(personaDTO.codigoObra());
+        List<Obra> obras = new ArrayList<>();
+        if (ingenieroBuscado.isEmpty()|| obraBuscada.isEmpty()){
+            throw new Excepciones("El ingeniero u obra no fue encontrado");
+        }else {
+            obras.add(obraBuscada.get());
+            ingenieroBuscado.get().setObras(obras);
+        }
+        Ingeniero ingeniero = ingenieroRepo.save(ingenieroBuscado.get());
+
+        return ingeniero.getCodigo();
     }
 
     public boolean estaRepetidaCedula(String cedula) {
