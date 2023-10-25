@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class Cilindros  implements Serializable {
+public class Cilindro implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,7 @@ public class Cilindros  implements Serializable {
     private int codigo;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(nullable = false)
     private CompresionCilindros compresionCilindros;
 
     @Column
@@ -32,4 +32,7 @@ public class Cilindros  implements Serializable {
 
     @Enumerated
     FormaFalla formaFalla;
+
+    @Column
+    int edad;
 }

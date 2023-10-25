@@ -10,4 +10,5 @@ public interface ObraRepo extends JpaRepository<Obra, Integer> {
 
     boolean existsByCR (String CR);
 
+    Obra findByCR(String CR);
 }

@@ -29,8 +29,10 @@ public class CompresionCilindros implements Serializable {
     @Enumerated(EnumType.STRING)
     private TipoMuestraCilindro ensayo;
 
+    @Column
+    private String seccion;
 
-    @Column(unique = true)
+    @Column
     String numeroMuestra;
 
     @Column
@@ -42,10 +44,10 @@ public class CompresionCilindros implements Serializable {
     @Column
     int cantMuestras;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     String descripcion;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     String observaciones;
 
 }

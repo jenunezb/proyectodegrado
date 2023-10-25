@@ -1,4 +1,7 @@
 package laboratorio.repositorios;
 
-public interface AdministradorRepo {
+import laboratorio.modelo.Administrador;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface AdministradorRepo extends JpaRepository<Administrador, Integer> {
 }

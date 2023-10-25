@@ -21,13 +21,13 @@ public class ImagenesController {
             throws Exception{
         File imagen = cloudinaryServicio.convertir(file);
         Map respuesta = cloudinaryServicio.subirImagen(imagen, "proyecto");
-        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false,
+        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(false,
                 respuesta ) );
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<MensajeDTO> eliminarImagen(@PathVariable String id) throws Exception{
         Map respuesta = cloudinaryServicio.eliminarImagen(id);
-        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(HttpStatus.OK, false,
+        return ResponseEntity.status(HttpStatus.OK).body( new MensajeDTO(false,
                 respuesta ) );
     }
 }
