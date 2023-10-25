@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 public interface ObraRepo extends JpaRepository<Obra, Integer> {
 
     boolean existsByCR (String CR);
+
 }

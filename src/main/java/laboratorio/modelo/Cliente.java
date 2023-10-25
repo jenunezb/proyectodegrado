@@ -1,12 +1,10 @@
 package laboratorio.modelo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,5 +18,9 @@ public class Cliente extends Usuario implements Serializable {
 
     @Column(nullable = false)
     private String obra;
+
+    @JoinColumn
+    @ManyToMany(mappedBy = "clientes")
+    private List<Obra> obras;
 
 }

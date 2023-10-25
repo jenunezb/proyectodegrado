@@ -1,9 +1,8 @@
 package laboratorio.servicios.interfaces;
 
-import laboratorio.dto.DigitadorDTO;
-import laboratorio.dto.EmpresaDTO;
-import laboratorio.dto.ObraDTO;
-import laboratorio.dto.PersonaDTO;
+import laboratorio.dto.*;
+
+import java.util.List;
 
 public interface AdministradorServicio {
 
@@ -16,4 +15,14 @@ public interface AdministradorServicio {
     int crearObra(ObraDTO obraDTO) throws Exception;
 
     int asignarObra(PersonaDTO personaDTO) throws Exception;
+
+    int eliminarMuestra (int codigoMuestra) throws Exception;
+
+    List<IngenieroGetDTO> listarIngenieros ();
+
+    List<DigitadorDTO> listarDigitadores();
+
+    int buscarObra(int codigoObra) throws Exception;
+
+    List<ObraDTO> listarObras ();
 }

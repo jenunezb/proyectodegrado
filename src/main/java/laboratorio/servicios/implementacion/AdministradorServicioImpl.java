@@ -1,10 +1,7 @@
 package laboratorio.servicios.implementacion;
 
 import laboratorio.Excepciones.Excepciones;
-import laboratorio.dto.DigitadorDTO;
-import laboratorio.dto.EmpresaDTO;
-import laboratorio.dto.ObraDTO;
-import laboratorio.dto.PersonaDTO;
+import laboratorio.dto.*;
 import laboratorio.modelo.Digitador;
 import laboratorio.modelo.Empresa;
 import laboratorio.modelo.Ingeniero;
@@ -159,7 +156,45 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return retorno;
     }
 
+    @Override
+    public int eliminarMuestra(int codigoMuestra) throws Exception {
+        return 0;
+    }
 
+    @Override
+    public List<IngenieroGetDTO> listarIngenieros() {
+        List<Ingeniero> ingenieroList = ingenieroRepo.findAll();
+        List<IngenieroGetDTO> ingenieroGetDTOS = new ArrayList<>();
+
+        for (int i = 0; i< ingenieroList.size(); i++){
+
+
+
+                ingenieroGetDTOS.add(new IngenieroGetDTO(
+                        ingenieroList.get(i).getCedula(),
+                        ingenieroList.get(i).getNombre(),
+                        ingenieroList.get(i).getCiudad(),
+                        ingenieroList.get(i).getTelefono(),
+                        ingenieroList.get(i).getCorreo()
+                ));
+            }
+        return ingenieroGetDTOS;
+    }
+
+    @Override
+    public List<DigitadorDTO> listarDigitadores() {
+        return null;
+    }
+
+    @Override
+    public int buscarObra(int codigoObra) throws Exception {
+        return 0;
+    }
+
+    @Override
+    public List<ObraDTO> listarObras() {
+        return null;
+    }
 
     public boolean estaRepetidaCedula(String cedula) {
         Optional<Digitador> digitadorBuscado = digitadorRepo.findByCedula(cedula);
@@ -177,6 +212,5 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         return digitador != null;
     }
-
 
 }

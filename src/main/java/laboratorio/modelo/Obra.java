@@ -34,7 +34,9 @@ public class Obra implements Serializable {
     @Column(nullable = false, length = 70)
     private String telefono;
 
-    @ManyToMany(mappedBy = "obras")
+
+    @ManyToMany
+    @JoinColumn
     private List<Cliente> clientes;
 
     @JoinColumn(nullable = false)
@@ -52,6 +54,15 @@ public class Obra implements Serializable {
     private Empresa empresa;
 
     @OneToMany
+    @JoinColumn
     private List<MuestraSuelos> muestraSuelos;
+
+    @ManyToMany
+    @JoinColumn
+    private List<Ingeniero> ingenieros;
+
+    @ManyToMany
+    @JoinColumn
+    private List<Digitador> digitadores;
 
 }

@@ -1,9 +1,7 @@
 package laboratorio;
 
-import laboratorio.dto.DigitadorDTO;
-import laboratorio.dto.EmpresaDTO;
-import laboratorio.dto.ObraDTO;
-import laboratorio.dto.PersonaDTO;
+import laboratorio.Excepciones.Excepciones;
+import laboratorio.dto.*;
 import laboratorio.modelo.Empresa;
 import laboratorio.modelo.Ciudad;
 import laboratorio.repositorios.CiudadRepo;
@@ -17,6 +15,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Transactional
 @SpringBootTest
@@ -31,7 +30,7 @@ public class AdministradorServicioTest {
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void crearDigitador() throws Exception{
+    public void crearDigitador() throws Exception {
 
         DigitadorDTO digitadorDTO = new DigitadorDTO(
                 "1094927538",
@@ -42,15 +41,15 @@ public class AdministradorServicioTest {
                 "juesnube@gmail.com"
         );
 
-   int nuevo = administradorServicio.crearDigitador(digitadorDTO);
-    System.out.println(digitadorDTO);
+        int nuevo = administradorServicio.crearDigitador(digitadorDTO);
+        System.out.println(digitadorDTO);
         Assertions.assertNotEquals(0, nuevo);
 
     }
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void crearIngeniero() throws Exception{
+    public void crearIngeniero() throws Exception {
 
         DigitadorDTO ingenieroDTO = new DigitadorDTO(
 
@@ -66,31 +65,31 @@ public class AdministradorServicioTest {
         System.out.println(ingenieroDTO);
         Assertions.assertNotEquals(0, nuevo);
     }
+
     @Test
     @Sql("classpath:dataset.sql")
-    public void crearEmpresa() throws Exception{
+    public void crearEmpresa() throws Exception {
 
         EmpresaDTO empresaDTO = new EmpresaDTO(
-              12345,
-              "Barrio tal",
-              "Morelco",
-              "3154544545"
+                12345,
+                "Barrio tal",
+                "Morelco",
+                "3154544545"
         );
 
         int nuevo = administradorServicio.crearEmpresa(empresaDTO);
         System.out.println(empresaDTO);
-        Assertions.assertNotEquals(0,nuevo);
+        Assertions.assertNotEquals(0, nuevo);
     }
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void crearObra() throws Exception
-    {
+    public void crearObra() throws Exception {
         Ciudad ciudad = ciudadRepo.getById(1);
         Empresa empresa = empresaRepo.getById(1);
         ObraDTO obraDTO = new ObraDTO(
                 "Direccion de la obra",
-                LocalDate.of(2023,10,22),
+                LocalDate.of(2023, 10, 22),
                 "Nombre de la obra nueva",
                 "Telefono de la obra nueva",
                 ciudad,
@@ -100,19 +99,28 @@ public class AdministradorServicioTest {
 
         int nuevo = administradorServicio.crearObra(obraDTO);
 
-        Assertions.assertNotEquals(0,nuevo);
+        Assertions.assertNotEquals(0, nuevo);
     }
+
     @Test
     @Sql("classpath:dataset.sql")
-    public void asignarObra()throws Exception{
+    public void asignarObra() throws Exception {
         PersonaDTO personaDTO = new PersonaDTO(
-                "1",
-                1
+                "2",
+                2
         );
 
         int nuevo = administradorServicio.asignarObra(personaDTO);
 
-        Assertions.assertNotEquals(0,nuevo);
+        Assertions.assertNotEquals(0, nuevo);
+    }
+
+    @Test
+    @Sql("classpath:dataset.sql")
+    public void listarIngenieros(){
+        List<IngenieroGetDTO> ingenieroGetDTOS = administradorServicio.listarIngenieros();
+        System.out.println(ingenieroGetDTOS.size());
+        ingenieroGetDTOS.forEach(System.out::println);
     }
 
 }
