@@ -2,14 +2,8 @@ package laboratorio.servicios.implementacion;
 
 import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.*;
-import laboratorio.modelo.Digitador;
-import laboratorio.modelo.Empresa;
-import laboratorio.modelo.Ingeniero;
-import laboratorio.modelo.Obra;
-import laboratorio.repositorios.DigitadorRepo;
-import laboratorio.repositorios.EmpresaRepo;
-import laboratorio.repositorios.IngenieroRepo;
-import laboratorio.repositorios.ObraRepo;
+import laboratorio.modelo.*;
+import laboratorio.repositorios.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +22,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final IngenieroRepo ingenieroRepo;
     private final EmpresaRepo empresaRepo;
     private final ObraRepo obraRepo;
+    private final CiudadRepo ciudadRepo;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -45,7 +40,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         digitador.setCedula(digitadorDTO.cedula());
         digitador.setNombre(digitadorDTO.nombre());
         digitador.setTelefono(digitadorDTO.telefono());
-        digitador.setCiudad(digitadorDTO.ciudad());
+        digitador.setCiudad(ciudadRepo.findById(digitadorDTO.ciudad()).get());
         digitador.setCorreo(digitadorDTO.correo());
         digitador.setEstado(true);
         String passwordEncriptada = passwordEncoder.encode(digitadorDTO.password());
@@ -71,7 +66,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         ingeniero.setCedula(digitadorDTO.cedula());
         ingeniero.setNombre(digitadorDTO.nombre());
         ingeniero.setTelefono(digitadorDTO.telefono());
-        ingeniero.setCiudad(digitadorDTO.ciudad());
+        ingeniero.setCiudad(ciudadRepo.findById(digitadorDTO.ciudad()).get());
         ingeniero.setCorreo(digitadorDTO.correo());
         ingeniero.setEstado(true);
         String passwordEncriptada = passwordEncoder.encode(digitadorDTO.password());
@@ -84,7 +79,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     @Override
     public int crearEmpresa(EmpresaDTO empresaDTO) throws Exception {
-        if (empresaRepo.existsById(empresaDTO.nit())){
+        if (empresaRepo.existsById(empresaDTO.nit())) {
             throw new Excepciones("La empresa ya se encuentra registrada");
         }
 
@@ -100,10 +95,10 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public int crearObra(ObraDTO obraDTO) throws Exception{
+    public int crearObra(ObraDTO obraDTO) throws Exception {
 
-        if (obraRepo.existsByCR(obraDTO.cr())){
-            throw new Excepciones("Ya existe una obra con este CR: "+obraDTO.cr());
+        if (obraRepo.existsByCR(obraDTO.cr())) {
+            throw new Excepciones("Ya existe una obra con este CR: " + obraDTO.cr());
         }
 
         Obra obra = new Obra();
@@ -123,29 +118,29 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public int asignarObra(PersonaDTO personaDTO) throws Exception{
+    public int asignarObra(PersonaDTO personaDTO) throws Exception {
         int retorno = 0;
         Optional<Ingeniero> ingenieroBuscado = ingenieroRepo.findByCedula(personaDTO.cedula());
         Optional<Obra> obraBuscada = obraRepo.findById(personaDTO.codigoObra());
         List<Obra> obras = new ArrayList<>();
-        if (ingenieroBuscado.isEmpty()){
+        if (ingenieroBuscado.isEmpty()) {
             Optional<Digitador> digitador = digitadorRepo.findByCedula(personaDTO.cedula());
-            if(digitador.isEmpty()){
+            if (digitador.isEmpty()) {
                 throw new Excepciones("La persona no fue encontrada");
-            }else {
-                if(obraBuscada.isEmpty()){
+            } else {
+                if (obraBuscada.isEmpty()) {
                     throw new Excepciones("La obra no fue encontrada");
-                }else {
+                } else {
                     obras.add(obraBuscada.get());
                     digitador.get().setObras(obras);
                     Digitador digitador1 = digitadorRepo.save(digitador.get());
                     retorno = digitador1.getCodigo();
                 }
             }
-        }else {
-            if(obraBuscada.isEmpty()){
+        } else {
+            if (obraBuscada.isEmpty()) {
                 throw new Excepciones("La obra no fue encontrada");
-            }else {
+            } else {
                 obras.add(obraBuscada.get());
                 ingenieroBuscado.get().setObras(obras);
                 Ingeniero ingeniero = ingenieroRepo.save(ingenieroBuscado.get());
@@ -166,18 +161,17 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         List<Ingeniero> ingenieroList = ingenieroRepo.findAll();
         List<IngenieroGetDTO> ingenieroGetDTOS = new ArrayList<>();
 
-        for (int i = 0; i< ingenieroList.size(); i++){
+        for (int i = 0; i < ingenieroList.size(); i++) {
 
 
-
-                ingenieroGetDTOS.add(new IngenieroGetDTO(
-                        ingenieroList.get(i).getCedula(),
-                        ingenieroList.get(i).getNombre(),
-                        ingenieroList.get(i).getCiudad(),
-                        ingenieroList.get(i).getTelefono(),
-                        ingenieroList.get(i).getCorreo()
-                ));
-            }
+            ingenieroGetDTOS.add(new IngenieroGetDTO(
+                    ingenieroList.get(i).getCedula(),
+                    ingenieroList.get(i).getNombre(),
+                    ingenieroList.get(i).getCiudad(),
+                    ingenieroList.get(i).getTelefono(),
+                    ingenieroList.get(i).getCorreo()
+            ));
+        }
         return ingenieroGetDTOS;
     }
 
@@ -234,7 +228,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public DetallePersonaDTO detalleDigitador (int codigoDigitador) throws Exception {
+    public DetallePersonaDTO detalleDigitador(int codigoDigitador) throws Exception {
         Optional<Digitador> digitadorOptional = digitadorRepo.findById(codigoDigitador);
 
         Digitador digitador = digitadorOptional.orElseThrow(() ->
