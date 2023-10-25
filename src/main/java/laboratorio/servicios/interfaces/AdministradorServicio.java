@@ -20,9 +20,13 @@ public interface AdministradorServicio {
 
     List<IngenieroGetDTO> listarIngenieros ();
 
-    List<DigitadorDTO> listarDigitadores();
+    List<DetallePersonaDTO> listarDigitadores();
 
     int buscarObra(int codigoObra) throws Exception;
 
     List<ObraDTO> listarObras ();
+
+    DetallePersonaDTO detalleIngeniero(int codigoIngeniero) throws Exception;
+
+    DetallePersonaDTO detalleDigitador (int codigoDigitador) throws Exception;
 }

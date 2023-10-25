@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +28,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final IngenieroRepo ingenieroRepo;
     private final EmpresaRepo empresaRepo;
     private final ObraRepo obraRepo;
-
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -182,8 +182,24 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public List<DigitadorDTO> listarDigitadores() {
-        return null;
+    public List<DetallePersonaDTO> listarDigitadores() {
+        List<Digitador> digitadorList = digitadorRepo.findAll();
+        List<DetallePersonaDTO> personaDTOS = new ArrayList<>();
+
+        for (Digitador digitador : digitadorList) {
+            List<String> obras = digitador.getObras().stream()
+                    .map(Obra::getCR)
+                    .collect(Collectors.toList());
+
+            personaDTOS.add(new DetallePersonaDTO(
+                    digitador.getCedula(),
+                    digitador.getNombre(),
+                    digitador.getTelefono(),
+                    digitador.getCiudad().getNombre(),
+                    obras
+            ));
+        }
+        return personaDTOS;
     }
 
     @Override
@@ -194,6 +210,48 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     @Override
     public List<ObraDTO> listarObras() {
         return null;
+    }
+
+    @Override
+    public DetallePersonaDTO detalleIngeniero(int codigoIngeniero) throws Exception {
+        Optional<Ingeniero> ingenieroOptional = ingenieroRepo.findById(codigoIngeniero);
+
+        Ingeniero ingeniero = ingenieroOptional.orElseThrow(() ->
+                new Excepciones("El ingeniero de código " + codigoIngeniero + " no existe")
+        );
+
+        List<String> obras = ingeniero.getObras().stream()
+                .map(Obra::getCR)
+                .collect(Collectors.toList());
+
+        return new DetallePersonaDTO(
+                ingeniero.getCedula(),
+                ingeniero.getNombre(),
+                ingeniero.getTelefono(),
+                ingeniero.getCiudad().getNombre(),
+                obras
+        );
+    }
+
+    @Override
+    public DetallePersonaDTO detalleDigitador (int codigoDigitador) throws Exception {
+        Optional<Digitador> digitadorOptional = digitadorRepo.findById(codigoDigitador);
+
+        Digitador digitador = digitadorOptional.orElseThrow(() ->
+                new Excepciones("El digitador de código " + codigoDigitador + " no existe")
+        );
+
+        List<String> obras = digitador.getObras().stream()
+                .map(Obra::getCR)
+                .collect(Collectors.toList());
+
+        return new DetallePersonaDTO(
+                digitador.getCedula(),
+                digitador.getNombre(),
+                digitador.getTelefono(),
+                digitador.getCiudad().getNombre(),
+                obras
+        );
     }
 
     public boolean estaRepetidaCedula(String cedula) {

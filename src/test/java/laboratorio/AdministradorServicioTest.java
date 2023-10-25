@@ -1,6 +1,5 @@
 package laboratorio;
 
-import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.*;
 import laboratorio.modelo.Empresa;
 import laboratorio.modelo.Ciudad;
@@ -121,6 +120,19 @@ public class AdministradorServicioTest {
         List<IngenieroGetDTO> ingenieroGetDTOS = administradorServicio.listarIngenieros();
         System.out.println(ingenieroGetDTOS.size());
         ingenieroGetDTOS.forEach(System.out::println);
+    }
+    @Test
+    @Sql("classpath:dataset.sql")
+    public void detalleIngeniero()throws Exception{
+        DetallePersonaDTO detallePersonaDTO = administradorServicio.detalleIngeniero(1);
+        System.out.println(detallePersonaDTO);
+    }
+
+    @Test
+    @Sql("classpath:dataset.sql")
+    public void detalleDigitador()throws Exception{
+        DetallePersonaDTO detallePersonaDTO = administradorServicio.detalleDigitador(1);
+        System.out.println(detallePersonaDTO);
     }
 
 }
