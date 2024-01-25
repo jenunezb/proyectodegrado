@@ -1,6 +1,7 @@
 package laboratorio.controladores;
 
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import laboratorio.dto.CompresionCilindrosDTO;
 import laboratorio.dto.MensajeDTO;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("api/digitador")
 @AllArgsConstructor
 public class DigitadorController {

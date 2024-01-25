@@ -34,7 +34,7 @@ public class AdministradorServicioTest {
         DigitadorDTO digitadorDTO = new DigitadorDTO(
                 "1094927538",
                 "Julián Esteban Núñez Bejarano",
-                ciudadRepo.getById(1),
+                ciudadRepo.getById(1).getCodigo(),
                 "3044883381",
                 "12345",
                 "juesnube@gmail.com"
@@ -54,7 +54,7 @@ public class AdministradorServicioTest {
 
                 "1094927538",
                 "Julián Esteban Núñez Bejarano",
-                ciudadRepo.getById(1),
+                ciudadRepo.getById(1).getCodigo(),
                 "3044883381",
                 "12345",
                 "juesnube@gmail.com"

@@ -18,6 +18,7 @@ public class Ciudad implements Serializable {
     @Column(length = 10)
     private int codigo;
 
-    @Column(nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
     private String nombre;
 }

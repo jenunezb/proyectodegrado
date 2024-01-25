@@ -4,7 +4,6 @@ import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.CilindroDTO;
 import laboratorio.dto.CompresionCilindrosDTO;
 import laboratorio.dto.FormaFalla;
-import laboratorio.modelo.TipoMuestraCilindro;
 import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.CompresionCilindros;
 import laboratorio.repositorios.ObraRepo;
@@ -58,7 +57,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
 
     @Override
     public void digitarInformeCompresion(int codigoEnsayo) {
-
 
     }
 

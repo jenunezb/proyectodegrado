@@ -1,10 +1,14 @@
 package laboratorio.servicios.interfaces;
 
+import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.*;
+import laboratorio.modelo.Administrador;
 
 import java.util.List;
 
 public interface AdministradorServicio {
+
+    int crearAdministrador(AdministradorDTO administradorDTO) throws Exception;
 
     int crearDigitador (DigitadorDTO digitadorDTO) throws Exception;
 
@@ -29,4 +33,6 @@ public interface AdministradorServicio {
     DetallePersonaDTO detalleIngeniero(int codigoIngeniero) throws Exception;
 
     DetallePersonaDTO detalleDigitador (int codigoDigitador) throws Exception;
+
+    void crearCiudad(String ciudad) throws Excepciones;
 }

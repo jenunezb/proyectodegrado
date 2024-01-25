@@ -1,6 +1,8 @@
 package laboratorio.controladores;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.AllArgsConstructor;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@SecurityRequirement(name = "bearerAuth")
 @RequestMapping("api/administrador")
 @AllArgsConstructor
+
 public class AdministradorController {
 
     private final AdministradorServicio administradorServicio;
@@ -56,5 +60,11 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<DetallePersonaDTO>> detalleDigitador(@RequestParam int codigoDigitador)throws Exception{
         DetallePersonaDTO detallePersonaDTO = administradorServicio.detalleDigitador(codigoDigitador);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, detallePersonaDTO));
+    }
+
+    @PostMapping("/agregarCiudad")
+    public ResponseEntity<MensajeDTO<String>> crearCiudad(@Valid @RequestBody String ciudad) throws Excepciones {
+        administradorServicio.crearCiudad(ciudad);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la ciudad correctamente"));
     }
 }

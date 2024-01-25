@@ -23,8 +23,24 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final EmpresaRepo empresaRepo;
     private final ObraRepo obraRepo;
     private final CiudadRepo ciudadRepo;
+    private final AdministradorRepo administradorRepo;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Override
+    public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception{
+
+        if (estaRepetidoCorreo(administradorDTO.correo())) {
+            throw new Excepciones("El correo ya se encuentra registrado");
+        }
+        Administrador administrador = new Administrador();
+        administrador.setCorreo(administradorDTO.correo());
+        String passwordEncriptada = passwordEncoder.encode(administradorDTO.password());
+        administrador.setPassword(passwordEncriptada);
+        Administrador administradorNuevo = administradorRepo.save(administrador);
+
+        return administradorNuevo.getCodigo();
+    }
 
     @Override
     public int crearDigitador(DigitadorDTO digitadorDTO) throws Exception {
@@ -265,4 +281,19 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return digitador != null;
     }
 
+    public boolean estaRepetidaCiudad(String ciudad){
+        Ciudad ciudad1 = ciudadRepo.findByNombre(ciudad);
+
+        return ciudad1 !=null;
+    }
+
+    public void crearCiudad(String ciudad) throws Excepciones{
+
+        if(estaRepetidaCiudad(ciudad)){
+            throw new Excepciones("La ciudad ya se encuentra registrada");
+        }
+        Ciudad ciudad1 = new Ciudad();
+        ciudad1.setNombre(ciudad);
+        ciudadRepo.save(ciudad1);
+    }
 }
