@@ -1,6 +1,4 @@
 package laboratorio.servicios.implementacion;
-
-import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.CilindroDTO;
 import laboratorio.dto.CompresionCilindrosDTO;
 import laboratorio.dto.FormaFalla;
@@ -71,7 +69,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         if (!cr.isBlank()){
                 List<Cilindro> compresionCilindros = cilindroRepo.findByCr(cr, fecha);
                 if(compresionCilindros.isEmpty()){
-                    throw new Excepciones("no existe el cr "+cr+" o pertenece a otra sucursal");
+                    throw new Exception("no existe el cr "+cr+" o pertenece a otra sucursal");
                 }
 
                 List<CilindroDTO> cilindroDTOS = new ArrayList<>();

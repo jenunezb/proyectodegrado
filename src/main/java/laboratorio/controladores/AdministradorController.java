@@ -2,7 +2,6 @@ package laboratorio.controladores;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.AllArgsConstructor;
@@ -63,7 +62,7 @@ public class AdministradorController {
     }
 
     @PostMapping("/agregarCiudad")
-    public ResponseEntity<MensajeDTO<String>> crearCiudad(@Valid @RequestBody String ciudad) throws Excepciones {
+    public ResponseEntity<MensajeDTO<String>> crearCiudad(@Valid @RequestBody String ciudad) throws Exception {
         administradorServicio.crearCiudad(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la ciudad correctamente"));
     }

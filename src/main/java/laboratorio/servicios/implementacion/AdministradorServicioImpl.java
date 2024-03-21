@@ -1,11 +1,10 @@
 package laboratorio.servicios.implementacion;
-
-import laboratorio.Excepciones.Excepciones;
 import laboratorio.dto.*;
 import laboratorio.modelo.*;
 import laboratorio.repositorios.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.expression.ExpressionException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +30,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception{
 
         if (estaRepetidoCorreo(administradorDTO.correo())) {
-            throw new Excepciones("El correo ya se encuentra registrado");
+            throw new Exception("El correo ya se encuentra registrado");
         }
         Administrador administrador = new Administrador();
         administrador.setCorreo(administradorDTO.correo());
@@ -45,11 +44,11 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     @Override
     public int crearDigitador(DigitadorDTO digitadorDTO) throws Exception {
         if (estaRepetidaCedula(digitadorDTO.cedula())) {
-            throw new Excepciones("La cédula ya se encuentra registrada");
+            throw new Exception("La cédula ya se encuentra registrada");
         }
 
         if (estaRepetidoCorreo(digitadorDTO.correo())) {
-            throw new Excepciones("El correo ya se encuentra registrado");
+            throw new Exception("El correo ya se encuentra registrado");
         }
 
         Digitador digitador = new Digitador();
@@ -71,11 +70,11 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     // Como el digitador y el ingeniero comparten los mismos atributos, ingreso DigitadorDTO y no afecta en nada el método
     public int crearIngeniero(DigitadorDTO digitadorDTO) throws Exception {
         if (estaRepetidaCedula(digitadorDTO.cedula())) {
-            throw new Excepciones("La cédula ya se encuentra registrada");
+            throw new Exception("La cédula ya se encuentra registrada");
         }
 
         if (estaRepetidoCorreo(digitadorDTO.correo())) {
-            throw new Excepciones("El correo ya se encuentra registrado");
+            throw new Exception("El correo ya se encuentra registrado");
         }
 
         Ingeniero ingeniero = new Ingeniero();
@@ -96,7 +95,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     @Override
     public int crearEmpresa(EmpresaDTO empresaDTO) throws Exception {
         if (empresaRepo.existsById(empresaDTO.nit())) {
-            throw new Excepciones("La empresa ya se encuentra registrada");
+            throw new Exception("La empresa ya se encuentra registrada");
         }
 
         Empresa empresa = new Empresa();
@@ -114,7 +113,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     public int crearObra(ObraDTO obraDTO) throws Exception {
 
         if (obraRepo.existsByCR(obraDTO.cr())) {
-            throw new Excepciones("Ya existe una obra con este CR: " + obraDTO.cr());
+            throw new Exception("Ya existe una obra con este CR: " + obraDTO.cr());
         }
 
         Obra obra = new Obra();
@@ -142,10 +141,10 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         if (ingenieroBuscado.isEmpty()) {
             Optional<Digitador> digitador = digitadorRepo.findByCedula(personaDTO.cedula());
             if (digitador.isEmpty()) {
-                throw new Excepciones("La persona no fue encontrada");
+                throw new Exception("La persona no fue encontrada");
             } else {
                 if (obraBuscada.isEmpty()) {
-                    throw new Excepciones("La obra no fue encontrada");
+                    throw new Exception("La obra no fue encontrada");
                 } else {
                     obras.add(obraBuscada.get());
                     digitador.get().setObras(obras);
@@ -155,7 +154,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             }
         } else {
             if (obraBuscada.isEmpty()) {
-                throw new Excepciones("La obra no fue encontrada");
+                throw new Exception("La obra no fue encontrada");
             } else {
                 obras.add(obraBuscada.get());
                 ingenieroBuscado.get().setObras(obras);
@@ -227,7 +226,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Optional<Ingeniero> ingenieroOptional = ingenieroRepo.findById(codigoIngeniero);
 
         Ingeniero ingeniero = ingenieroOptional.orElseThrow(() ->
-                new Excepciones("El ingeniero de código " + codigoIngeniero + " no existe")
+                new ExpressionException("El ingeniero de código " + codigoIngeniero + " no existe")
         );
 
         List<String> obras = ingeniero.getObras().stream()
@@ -248,7 +247,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Optional<Digitador> digitadorOptional = digitadorRepo.findById(codigoDigitador);
 
         Digitador digitador = digitadorOptional.orElseThrow(() ->
-                new Excepciones("El digitador de código " + codigoDigitador + " no existe")
+                new ExpressionException("El digitador de código " + codigoDigitador + " no existe")
         );
 
         List<String> obras = digitador.getObras().stream()
@@ -287,10 +286,10 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return ciudad1 !=null;
     }
 
-    public void crearCiudad(String ciudad) throws Excepciones{
+    public void crearCiudad(String ciudad) throws Exception{
 
         if(estaRepetidaCiudad(ciudad)){
-            throw new Excepciones("La ciudad ya se encuentra registrada");
+            throw new Exception("La ciudad ya se encuentra registrada");
         }
         Ciudad ciudad1 = new Ciudad();
         ciudad1.setNombre(ciudad);
