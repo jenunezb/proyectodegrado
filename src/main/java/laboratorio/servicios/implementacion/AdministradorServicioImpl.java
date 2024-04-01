@@ -291,6 +291,9 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         if(estaRepetidaCiudad(ciudad)){
             throw new Exception("La ciudad ya se encuentra registrada");
         }
+        if(ciudad.isEmpty()){
+            throw new Exception("El campo se encuentra vacío");
+        }
         Ciudad ciudad1 = new Ciudad();
         ciudad1.setNombre(ciudad);
         ciudadRepo.save(ciudad1);

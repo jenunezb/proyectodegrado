@@ -62,8 +62,13 @@ public class AdministradorController {
     }
 
     @PostMapping("/agregarCiudad")
-    public ResponseEntity<MensajeDTO<String>> crearCiudad(@Valid @RequestBody String ciudad) throws Exception {
+    public ResponseEntity<MensajeDTO<String>> crearCiudad(@RequestBody(required = false) String ciudad) throws Exception {
+        if (ciudad == null || ciudad.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MensajeDTO<>(true, "El nombre de la ciudad no puede estar vacío"));
+        }
+
         administradorServicio.crearCiudad(ciudad);
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la ciudad correctamente"));
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se agregó la ciudad correctamente"));
     }
+
 }
