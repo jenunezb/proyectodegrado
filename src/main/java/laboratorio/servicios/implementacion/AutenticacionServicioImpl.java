@@ -1,9 +1,12 @@
 package laboratorio.servicios.implementacion;
+import laboratorio.dto.CiudadGetDTO;
 import laboratorio.dto.LoginDTO;
 import laboratorio.dto.TokenDTO;
+import laboratorio.modelo.Ciudad;
 import laboratorio.modelo.Cuenta;
 import laboratorio.modelo.Digitador;
 import laboratorio.modelo.Ingeniero;
+import laboratorio.repositorios.CiudadRepo;
 import laboratorio.repositorios.CuentaRepo;
 import laboratorio.servicios.interfaces.AutenticacionServicio;
 import laboratorio.utils.JWTUtils;
@@ -17,6 +20,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AutenticacionServicioImpl implements AutenticacionServicio {
     private final CuentaRepo cuentaRepo;
+    private final CiudadRepo ciudadRepo;
     private final JWTUtils jwtUtils;
 
     @Override
@@ -51,5 +55,17 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
         map.put("id", cuenta.getCodigo());
 
         return jwtUtils.generarToken(cuenta.getCorreo(), map);
+    }
+
+    public List<CiudadGetDTO> listarCiudades(){
+        List<Ciudad> ciudadList = ciudadRepo.findAll();
+        List<CiudadGetDTO> ciudadGetDTOS = new ArrayList<>();
+
+        for (int i=0; i< ciudadList.size();i++){
+            ciudadGetDTOS.add(new CiudadGetDTO(
+                    ciudadList.get(i).getNombre()
+            ));
+        }
+        return ciudadGetDTOS;
     }
 }

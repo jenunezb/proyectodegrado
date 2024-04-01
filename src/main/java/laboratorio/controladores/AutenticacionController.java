@@ -7,10 +7,9 @@ import laboratorio.servicios.interfaces.AdministradorServicio;
 import laboratorio.servicios.interfaces.AutenticacionServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -31,4 +30,10 @@ public class AutenticacionController {
         administradorServicio.crearAdministrador(administradorDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el administrador correctamente"));
     }
+    @GetMapping("/ciudades")
+    public ResponseEntity<MensajeDTO<List<CiudadGetDTO>>>listarCiudades(){
+        List<CiudadGetDTO> ciudadGetDTOS = autenticacionServicio.listarCiudades();
+            return ResponseEntity.ok().body(new MensajeDTO<>(false, ciudadGetDTOS));
+        }
+
 }
