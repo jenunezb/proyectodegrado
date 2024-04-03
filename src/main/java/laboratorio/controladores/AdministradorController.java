@@ -71,8 +71,8 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se agregó la ciudad correctamente"));
     }
 
-    @DeleteMapping("/eliminarCiudad")
-    public  ResponseEntity<MensajeDTO<String>> eliminarCiudad(@RequestBody(required = false) String ciudad) throws Exception{
+    @DeleteMapping("/eliminarCiudad/{ciudad}")
+    public ResponseEntity<MensajeDTO<String>> eliminarCiudad(@PathVariable String ciudad) throws Exception {
         administradorServicio.eliminarCiudad(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la ciudad correctamente"));
     }
