@@ -31,4 +31,6 @@ public interface AdministradorServicio {
     DetallePersonaDTO detalleDigitador (int codigoDigitador) throws Exception;
 
     void crearCiudad(String ciudad) throws Exception;
+
+    void eliminarCiudad(String ciudad) throws Exception;
 }

@@ -4,6 +4,7 @@ import laboratorio.modelo.*;
 import laboratorio.repositorios.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.expression.ExpressionException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -297,5 +298,25 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Ciudad ciudad1 = new Ciudad();
         ciudad1.setNombre(ciudad);
         ciudadRepo.save(ciudad1);
+    }
+    public void eliminarCiudad(String ciudad) throws Exception {
+        Ciudad ciudadEliminar = buscarCiudad(ciudad);
+
+        try {
+            ciudadRepo.deleteByNombre(ciudadEliminar.getNombre());
+        } catch (DataIntegrityViolationException e) {
+            // Si se produce una excepción de violación de integridad de datos (como la restricción de clave externa)
+            // Manejamos el error proporcionando un mensaje significativo.
+            throw new Exception("No se puede eliminar la ciudad '" + ciudad + "' porque está en uso.");
+        }
+    }
+
+    public Ciudad buscarCiudad(String ciudad) throws Exception{
+        Ciudad ciudadBuscada = ciudadRepo.findByNombre(ciudad);
+
+        if(ciudadBuscada==null){
+            throw new Exception("No se ha encontrado la ciudad buscada");
+        }
+        return ciudadBuscada;
     }
 }
