@@ -2,6 +2,7 @@ package laboratorio.servicios.interfaces;
 
 
 import laboratorio.dto.CiudadGetDTO;
+import laboratorio.dto.EmpresaDTO;
 import laboratorio.dto.LoginDTO;
 import laboratorio.dto.TokenDTO;
 
@@ -11,4 +12,6 @@ public interface AutenticacionServicio {
     TokenDTO login(LoginDTO dto) throws Exception;
 
    List<CiudadGetDTO> listarCiudades();
+
+    List<EmpresaDTO> listarEmpresas();
 }

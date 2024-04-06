@@ -192,6 +192,24 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
+    public List<EmpresaDTO> listarEmpresas() {
+        List<Empresa> empresaList = empresaRepo.findAll();
+        List<EmpresaDTO> empresaGetDTOS = new ArrayList<>();
+
+        for (int i = 0; i < empresaList.size(); i++) {
+
+
+            empresaGetDTOS.add(new EmpresaDTO(
+                    empresaList.get(i).getNit(),
+                    empresaList.get(i).getNombre(),
+                    empresaList.get(i).getDireccion(),
+                    empresaList.get(i).getTelefono()
+            ));
+        }
+        return empresaGetDTOS;
+    }
+
+    @Override
     public List<DetallePersonaDTO> listarDigitadores() {
         List<Digitador> digitadorList = digitadorRepo.findAll();
         List<DetallePersonaDTO> personaDTOS = new ArrayList<>();
@@ -318,5 +336,25 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             throw new Exception("No se ha encontrado la ciudad buscada");
         }
         return ciudadBuscada;
+    }
+
+    public void eliminarEmpresa(String nombre) throws Exception {
+        Empresa empresaEliminar = buscarEmpresa(nombre);
+
+        try {
+            empresaRepo.deleteByNombre(empresaEliminar.getNombre());
+        } catch (DataIntegrityViolationException e) {
+            throw new Exception("No se puede eliminar la empresa '" + nombre + "' porque está en uso.");
+        }
+    }
+
+    public Empresa buscarEmpresa(String nombre) throws Exception {
+        Empresa empresaBuscada = empresaRepo.findByNombre(nombre);
+
+        if (empresaBuscada == null) {
+            throw new Exception("No se ha encontrado la empresa buscada con nombre: " + nombre);
+        }
+
+        return empresaBuscada;
     }
 }

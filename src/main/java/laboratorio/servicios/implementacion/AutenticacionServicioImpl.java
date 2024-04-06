@@ -1,13 +1,12 @@
 package laboratorio.servicios.implementacion;
 import laboratorio.dto.CiudadGetDTO;
+import laboratorio.dto.EmpresaDTO;
 import laboratorio.dto.LoginDTO;
 import laboratorio.dto.TokenDTO;
-import laboratorio.modelo.Ciudad;
-import laboratorio.modelo.Cuenta;
-import laboratorio.modelo.Digitador;
-import laboratorio.modelo.Ingeniero;
+import laboratorio.modelo.*;
 import laboratorio.repositorios.CiudadRepo;
 import laboratorio.repositorios.CuentaRepo;
+import laboratorio.repositorios.EmpresaRepo;
 import laboratorio.servicios.interfaces.AutenticacionServicio;
 import laboratorio.utils.JWTUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,9 @@ import java.util.*;
 public class AutenticacionServicioImpl implements AutenticacionServicio {
     private final CuentaRepo cuentaRepo;
     private final CiudadRepo ciudadRepo;
+    private final EmpresaRepo empresaRepo;
     private final JWTUtils jwtUtils;
+
 
     @Override
     public TokenDTO login(LoginDTO loginDTO) throws Exception {
@@ -67,5 +68,21 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
             ));
         }
         return ciudadGetDTOS;
+    }
+
+    public List<EmpresaDTO> listarEmpresas(){
+        List<Empresa> empresaList = empresaRepo.findAll();
+        List<EmpresaDTO> empresaDTOS = new ArrayList<>();
+
+        for (int i=0; i< empresaList.size();i++){
+            empresaDTOS.add(new EmpresaDTO(
+                    empresaList.get(i).getNit(),
+                    empresaList.get(i).getNombre(),
+                    empresaList.get(i).getDireccion(),
+                    empresaList.get(i).getDireccion()
+
+            ));
+        }
+        return empresaDTOS;
     }
 }

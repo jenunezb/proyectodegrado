@@ -35,5 +35,10 @@ public class AutenticacionController {
         List<CiudadGetDTO> ciudadGetDTOS = autenticacionServicio.listarCiudades();
             return ResponseEntity.ok().body(new MensajeDTO<>(false, ciudadGetDTOS));
         }
+    @GetMapping("/empresas")
+    public ResponseEntity<MensajeDTO<List<EmpresaDTO>>>listarEmpresas(){
+        List<EmpresaDTO> empresaDTOS = autenticacionServicio.listarEmpresas();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, empresaDTOS));
+    }
 
 }

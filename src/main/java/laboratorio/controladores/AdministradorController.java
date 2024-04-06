@@ -3,8 +3,10 @@ package laboratorio.controladores;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import laboratorio.dto.*;
+import laboratorio.modelo.Empresa;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +37,11 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<String>> crearEmpresa(@Valid @RequestBody EmpresaDTO empresaDTO)throws Exception{
         administradorServicio.crearEmpresa(empresaDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la empresa correctamente"));
+    }
+    @GetMapping("/listarEmpresas")
+    public ResponseEntity<MensajeDTO<List<EmpresaDTO>>> listarEmpresas()throws Exception{
+        List<EmpresaDTO> empresaGetDTOS = administradorServicio.listarEmpresas();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, empresaGetDTOS));
     }
 
     @PostMapping("/agregarObra")
@@ -76,4 +83,14 @@ public class AdministradorController {
         administradorServicio.eliminarCiudad(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la ciudad correctamente"));
     }
-}
+    @DeleteMapping("/eliminarEmpresa/{nit}")
+    public ResponseEntity<?> eliminarEmpresa(@PathVariable String nit) throws Exception {
+        administradorServicio.eliminarEmpresa(nit);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la empresa correctamente"));
+    }
+    @GetMapping("/buscarEmpresa/{nombre}")
+    public ResponseEntity<MensajeDTO<Empresa>>  buscarEmpresa(@PathVariable String nombre) throws Exception {
+          Empresa empresa=administradorServicio.buscarEmpresa(nombre);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, empresa));
+        }
+    }
