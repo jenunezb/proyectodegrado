@@ -57,7 +57,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         digitador.setCedula(digitadorDTO.cedula());
         digitador.setNombre(digitadorDTO.nombre());
         digitador.setTelefono(digitadorDTO.telefono());
-        digitador.setCiudad(ciudadRepo.findById(digitadorDTO.ciudad()).get());
+        digitador.setCiudad(ciudadRepo.findByNombre(digitadorDTO.ciudad()));
         digitador.setCorreo(digitadorDTO.correo());
         digitador.setEstado(true);
         String passwordEncriptada = passwordEncoder.encode(digitadorDTO.password());
@@ -83,7 +83,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         ingeniero.setCedula(digitadorDTO.cedula());
         ingeniero.setNombre(digitadorDTO.nombre());
         ingeniero.setTelefono(digitadorDTO.telefono());
-        ingeniero.setCiudad(ciudadRepo.findById(digitadorDTO.ciudad()).get());
+        ingeniero.setCiudad(ciudadRepo.findByNombre(digitadorDTO.ciudad()));
         ingeniero.setCorreo(digitadorDTO.correo());
         ingeniero.setEstado(true);
         String passwordEncriptada = passwordEncoder.encode(digitadorDTO.password());

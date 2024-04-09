@@ -32,4 +32,7 @@ public class Usuario extends Cuenta implements Serializable {
 
     @ManyToMany
     private List<Obra> obras;
+
+    @Column(nullable = false)
+    private String rol;
 }
