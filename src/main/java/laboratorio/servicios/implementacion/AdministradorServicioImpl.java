@@ -8,7 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.expression.ExpressionException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +23,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final ObraRepo obraRepo;
     private final CiudadRepo ciudadRepo;
     private final AdministradorRepo administradorRepo;
+
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -101,8 +101,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         Empresa empresa = new Empresa();
         empresa.setNit(empresaDTO.nit());
-        empresa.setDireccion(empresaDTO.direccion());
         empresa.setNombre(empresaDTO.nombre());
+        empresa.setDireccion(empresaDTO.direccion());
         empresa.setTelefono(empresaDTO.telefono());
 
         Empresa empresaNueva = empresaRepo.save(empresa);
@@ -323,8 +323,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         try {
             ciudadRepo.deleteByNombre(ciudadEliminar.getNombre());
         } catch (DataIntegrityViolationException e) {
-            // Si se produce una excepción de violación de integridad de datos (como la restricción de clave externa)
-            // Manejamos el error proporcionando un mensaje significativo.
             throw new Exception("No se puede eliminar la ciudad '" + ciudad + "' porque está en uso.");
         }
     }
@@ -339,22 +337,35 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     public void eliminarEmpresa(String nombre) throws Exception {
-        Empresa empresaEliminar = buscarEmpresa(nombre);
+        Empresa empresa = empresaRepo.findByNombre(nombre);
 
-        try {
-            empresaRepo.deleteByNombre(empresaEliminar.getNombre());
-        } catch (DataIntegrityViolationException e) {
-            throw new Exception("No se puede eliminar la empresa '" + nombre + "' porque está en uso.");
+        if (empresa != null) {
+            empresaRepo.deleteByNombre(nombre);
+        } else {
+            throw new Exception("No se ha encontrado la empresa buscada");
         }
     }
 
+    @Override
     public Empresa buscarEmpresa(String nombre) throws Exception {
-        Empresa empresaBuscada = empresaRepo.findByNombre(nombre);
-
-        if (empresaBuscada == null) {
-            throw new Exception("No se ha encontrado la empresa buscada con nombre: " + nombre);
+        Empresa empresa = empresaRepo.findByNit(nombre);
+        if (empresa == null) {
+            throw new Exception("No se ha encontrado la empresa con el nombre: " + nombre);
         }
+        return empresa;
+    }
 
-        return empresaBuscada;
+    @Override
+    public Empresa editarEmpresa(Empresa empresa) throws Exception {
+        int empresaId = empresa.getNit();
+        Empresa empresaExistente = empresaRepo.findById(empresaId)
+                .orElseThrow(() -> new Exception("Empresa no encontrada con ID: " + empresaId));
+
+        empresaExistente.setNombre(empresa.getNombre());
+        empresaExistente.setDireccion(empresa.getDireccion());
+        empresaExistente.setTelefono(empresa.getTelefono());
+
+        return empresaRepo.save(empresaExistente);
     }
 }
+

@@ -79,7 +79,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
                     empresaList.get(i).getNit(),
                     empresaList.get(i).getNombre(),
                     empresaList.get(i).getDireccion(),
-                    empresaList.get(i).getDireccion()
+                    empresaList.get(i).getTelefono()
 
             ));
         }

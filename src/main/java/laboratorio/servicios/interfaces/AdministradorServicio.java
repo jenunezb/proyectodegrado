@@ -40,7 +40,9 @@ public interface AdministradorServicio {
 
     void eliminarEmpresa(String nombre) throws Exception;
 
-    Empresa buscarEmpresa(String nombre) throws Exception;
+    Empresa buscarEmpresa(String nit) throws Exception;
+
+    Empresa editarEmpresa(Empresa empresa) throws Exception;
 
 
 }

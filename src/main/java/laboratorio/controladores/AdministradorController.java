@@ -83,14 +83,31 @@ public class AdministradorController {
         administradorServicio.eliminarCiudad(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la ciudad correctamente"));
     }
-    @DeleteMapping("/eliminarEmpresa/{nit}")
-    public ResponseEntity<?> eliminarEmpresa(@PathVariable String nit) throws Exception {
-        administradorServicio.eliminarEmpresa(nit);
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la empresa correctamente"));
+    @DeleteMapping("/eliminarEmpresa/{nombre}")
+    public ResponseEntity<MensajeDTO<String>>eliminarEmpresa(@PathVariable String nombre) throws Exception {
+        administradorServicio.eliminarEmpresa(nombre);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false,"Se eliminó la empresa correctamente" ));
     }
-    @GetMapping("/buscarEmpresa/{nombre}")
-    public ResponseEntity<MensajeDTO<Empresa>>  buscarEmpresa(@PathVariable String nombre) throws Exception {
-          Empresa empresa=administradorServicio.buscarEmpresa(nombre);
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, empresa));
+    @GetMapping("/buscarEmpresa/{nit}")
+    public ResponseEntity<?> buscarEmpresa(@PathVariable String nit) {
+        try {
+            Empresa empresaEncontrada = administradorServicio.buscarEmpresa(nit);
+            if (empresaEncontrada == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la empresa con el nit: " + nit);
+            }
+            return ResponseEntity.ok(empresaEncontrada);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la empresa: " + e.getMessage());
         }
+    }
+
+    @PutMapping("/editarEmpresa{nit}")
+    public ResponseEntity<Empresa> editarEmpresa(@RequestBody Empresa empresa) {
+        try {
+            Empresa empresaEditada = administradorServicio.editarEmpresa(empresa);
+            return new ResponseEntity<>(empresaEditada, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     }
