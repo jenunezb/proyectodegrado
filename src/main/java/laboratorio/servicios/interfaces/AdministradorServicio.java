@@ -14,6 +14,9 @@ public interface AdministradorServicio {
 
     int crearEmpresa(EmpresaDTO empresaDTO) throws Exception;
 
+    String crearSede(SedeDTO sedeDTO) throws Exception;
+
+
     int crearObra(ObraDTO obraDTO) throws Exception;
 
     int asignarObra(PersonaDTO personaDTO) throws Exception;

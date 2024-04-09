@@ -23,6 +23,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final ObraRepo obraRepo;
     private final CiudadRepo ciudadRepo;
     private final AdministradorRepo administradorRepo;
+    private final SedeRepo sedeRepo;
 
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -108,6 +109,21 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Empresa empresaNueva = empresaRepo.save(empresa);
 
         return empresaNueva.getNit();
+    }
+
+    @Override
+    public String crearSede(SedeDTO sedeDTO) throws Exception {
+        if (sedeRepo.findByCiudad(sedeDTO.ciudad().getNombre())) {
+            throw new Exception("La sede ya se encuentra registrada");
+        }
+        Sede sede = new Sede();
+        sede.setCiudad(sedeDTO.ciudad());
+        sede.setDireccion(sedeDTO.direccion());
+        sede.setTelefono(sedeDTO.telefono());
+
+        Sede sedeNueva = sedeRepo.save(sede);
+
+        return sedeNueva.getCiudad().getNombre();
     }
 
     @Override

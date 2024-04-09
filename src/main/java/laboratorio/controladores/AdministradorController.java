@@ -110,4 +110,11 @@ public class AdministradorController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/agregarSede")
+    public ResponseEntity<MensajeDTO<String>> crearSede(@Valid @RequestBody SedeDTO sedeDTO)throws Exception{
+        administradorServicio.crearSede(sedeDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la sede correctamente"));
+    }
+
     }
