@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import laboratorio.dto.*;
 import laboratorio.modelo.Empresa;
+import laboratorio.modelo.Sede;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,11 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<List<EmpresaDTO>>> listarEmpresas()throws Exception{
         List<EmpresaDTO> empresaGetDTOS = administradorServicio.listarEmpresas();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, empresaGetDTOS));
+    }
+    @GetMapping("/listarSedes")
+    public ResponseEntity<MensajeDTO<List<SedeDTO>>> listarSedes()throws Exception{
+        List<SedeDTO> sedeDTOS = administradorServicio.listarSedes();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, sedeDTOS));
     }
 
     @PostMapping("/agregarObra")
@@ -128,5 +134,32 @@ public class AdministradorController {
         administradorServicio.crearSede(sedeDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la sede correctamente"));
     }
-
+    @DeleteMapping("/eliminarSede/{ciudad}")
+    public ResponseEntity<MensajeDTO<String>>eliminarSede(@PathVariable String ciudad) throws Exception {
+        administradorServicio.eliminarSede(ciudad);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false,"Se eliminó la ciudad correctamente" ));
     }
+    @GetMapping("/buscarSede/{ciudad}")
+    public ResponseEntity<?> buscarSede(@PathVariable String ciudad) {
+        try {
+            Sede sedeEncontrada = administradorServicio.buscarSede(ciudad);
+            if (sedeEncontrada == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró la sede con la ciudad: " + ciudad);
+            }
+            return ResponseEntity.ok(sedeEncontrada);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la sede: " + e.getMessage());
+        }
+    }
+    @PutMapping("/editarSede{ciudad}")
+    public ResponseEntity<Sede> editarSede(@RequestBody Sede sede) {
+        try {
+            Sede sedeEditada = administradorServicio.editarSede(sede);
+            return new ResponseEntity<>(sedeEditada, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+}

@@ -1,6 +1,7 @@
 package laboratorio.servicios.interfaces;
 import laboratorio.dto.*;
 import laboratorio.modelo.Empresa;
+import laboratorio.modelo.Sede;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ public interface AdministradorServicio {
 
     List<EmpresaDTO>listarEmpresas();
 
+    List<SedeDTO>listarSedes();
+
     List<DetallePersonaDTO> listarDigitadores();
 
     int buscarObra(int codigoObra) throws Exception;
@@ -43,9 +46,15 @@ public interface AdministradorServicio {
 
     void eliminarEmpresa(String nombre) throws Exception;
 
+    void eliminarSede(String nombre) throws Exception;
+
     Empresa buscarEmpresa(String nit) throws Exception;
 
     Empresa editarEmpresa(Empresa empresa) throws Exception;
+
+    Sede editarSede(Sede sede) throws Exception;
+
+    Sede buscarSede(String ciudad) throws Exception;
 
     List<AdministradorGetDTO> listaradministradores();
 

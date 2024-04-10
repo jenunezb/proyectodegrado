@@ -113,18 +113,25 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     @Override
     public String crearSede(SedeDTO sedeDTO) throws Exception {
-        if (sedeRepo.findByCiudad(sedeDTO.ciudad().getNombre())) {
-            throw new Exception("La sede ya se encuentra registrada");
+        // Verificar si ya existe una sede para la ciudad proporcionada
+        Sede sedeExistente = sedeRepo.findByCiudad(sedeDTO.ciudad());
+        if (sedeExistente != null) {
+            throw new Exception("La sede ya se encuentra registrada para esta ciudad");
         }
-        Sede sede = new Sede();
-        sede.setCiudad(sedeDTO.ciudad());
-        sede.setDireccion(sedeDTO.direccion());
-        sede.setTelefono(sedeDTO.telefono());
 
-        Sede sedeNueva = sedeRepo.save(sede);
+        // Crear una nueva instancia de Sede utilizando los datos del DTO
+        Sede nuevaSede = new Sede();
+        nuevaSede.setCiudad(sedeDTO.ciudad());
+        nuevaSede.setDireccion(sedeDTO.direccion());
+        nuevaSede.setTelefono(sedeDTO.telefono());
 
-        return sedeNueva.getCiudad().getNombre();
+        // Guardar la nueva sede en la base de datos utilizando el repositorio
+        Sede sedeGuardada = sedeRepo.save(nuevaSede);
+
+        // Devolver el nombre de la ciudad de la sede guardada
+        return sedeGuardada.getCiudad();
     }
+
 
     @Override
     public int crearObra(ObraDTO obraDTO) throws Exception {
@@ -238,6 +245,22 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             ));
         }
         return empresaGetDTOS;
+    }
+    @Override
+    public List<SedeDTO> listarSedes() {
+        List<Sede> sedeList = sedeRepo.findAll();
+        List<SedeDTO> sedeDTOS = new ArrayList<>();
+
+        for (int i = 0; i < sedeList.size(); i++) {
+
+
+            sedeDTOS.add(new SedeDTO(
+                    sedeList.get(i).getCiudad(),
+                    sedeList.get(i).getDireccion(),
+                    sedeList.get(i).getTelefono()
+            ));
+        }
+        return sedeDTOS;
     }
 
     @Override
@@ -395,6 +418,18 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
+    public void eliminarSede(String ciudad) throws Exception {
+        Sede sede = sedeRepo.findByCiudad(ciudad);
+
+        if (sede != null) {
+            sedeRepo.deleteByCiudad(ciudad);
+        } else {
+            throw new Exception("No se ha encontrado la sede buscada");
+        }
+    }
+
+
+    @Override
     public Empresa buscarEmpresa(String nombre) throws Exception {
         Empresa empresa = empresaRepo.findByNit(nombre);
         if (empresa == null) {
@@ -414,6 +449,27 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         empresaExistente.setTelefono(empresa.getTelefono());
 
         return empresaRepo.save(empresaExistente);
+    }
+
+    @Override
+    public Sede editarSede(Sede sede)  {
+        String sedeCiudad = sede.getCiudad();
+        Sede sedeExistente = sedeRepo.findByCiudad(sedeCiudad);
+
+        sedeExistente.setCiudad(sede.getCiudad());
+        sedeExistente.setDireccion(sede.getDireccion());
+        sedeExistente.setTelefono(sede.getTelefono());
+
+        return sedeRepo.save(sedeExistente);
+    }
+
+    @Override
+    public Sede buscarSede(String ciudad) throws Exception {
+        Sede sede = sedeRepo.findByCiudad(ciudad);
+        if (sede == null) {
+            throw new Exception("No se ha encontrado la empresa con el nombre: " + ciudad);
+        }
+        return sede;
     }
 }
 

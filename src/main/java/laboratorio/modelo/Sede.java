@@ -17,9 +17,8 @@ public class Sede implements Serializable {
     @EqualsAndHashCode.Include
     private int id;
 
-    @JoinColumn(nullable = false)
-    @ManyToOne
-    private Ciudad ciudad;
+    @Column(nullable = false, length = 150)
+    private String ciudad;
 
     @Column(nullable = false, length = 150)
     private String direccion;

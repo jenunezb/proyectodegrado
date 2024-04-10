@@ -1,12 +1,10 @@
 package laboratorio.servicios.implementacion;
-import laboratorio.dto.CiudadGetDTO;
-import laboratorio.dto.EmpresaDTO;
-import laboratorio.dto.LoginDTO;
-import laboratorio.dto.TokenDTO;
+import laboratorio.dto.*;
 import laboratorio.modelo.*;
 import laboratorio.repositorios.CiudadRepo;
 import laboratorio.repositorios.CuentaRepo;
 import laboratorio.repositorios.EmpresaRepo;
+import laboratorio.repositorios.SedeRepo;
 import laboratorio.servicios.interfaces.AutenticacionServicio;
 import laboratorio.utils.JWTUtils;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +19,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
     private final CuentaRepo cuentaRepo;
     private final CiudadRepo ciudadRepo;
     private final EmpresaRepo empresaRepo;
+    private final SedeRepo sedeRepo;
     private final JWTUtils jwtUtils;
 
 
@@ -84,5 +83,21 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
             ));
         }
         return empresaDTOS;
+    }
+
+    @Override
+    public List<SedeDTO> listarSedes() {
+        List<Sede> sedeList = sedeRepo.findAll();
+        List<SedeDTO> sedeDTOS = new ArrayList<>();
+
+        for (int i=0; i< sedeList.size();i++){
+            sedeDTOS.add(new SedeDTO(
+                    sedeList.get(i).getCiudad(),
+                    sedeList.get(i).getDireccion(),
+                    sedeList.get(i).getTelefono()
+
+            ));
+        }
+        return sedeDTOS;
     }
 }

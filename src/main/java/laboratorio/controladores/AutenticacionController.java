@@ -41,4 +41,10 @@ public class AutenticacionController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, empresaDTOS));
     }
 
+    @GetMapping("/sedes")
+    public ResponseEntity<MensajeDTO<List<SedeDTO>>>listarSedes(){
+        List<SedeDTO> sedeDTOS = autenticacionServicio.listarSedes();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, sedeDTOS));
+    }
+
 }
