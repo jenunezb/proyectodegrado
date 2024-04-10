@@ -12,4 +12,5 @@ public interface CuentaRepo extends JpaRepository<Cuenta, Integer> {
 
     @Query("select c from Cuenta c where c.correo=:correo")
     Optional<Cuenta> findByCorreo(@Param("correo")String correo);
+
 }

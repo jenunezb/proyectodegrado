@@ -47,5 +47,9 @@ public interface AdministradorServicio {
 
     Empresa editarEmpresa(Empresa empresa) throws Exception;
 
+    List<AdministradorGetDTO> listaradministradores();
+
+    void eliminarAdministrador(String correo) throws Exception;
+
 
 }

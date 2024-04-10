@@ -56,6 +56,12 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, ingenieroGetDTOS));
     }
 
+    @GetMapping("/listaAdministradores")
+    public ResponseEntity<MensajeDTO<List<AdministradorGetDTO>>> listarAdministradores(){
+        List<AdministradorGetDTO> administradorGetDTOS = administradorServicio.listaradministradores();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, administradorGetDTOS));
+    }
+
     @GetMapping("/detalleIngeniero/{codigoIngeniero}")
     public ResponseEntity<MensajeDTO<DetallePersonaDTO>> detalleIngeniero(@RequestParam int codigoIngeniero)throws Exception{
         DetallePersonaDTO detallePersonaDTO = administradorServicio.detalleIngeniero(codigoIngeniero);
@@ -83,6 +89,12 @@ public class AdministradorController {
         administradorServicio.eliminarCiudad(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la ciudad correctamente"));
     }
+    @DeleteMapping("/eliminarAdministrador/{correo}")
+    public ResponseEntity<MensajeDTO<String>> eliminarAdministrador(@PathVariable String correo) throws Exception {
+        administradorServicio.eliminarAdministrador(correo);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó el administrador correctamente"));
+    }
+
     @DeleteMapping("/eliminarEmpresa/{nombre}")
     public ResponseEntity<MensajeDTO<String>>eliminarEmpresa(@PathVariable String nombre) throws Exception {
         administradorServicio.eliminarEmpresa(nombre);

@@ -24,7 +24,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final CiudadRepo ciudadRepo;
     private final AdministradorRepo administradorRepo;
     private final SedeRepo sedeRepo;
-
+    private final CuentaRepo cuentaRepo;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -199,13 +199,28 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             ingenieroGetDTOS.add(new IngenieroGetDTO(
                     ingenieroList.get(i).getCedula(),
                     ingenieroList.get(i).getNombre(),
-                    ingenieroList.get(i).getCiudad(),
+                    ingenieroList.get(i).getCiudad().getNombre(),
                     ingenieroList.get(i).getTelefono(),
                     ingenieroList.get(i).getCorreo()
             ));
         }
         return ingenieroGetDTOS;
     }
+    @Override
+    public List<AdministradorGetDTO> listaradministradores(){
+        List<Administrador> administradorList = administradorRepo.findAll();
+        List<AdministradorGetDTO> administradorGetDTOS = new ArrayList<>();
+
+        for (int i = 0; i < administradorList.size(); i++) {
+
+
+            administradorGetDTOS.add(new AdministradorGetDTO(
+                    administradorList.get(i).getCorreo()
+            ));
+        }
+        return administradorGetDTOS;
+    }
+
 
     @Override
     public List<EmpresaDTO> listarEmpresas() {
@@ -343,6 +358,15 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
     }
 
+    public void eliminarAdministrador(String correo) throws Exception {
+        Optional<Cuenta> administradorEliminar = buscarAdministrador(correo);
+        try {
+            cuentaRepo.deleteById(administradorEliminar.get().getCodigo());
+        } catch (DataIntegrityViolationException e) {
+            throw new Exception("No se puede eliminar el administrador '" + correo + "' porque está en uso.");
+        }
+    }
+
     public Ciudad buscarCiudad(String ciudad) throws Exception{
         Ciudad ciudadBuscada = ciudadRepo.findByNombre(ciudad);
 
@@ -350,6 +374,14 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             throw new Exception("No se ha encontrado la ciudad buscada");
         }
         return ciudadBuscada;
+    }
+
+    public Optional<Cuenta> buscarAdministrador(String correo) throws Exception{
+        Optional<Cuenta> adminBuscado = cuentaRepo.findByCorreo(correo);
+        if(adminBuscado.isEmpty()){
+            throw new Exception("No se ha encontrado el administrador buscado");
+        }
+        return adminBuscado;
     }
 
     public void eliminarEmpresa(String nombre) throws Exception {

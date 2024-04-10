@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         compresionCilindros.setEnsayo(compresionCilindrosDTO.tipoMuestraCilindro());
         compresionCilindros.setSeccion(compresionCilindrosDTO.seccion());
         compresionCilindros.setNumeroMuestra(compresionCilindrosDTO.numeroMuestra());
-        compresionCilindros.setFechaToma(compresionCilindrosDTO.fechaToma());
+        compresionCilindros.setFechaToma(LocalDate.from(LocalDateTime.now()));
         compresionCilindros.setResistencia(compresionCilindrosDTO.resistencia());
         compresionCilindros.setCantMuestras(compresionCilindrosDTO.cantidad());
         compresionCilindros.setDescripcion(compresionCilindrosDTO.descripcion());
