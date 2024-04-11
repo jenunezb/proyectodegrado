@@ -23,9 +23,10 @@ public class Cuenta implements Serializable {
     @Column(length = 10)
     private int codigo;
 
-    @Email
+    @Email(message = "Debe ser una dirección de correo electrónico con formato correcto")
     @Column(unique = true, nullable = false)
     private String correo;
+
 
     @Column(nullable = false)
     private String password;

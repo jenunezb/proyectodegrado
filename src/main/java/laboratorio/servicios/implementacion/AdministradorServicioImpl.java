@@ -22,6 +22,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final EmpresaRepo empresaRepo;
     private final ObraRepo obraRepo;
     private final CiudadRepo ciudadRepo;
+    private final ClienteRepo clienteRepo;
     private final AdministradorRepo administradorRepo;
     private final SedeRepo sedeRepo;
     private final CuentaRepo cuentaRepo;
@@ -29,7 +30,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception{
+    public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception {
 
         if (estaRepetidoCorreo(administradorDTO.correo())) {
             throw new Exception("El correo ya se encuentra registrado");
@@ -92,6 +93,31 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Ingeniero ingenieroNuevo = ingenieroRepo.save(ingeniero);
 
         return ingenieroNuevo.getCodigo();
+    }
+
+    @Override
+    public int crearCliente(ClienteDTO clienteDTO) throws Exception {
+        if (estaRepetidaCedula(clienteDTO.cedula())) {
+            throw new Exception("La cédula ya se encuentra registrada");
+        }
+
+        if (estaRepetidoCorreo(clienteDTO.correo())) {
+            throw new Exception("El correo ya se encuentra registrado");
+        }
+
+        Cliente cliente = new Cliente();
+        cliente.setCedula(clienteDTO.cedula());
+        cliente.setNombre(clienteDTO.nombre());
+
+        cliente.setCiudad(ciudadRepo.findByNombre(clienteDTO.ciudad()));
+        cliente.setCorreo(clienteDTO.correo());
+        cliente.setEstado(true);
+        String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
+        cliente.setPassword(passwordEncriptada);
+
+        Cliente cliente1 = clienteRepo.save(cliente);
+
+        return cliente1.getCodigo();
     }
 
     @Override
@@ -213,8 +239,9 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return ingenieroGetDTOS;
     }
+
     @Override
-    public List<AdministradorGetDTO> listaradministradores(){
+    public List<AdministradorGetDTO> listaradministradores() {
         List<Administrador> administradorList = administradorRepo.findAll();
         List<AdministradorGetDTO> administradorGetDTOS = new ArrayList<>();
 
@@ -246,6 +273,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return empresaGetDTOS;
     }
+
     @Override
     public List<SedeDTO> listarSedes() {
         List<Sede> sedeList = sedeRepo.findAll();
@@ -264,24 +292,39 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public List<DetallePersonaDTO> listarDigitadores() {
-        List<Digitador> digitadorList = digitadorRepo.findAll();
-        List<DetallePersonaDTO> personaDTOS = new ArrayList<>();
+    public List<ClienteDTO> listarClientes() {
+        List<Cliente> clienteList = clienteRepo.findAll();
+        List<ClienteDTO> clienteDTOS = new ArrayList<>();
 
-        for (Digitador digitador : digitadorList) {
-            List<String> obras = digitador.getObras().stream()
-                    .map(Obra::getCR)
-                    .collect(Collectors.toList());
-
-            personaDTOS.add(new DetallePersonaDTO(
-                    digitador.getCedula(),
-                    digitador.getNombre(),
-                    digitador.getTelefono(),
-                    digitador.getCiudad().getNombre(),
-                    obras
+        for (int i = 0; i < clienteList.size(); i++) {
+            clienteDTOS.add(new ClienteDTO(
+                    clienteList.get(i).getCedula(),
+                    clienteList.get(i).getNombre(),
+                    clienteList.get(i).getCiudad().getNombre(),
+                    clienteList.get(i).getTelefono(),
+                    clienteList.get(i).getPassword(),
+                    clienteList.get(i).getCorreo()
             ));
         }
-        return personaDTOS;
+        return clienteDTOS;
+    }
+
+    @Override
+    public List<DigitadorDTO> listarDigitadores() {
+        List<Digitador> digitador = digitadorRepo.findAll();
+        List<DigitadorDTO> digitadorDTOS = new ArrayList<>();
+
+        for (int i = 0; i < digitador.size(); i++) {
+            digitadorDTOS.add(new DigitadorDTO(
+                    digitador.get(i).getCedula(),
+                    digitador.get(i).getNombre(),
+                    digitador.get(i).getCiudad().getNombre(),
+                    digitador.get(i).getTelefono(),
+                    digitador.get(i).getPassword(),
+                    digitador.get(i).getCorreo()
+            ));
+        }
+        return digitadorDTOS;
     }
 
     @Override
@@ -353,24 +396,26 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return digitador != null;
     }
 
-    public boolean estaRepetidaCiudad(String ciudad){
+
+    public boolean estaRepetidaCiudad(String ciudad) {
         Ciudad ciudad1 = ciudadRepo.findByNombre(ciudad);
 
-        return ciudad1 !=null;
+        return ciudad1 != null;
     }
 
-    public void crearCiudad(String ciudad) throws Exception{
+    public void crearCiudad(String ciudad) throws Exception {
 
-        if(estaRepetidaCiudad(ciudad)){
+        if (estaRepetidaCiudad(ciudad)) {
             throw new Exception("La ciudad ya se encuentra registrada");
         }
-        if(ciudad.isEmpty()){
+        if (ciudad.isEmpty()) {
             throw new Exception("El campo se encuentra vacío");
         }
         Ciudad ciudad1 = new Ciudad();
         ciudad1.setNombre(ciudad);
         ciudadRepo.save(ciudad1);
     }
+
     public void eliminarCiudad(String ciudad) throws Exception {
         Ciudad ciudadEliminar = buscarCiudad(ciudad);
 
@@ -390,23 +435,46 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
     }
 
-    public Ciudad buscarCiudad(String ciudad) throws Exception{
+    public void eliminarDigitador(String correo) throws Exception {
+        Optional<Cuenta> administradorEliminar = buscarAdministrador(correo);
+        try {
+            cuentaRepo.deleteById(administradorEliminar.get().getCodigo());
+        } catch (DataIntegrityViolationException e) {
+            throw new Exception("No se puede eliminar el digitador '" + correo + "' porque está en uso.");
+        }
+    }
+
+    public void eliminarIngeniero(String correo) throws Exception {
+        Optional<Cuenta> administradorEliminar = buscarAdministrador(correo);
+        try {
+            cuentaRepo.deleteById(administradorEliminar.get().getCodigo());
+        } catch (DataIntegrityViolationException e) {
+            throw new Exception("No se puede eliminar el ingeniero '" + correo + "' porque está en uso.");
+        }
+    }
+
+    @Override
+    public void editarAdministrador(String correo) throws Exception {
+
+    }
+
+
+    public Ciudad buscarCiudad(String ciudad) throws Exception {
         Ciudad ciudadBuscada = ciudadRepo.findByNombre(ciudad);
 
-        if(ciudadBuscada==null){
+        if (ciudadBuscada == null) {
             throw new Exception("No se ha encontrado la ciudad buscada");
         }
         return ciudadBuscada;
     }
 
-    public Optional<Cuenta> buscarAdministrador(String correo) throws Exception{
+    public Optional<Cuenta> buscarAdministrador(String correo) throws Exception {
         Optional<Cuenta> adminBuscado = cuentaRepo.findByCorreo(correo);
-        if(adminBuscado.isEmpty()){
+        if (adminBuscado.isEmpty()) {
             throw new Exception("No se ha encontrado el administrador buscado");
         }
         return adminBuscado;
     }
-
     public void eliminarEmpresa(String nombre) throws Exception {
         Empresa empresa = empresaRepo.findByNombre(nombre);
 
@@ -437,6 +505,22 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return empresa;
     }
+    @Override
+    public Ingeniero buscarIngenieroPorCedula(String cedula) throws Exception {
+        Ingeniero ingeniero = ingenieroRepo.findBycedula(cedula);
+        if (ingeniero == null) {
+            throw new Exception("No se encontró ningún ingeniero con la cédula: " + cedula);
+        }
+        return ingeniero;
+    }
+    @Override
+    public Digitador buscarDigitadorPorCedula(String cedula) throws Exception {
+        Digitador digitador = digitadorRepo.findBycedula(cedula);
+        if (digitador == null) {
+            throw new Exception("No se encontró ningún ingeniero con la cédula: " + cedula);
+        }
+        return digitador;
+    }
 
     @Override
     public Empresa editarEmpresa(Empresa empresa) throws Exception {
@@ -450,9 +534,32 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         return empresaRepo.save(empresaExistente);
     }
+    @Override
+    public Ingeniero editarIngeniero(Ingeniero ingeniero) throws Exception {
+        String ingenieroCedulaId = ingeniero.getCedula();
+
+        // Busca el ingeniero por su cédula en la base de datos
+        Ingeniero ingenieroExistente = ingenieroRepo.findBycedula(ingenieroCedulaId);
+
+        if (ingenieroExistente == null) {
+            throw new Exception("Ingeniero no encontrado con cédula: " + ingenieroCedulaId);
+        }
+
+        // Actualiza los campos del usuario existente (que es un Ingeniero) con los nuevos valores
+        ingenieroExistente.setNombre(ingeniero.getNombre());
+        ingenieroExistente.setTelefono(ingeniero.getTelefono());
+        // No puedes setear 'correo' porque no está definido en Ingeniero
+        // ingenieroExistente.setCorreo(ingeniero.getCorreo());
+
+        // Guarda y devuelve el ingeniero actualizado
+        return ingenieroRepo.save(ingenieroExistente);
+    }
+
+
+
 
     @Override
-    public Sede editarSede(Sede sede)  {
+    public Sede editarSede(Sede sede) {
         String sedeCiudad = sede.getCiudad();
         Sede sedeExistente = sedeRepo.findByCiudad(sedeCiudad);
 
@@ -462,7 +569,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         return sedeRepo.save(sedeExistente);
     }
-
     @Override
     public Sede buscarSede(String ciudad) throws Exception {
         Sede sede = sedeRepo.findByCiudad(ciudad);

@@ -3,15 +3,17 @@ package laboratorio.controladores;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import laboratorio.dto.*;
-import laboratorio.modelo.Empresa;
-import laboratorio.modelo.Sede;
+import laboratorio.modelo.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.webjars.NotFoundException;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
@@ -19,6 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 
 public class AdministradorController {
+
 
     private final AdministradorServicio administradorServicio;
 
@@ -31,6 +34,11 @@ public class AdministradorController {
     @PostMapping("/agregarIngeniero")
     public ResponseEntity<MensajeDTO<String>> crearIngeniero(@Valid @RequestBody DigitadorDTO digitadorDTO)throws Exception{
         administradorServicio.crearIngeniero(digitadorDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el ingeniero correctamente"));
+    }
+    @PostMapping("/agregarCliente")
+    public ResponseEntity<MensajeDTO<String>> crearCliente(@Valid @RequestBody ClienteDTO clienteDTO)throws Exception{
+        administradorServicio.crearCliente(clienteDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el ingeniero correctamente"));
     }
 
@@ -49,7 +57,6 @@ public class AdministradorController {
         List<SedeDTO> sedeDTOS = administradorServicio.listarSedes();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, sedeDTOS));
     }
-
     @PostMapping("/agregarObra")
     public ResponseEntity<MensajeDTO<String>> crearObra(@Valid @RequestBody ObraDTO obraDTO)throws Exception{
         administradorServicio.crearObra(obraDTO);
@@ -68,6 +75,16 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, administradorGetDTOS));
     }
 
+    @GetMapping("/listarDigitadores")
+    public ResponseEntity<MensajeDTO<List<DigitadorDTO>>> listarDigitadores(){
+        List<DigitadorDTO> digitadores = administradorServicio.listarDigitadores();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, digitadores));
+    }
+    @GetMapping("/listarClientes")
+    public ResponseEntity<MensajeDTO<List<ClienteDTO>>> listarClientes(){
+        List<ClienteDTO> clientes = administradorServicio.listarClientes();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, clientes));
+    }
     @GetMapping("/detalleIngeniero/{codigoIngeniero}")
     public ResponseEntity<MensajeDTO<DetallePersonaDTO>> detalleIngeniero(@RequestParam int codigoIngeniero)throws Exception{
         DetallePersonaDTO detallePersonaDTO = administradorServicio.detalleIngeniero(codigoIngeniero);
@@ -95,10 +112,20 @@ public class AdministradorController {
         administradorServicio.eliminarCiudad(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó la ciudad correctamente"));
     }
+    @DeleteMapping("/eliminarDigitador/{correo}")
+    public ResponseEntity<MensajeDTO<String>> eliminarDigitador(@PathVariable String correo) throws Exception {
+        administradorServicio.eliminarDigitador(correo);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó el digitador correctamente"));
+    }
     @DeleteMapping("/eliminarAdministrador/{correo}")
     public ResponseEntity<MensajeDTO<String>> eliminarAdministrador(@PathVariable String correo) throws Exception {
         administradorServicio.eliminarAdministrador(correo);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó el administrador correctamente"));
+    }
+    @DeleteMapping("/eliminarIngeniero{correo}")
+    public ResponseEntity<MensajeDTO<String>> eliminarIngeniero(@PathVariable String correo) throws Exception {
+        administradorServicio.eliminarIngeniero(correo);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó el ingeniero correctamente"));
     }
 
     @DeleteMapping("/eliminarEmpresa/{nombre}")
@@ -116,6 +143,25 @@ public class AdministradorController {
             return ResponseEntity.ok(empresaEncontrada);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la empresa: " + e.getMessage());
+        }
+    }
+    @GetMapping("/buscarIngenieros/{cedula}")
+    public ResponseEntity<?> buscarIngenieroPorCedula(@PathVariable String cedula) {
+        try {
+            Ingeniero ingeniero = administradorServicio.buscarIngenieroPorCedula(cedula);
+            return ResponseEntity.ok(ingeniero);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscarDigitador/{cedula}")
+    public ResponseEntity<?> buscarDigitadorPorCedula(@PathVariable String cedula) {
+        try {
+            Digitador digitador = administradorServicio.buscarDigitadorPorCedula(cedula);
+            return ResponseEntity.ok(digitador);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -151,6 +197,20 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la sede: " + e.getMessage());
         }
     }
+    @GetMapping("/buscarAdministrador/{correo}")
+    public ResponseEntity<?> buscarAdministrador(@PathVariable String correo) {
+        try {
+            Optional<Cuenta> adminBuscado = administradorServicio.buscarAdministrador(correo);
+
+            if (adminBuscado.isPresent()) {
+                return ResponseEntity.ok(adminBuscado.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontró el administrador con correo: " + correo);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar el administrador: " + e.getMessage());
+        }
+    }
     @PutMapping("/editarSede{ciudad}")
     public ResponseEntity<Sede> editarSede(@RequestBody Sede sede) {
         try {
@@ -160,6 +220,25 @@ public class AdministradorController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PutMapping("/editarIngeniero/{cedula}")
+    public ResponseEntity<Ingeniero> editarIngeniero(@PathVariable String cedula, @RequestBody Ingeniero ingeniero) {
+        try {
+            Ingeniero ingenieroActualizado = administradorServicio.editarIngeniero(ingeniero);
+            return ResponseEntity.ok(ingenieroActualizado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
-
+    @PutMapping("/editarAdministrador")
+    public ResponseEntity<String> editarAdministrador(@RequestBody String correo) {
+        try {
+            administradorServicio.editarAdministrador(correo);
+            return ResponseEntity.ok("{\"message\": \"Administrador actualizado correctamente\"}");
+        } catch (NotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
+        }
+    }
 }

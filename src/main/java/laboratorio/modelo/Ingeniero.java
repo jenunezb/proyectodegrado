@@ -20,4 +20,6 @@ public class Ingeniero extends Usuario implements Serializable {
     @JoinColumn
     @ManyToMany(mappedBy = "clientes")
     private List<Obra> obras;
+
+
 }

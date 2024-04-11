@@ -1,9 +1,9 @@
 package laboratorio.servicios.interfaces;
 import laboratorio.dto.*;
-import laboratorio.modelo.Empresa;
-import laboratorio.modelo.Sede;
+import laboratorio.modelo.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface AdministradorServicio {
 
@@ -12,6 +12,9 @@ public interface AdministradorServicio {
     int crearDigitador (DigitadorDTO digitadorDTO) throws Exception;
 
     int crearIngeniero(DigitadorDTO digitadorDTO) throws Exception;
+
+    int crearCliente(ClienteDTO clienteDTO) throws Exception;
+
 
     int crearEmpresa(EmpresaDTO empresaDTO) throws Exception;
 
@@ -30,7 +33,9 @@ public interface AdministradorServicio {
 
     List<SedeDTO>listarSedes();
 
-    List<DetallePersonaDTO> listarDigitadores();
+    List<DigitadorDTO> listarDigitadores();
+
+    List<ClienteDTO> listarClientes();
 
     int buscarObra(int codigoObra) throws Exception;
 
@@ -50,15 +55,26 @@ public interface AdministradorServicio {
 
     Empresa buscarEmpresa(String nit) throws Exception;
 
+    Ingeniero buscarIngenieroPorCedula(String cedula) throws Exception;
+
+    Digitador buscarDigitadorPorCedula(String cedula) throws Exception;
+
     Empresa editarEmpresa(Empresa empresa) throws Exception;
+
+    Ingeniero editarIngeniero(Ingeniero ingeniero) throws Exception;
 
     Sede editarSede(Sede sede) throws Exception;
 
+    void editarAdministrador(String correo) throws Exception;
     Sede buscarSede(String ciudad) throws Exception;
 
     List<AdministradorGetDTO> listaradministradores();
 
     void eliminarAdministrador(String correo) throws Exception;
 
+    void eliminarDigitador(String correo) throws Exception;
 
+    void eliminarIngeniero(String correo) throws Exception;
+
+    Optional<Cuenta> buscarAdministrador(String correo) throws Exception;
 }
