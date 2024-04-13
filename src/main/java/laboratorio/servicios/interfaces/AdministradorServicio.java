@@ -9,9 +9,9 @@ public interface AdministradorServicio {
 
     int crearAdministrador(AdministradorDTO administradorDTO) throws Exception;
 
-    int crearDigitador (DigitadorDTO digitadorDTO) throws Exception;
+    int crearDigitador (UsuarioDTO usuarioDTO) throws Exception;
 
-    int crearIngeniero(DigitadorDTO digitadorDTO) throws Exception;
+    int crearIngeniero(UsuarioDTO usuarioDTO) throws Exception;
 
     int crearCliente(ClienteDTO clienteDTO) throws Exception;
 
@@ -33,7 +33,7 @@ public interface AdministradorServicio {
 
     List<SedeDTO>listarSedes();
 
-    List<DigitadorDTO> listarDigitadores();
+    List<UsuarioDTO> listarDigitadores();
 
     List<ClienteDTO> listarClientes();
 

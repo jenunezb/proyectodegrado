@@ -16,9 +16,6 @@ public class Cliente extends Usuario implements Serializable {
     @Column(nullable = false)
     private String cargo;
 
-    @Column(nullable = false)
-    private String obra;
-
     @JoinColumn
     @ManyToMany(mappedBy = "clientes")
     private List<Obra> obras;

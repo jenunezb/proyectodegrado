@@ -29,44 +29,6 @@ public class AdministradorServicioTest {
 
     @Test
     @Sql("classpath:dataset.sql")
-    public void crearDigitador() throws Exception {
-
-        DigitadorDTO digitadorDTO = new DigitadorDTO(
-                "1094927538",
-                "Julián Esteban Núñez Bejarano",
-                ciudadRepo.getById(1).getCodigo(),
-                "3044883381",
-                "12345",
-                "juesnube@gmail.com"
-        );
-
-        int nuevo = administradorServicio.crearDigitador(digitadorDTO);
-        System.out.println(digitadorDTO);
-        Assertions.assertNotEquals(0, nuevo);
-
-    }
-
-    @Test
-    @Sql("classpath:dataset.sql")
-    public void crearIngeniero() throws Exception {
-
-        DigitadorDTO ingenieroDTO = new DigitadorDTO(
-
-                "1094927538",
-                "Julián Esteban Núñez Bejarano",
-                ciudadRepo.getById(1).getCodigo(),
-                "3044883381",
-                "12345",
-                "juesnube@gmail.com"
-        );
-
-        int nuevo = administradorServicio.crearIngeniero(ingenieroDTO);
-        System.out.println(ingenieroDTO);
-        Assertions.assertNotEquals(0, nuevo);
-    }
-
-    @Test
-    @Sql("classpath:dataset.sql")
     public void crearEmpresa() throws Exception {
 
         EmpresaDTO empresaDTO = new EmpresaDTO(

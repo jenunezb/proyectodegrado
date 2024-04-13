@@ -1,8 +1,6 @@
 package laboratorio.dto;
 
-import laboratorio.modelo.Ciudad;
-
-public record DigitadorDTO(
+public record UsuarioDTO(
 String cedula,
 String nombre,
 String ciudad,

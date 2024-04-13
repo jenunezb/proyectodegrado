@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -26,14 +25,14 @@ public class AdministradorController {
     private final AdministradorServicio administradorServicio;
 
     @PostMapping("/agregarDigitador")
-    public ResponseEntity<MensajeDTO<String>> crearDigitador(@Valid @RequestBody DigitadorDTO digitadorDTO)throws Exception{
-        administradorServicio.crearDigitador(digitadorDTO);
+    public ResponseEntity<MensajeDTO<String>> crearDigitador(@Valid @RequestBody UsuarioDTO usuarioDTO)throws Exception{
+        administradorServicio.crearDigitador(usuarioDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el digitador correctamente"));
     }
 
     @PostMapping("/agregarIngeniero")
-    public ResponseEntity<MensajeDTO<String>> crearIngeniero(@Valid @RequestBody DigitadorDTO digitadorDTO)throws Exception{
-        administradorServicio.crearIngeniero(digitadorDTO);
+    public ResponseEntity<MensajeDTO<String>> crearIngeniero(@Valid @RequestBody UsuarioDTO usuarioDTO)throws Exception{
+        administradorServicio.crearIngeniero(usuarioDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el ingeniero correctamente"));
     }
     @PostMapping("/agregarCliente")
@@ -76,8 +75,8 @@ public class AdministradorController {
     }
 
     @GetMapping("/listarDigitadores")
-    public ResponseEntity<MensajeDTO<List<DigitadorDTO>>> listarDigitadores(){
-        List<DigitadorDTO> digitadores = administradorServicio.listarDigitadores();
+    public ResponseEntity<MensajeDTO<List<UsuarioDTO>>> listarDigitadores(){
+        List<UsuarioDTO> digitadores = administradorServicio.listarDigitadores();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, digitadores));
     }
     @GetMapping("/listarClientes")

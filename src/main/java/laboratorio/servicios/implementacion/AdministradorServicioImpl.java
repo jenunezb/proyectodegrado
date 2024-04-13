@@ -45,23 +45,23 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public int crearDigitador(DigitadorDTO digitadorDTO) throws Exception {
-        if (estaRepetidaCedula(digitadorDTO.cedula())) {
+    public int crearDigitador(UsuarioDTO usuarioDTO) throws Exception {
+        if (estaRepetidaCedula(usuarioDTO.cedula())) {
             throw new Exception("La cédula ya se encuentra registrada");
         }
 
-        if (estaRepetidoCorreo(digitadorDTO.correo())) {
+        if (estaRepetidoCorreo(usuarioDTO.correo())) {
             throw new Exception("El correo ya se encuentra registrado");
         }
 
         Digitador digitador = new Digitador();
-        digitador.setCedula(digitadorDTO.cedula());
-        digitador.setNombre(digitadorDTO.nombre());
-        digitador.setTelefono(digitadorDTO.telefono());
-        digitador.setCiudad(ciudadRepo.findByNombre(digitadorDTO.ciudad()));
-        digitador.setCorreo(digitadorDTO.correo());
+        digitador.setCedula(usuarioDTO.cedula());
+        digitador.setNombre(usuarioDTO.nombre());
+        digitador.setTelefono(usuarioDTO.telefono());
+        digitador.setCiudad(ciudadRepo.findByNombre(usuarioDTO.ciudad()));
+        digitador.setCorreo(usuarioDTO.correo());
         digitador.setEstado(true);
-        String passwordEncriptada = passwordEncoder.encode(digitadorDTO.password());
+        String passwordEncriptada = passwordEncoder.encode(usuarioDTO.password());
         digitador.setPassword(passwordEncriptada);
 
         Digitador digitadorNuevo = digitadorRepo.save(digitador);
@@ -71,23 +71,23 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     @Override
     // Como el digitador y el ingeniero comparten los mismos atributos, ingreso DigitadorDTO y no afecta en nada el método
-    public int crearIngeniero(DigitadorDTO digitadorDTO) throws Exception {
-        if (estaRepetidaCedula(digitadorDTO.cedula())) {
+    public int crearIngeniero(UsuarioDTO usuarioDTO) throws Exception {
+        if (estaRepetidaCedula(usuarioDTO.cedula())) {
             throw new Exception("La cédula ya se encuentra registrada");
         }
 
-        if (estaRepetidoCorreo(digitadorDTO.correo())) {
+        if (estaRepetidoCorreo(usuarioDTO.correo())) {
             throw new Exception("El correo ya se encuentra registrado");
         }
 
         Ingeniero ingeniero = new Ingeniero();
-        ingeniero.setCedula(digitadorDTO.cedula());
-        ingeniero.setNombre(digitadorDTO.nombre());
-        ingeniero.setTelefono(digitadorDTO.telefono());
-        ingeniero.setCiudad(ciudadRepo.findByNombre(digitadorDTO.ciudad()));
-        ingeniero.setCorreo(digitadorDTO.correo());
+        ingeniero.setCedula(usuarioDTO.cedula());
+        ingeniero.setNombre(usuarioDTO.nombre());
+        ingeniero.setTelefono(usuarioDTO.telefono());
+        ingeniero.setCiudad(ciudadRepo.findByNombre(usuarioDTO.ciudad()));
+        ingeniero.setCorreo(usuarioDTO.correo());
         ingeniero.setEstado(true);
-        String passwordEncriptada = passwordEncoder.encode(digitadorDTO.password());
+        String passwordEncriptada = passwordEncoder.encode(usuarioDTO.password());
         ingeniero.setPassword(passwordEncriptada);
 
         Ingeniero ingenieroNuevo = ingenieroRepo.save(ingeniero);
@@ -108,12 +108,14 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Cliente cliente = new Cliente();
         cliente.setCedula(clienteDTO.cedula());
         cliente.setNombre(clienteDTO.nombre());
-
         cliente.setCiudad(ciudadRepo.findByNombre(clienteDTO.ciudad()));
         cliente.setCorreo(clienteDTO.correo());
         cliente.setEstado(true);
         String passwordEncriptada = passwordEncoder.encode(clienteDTO.password());
         cliente.setPassword(passwordEncriptada);
+        cliente.setCargo(clienteDTO.cargo());
+        cliente.setTelefono(clienteDTO.telefono());
+
 
         Cliente cliente1 = clienteRepo.save(cliente);
 
@@ -254,8 +256,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return administradorGetDTOS;
     }
-
-
     @Override
     public List<EmpresaDTO> listarEmpresas() {
         List<Empresa> empresaList = empresaRepo.findAll();
@@ -273,7 +273,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return empresaGetDTOS;
     }
-
     @Override
     public List<SedeDTO> listarSedes() {
         List<Sede> sedeList = sedeRepo.findAll();
@@ -303,19 +302,20 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                     clienteList.get(i).getCiudad().getNombre(),
                     clienteList.get(i).getTelefono(),
                     clienteList.get(i).getPassword(),
-                    clienteList.get(i).getCorreo()
+                    clienteList.get(i).getCorreo(),
+                    clienteList.get(i).getCargo()
             ));
         }
         return clienteDTOS;
     }
 
     @Override
-    public List<DigitadorDTO> listarDigitadores() {
+    public List<UsuarioDTO> listarDigitadores() {
         List<Digitador> digitador = digitadorRepo.findAll();
-        List<DigitadorDTO> digitadorDTOS = new ArrayList<>();
+        List<UsuarioDTO> usuarioDTOS = new ArrayList<>();
 
         for (int i = 0; i < digitador.size(); i++) {
-            digitadorDTOS.add(new DigitadorDTO(
+            usuarioDTOS.add(new UsuarioDTO(
                     digitador.get(i).getCedula(),
                     digitador.get(i).getNombre(),
                     digitador.get(i).getCiudad().getNombre(),
@@ -324,7 +324,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                     digitador.get(i).getCorreo()
             ));
         }
-        return digitadorDTOS;
+        return usuarioDTOS;
     }
 
     @Override
@@ -578,4 +578,3 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return sede;
     }
 }
-

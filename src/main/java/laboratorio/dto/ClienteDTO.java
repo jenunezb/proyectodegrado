@@ -6,7 +6,8 @@ public record ClienteDTO(
         String ciudad,
         String telefono,
         String password,
-        String correo
+        String correo,
+        String cargo
 
 
 ) {
