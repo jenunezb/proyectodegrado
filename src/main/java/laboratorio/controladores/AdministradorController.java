@@ -80,8 +80,8 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, digitadores));
     }
     @GetMapping("/listarClientes")
-    public ResponseEntity<MensajeDTO<List<ClienteDTO>>> listarClientes(){
-        List<ClienteDTO> clientes = administradorServicio.listarClientes();
+    public ResponseEntity<MensajeDTO<List<ClienteGetDTO>>> listarClientes(){
+        List<ClienteGetDTO> clientes = administradorServicio.listarClientes();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, clientes));
     }
     @GetMapping("/detalleIngeniero/{codigoIngeniero}")

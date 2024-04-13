@@ -35,6 +35,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         if (estaRepetidoCorreo(administradorDTO.correo())) {
             throw new Exception("El correo ya se encuentra registrado");
         }
+
         Administrador administrador = new Administrador();
         administrador.setCorreo(administradorDTO.correo());
         String passwordEncriptada = passwordEncoder.encode(administradorDTO.password());
@@ -291,17 +292,16 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public List<ClienteDTO> listarClientes() {
+    public List<ClienteGetDTO> listarClientes() {
         List<Cliente> clienteList = clienteRepo.findAll();
-        List<ClienteDTO> clienteDTOS = new ArrayList<>();
+        List<ClienteGetDTO> clienteDTOS = new ArrayList<>();
 
         for (int i = 0; i < clienteList.size(); i++) {
-            clienteDTOS.add(new ClienteDTO(
+            clienteDTOS.add(new ClienteGetDTO(
                     clienteList.get(i).getCedula(),
                     clienteList.get(i).getNombre(),
                     clienteList.get(i).getCiudad().getNombre(),
                     clienteList.get(i).getTelefono(),
-                    clienteList.get(i).getPassword(),
                     clienteList.get(i).getCorreo(),
                     clienteList.get(i).getCargo()
             ));
@@ -391,11 +391,13 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     public boolean estaRepetidoCorreo(String correo) {
-        Digitador digitador = digitadorRepo.findByCorreo(correo);
-
-        return digitador != null;
+        Optional<Cuenta> cuenta = cuentaRepo.findByCorreo(correo);
+        System.out.println(cuenta);
+        if(cuenta.isEmpty()){
+            return false;
+        }
+        return true;
     }
-
 
     public boolean estaRepetidaCiudad(String ciudad) {
         Ciudad ciudad1 = ciudadRepo.findByNombre(ciudad);

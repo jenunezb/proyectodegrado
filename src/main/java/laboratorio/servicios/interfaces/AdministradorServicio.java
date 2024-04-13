@@ -35,7 +35,7 @@ public interface AdministradorServicio {
 
     List<UsuarioDTO> listarDigitadores();
 
-    List<ClienteDTO> listarClientes();
+    List<ClienteGetDTO> listarClientes();
 
     int buscarObra(int codigoObra) throws Exception;
 
