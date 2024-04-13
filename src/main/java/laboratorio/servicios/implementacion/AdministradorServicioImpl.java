@@ -32,6 +32,13 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     @Override
     public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception {
 
+        if (administradorDTO == null) {
+            throw new IllegalArgumentException("El objeto administradorDTO no puede ser nulo");
+        }
+        if (administradorDTO.correo() == null || administradorDTO.correo().isEmpty()) {
+            throw new Exception("Por favor completa el campo de correo");
+        }
+
         if (estaRepetidoCorreo(administradorDTO.correo())) {
             throw new Exception("El correo ya se encuentra registrado");
         }
@@ -392,13 +399,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     public boolean estaRepetidoCorreo(String correo) {
         Optional<Cuenta> cuenta = cuentaRepo.findByCorreo(correo);
-        System.out.println(cuenta);
-        if(cuenta.isEmpty()){
-            return false;
-        }
-        return true;
+        return cuenta.isPresent(); // Devuelve true si la cuenta está presente (correo repetido), false si no está presente
     }
-
     public boolean estaRepetidaCiudad(String ciudad) {
         Ciudad ciudad1 = ciudadRepo.findByNombre(ciudad);
 

@@ -7,6 +7,7 @@ public record ClienteDTO(
         String telefono,
         String password,
         String correo,
+        String obra,
         String cargo
 
 
