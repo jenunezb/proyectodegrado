@@ -7,11 +7,10 @@ import java.time.LocalDate;
 
 public record ObraDTO(
         String direccion,
-        LocalDate fechaInicio,
         String nombre,
         String telefono,
-        Ciudad ciudad,
-        Empresa empresa,
+        String ciudad,
+        int empresa,
         String cr
 ) {
 }

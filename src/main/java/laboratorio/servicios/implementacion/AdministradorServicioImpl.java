@@ -8,6 +8,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.expression.ExpressionException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -177,13 +180,13 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
 
         Obra obra = new Obra();
-        Optional<Empresa> empresa = empresaRepo.findById(obraDTO.empresa().getNit());
+        Optional<Empresa> empresa = empresaRepo.findById(obraDTO.empresa());
         obra.setEmpresa(empresa.get());
         obra.setDireccion(obraDTO.direccion());
-        obra.setFecha_inicio(obraDTO.fechaInicio());
+        obra.setFecha_inicio(LocalDate.now());
         obra.setNombre(obraDTO.nombre());
         obra.setTelefono(obraDTO.telefono());
-        obra.setCiudad(obraDTO.ciudad());
+        obra.setCiudad(buscarCiudad(obraDTO.ciudad()));
         obra.setCR(obraDTO.cr());
 
         Obra obraNueva = obraRepo.save(obra);
@@ -281,6 +284,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return empresaGetDTOS;
     }
+
+
     @Override
     public List<SedeDTO> listarSedes() {
         List<Sede> sedeList = sedeRepo.findAll();
@@ -341,7 +346,21 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     @Override
     public List<ObraDTO> listarObras() {
-        return null;
+        List<Obra> obraList = obraRepo.findAll();
+        List<ObraDTO> obraGetDTOS = new ArrayList<>();
+
+        for (int i = 0; i < obraList.size(); i++) {
+
+            obraGetDTOS.add(new ObraDTO(
+                    obraList.get(i).getDireccion(),
+                    obraList.get(i).getNombre(),
+                    obraList.get(i).getTelefono(),
+                    obraList.get(i).getCiudad().getNombre(),
+                    obraList.get(i).getEmpresa().getNit(),
+                    obraList.get(i).getCR()
+            ));
+        }
+        return obraGetDTOS;
     }
 
     @Override
