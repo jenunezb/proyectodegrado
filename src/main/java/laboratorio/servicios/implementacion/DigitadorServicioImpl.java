@@ -114,10 +114,10 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     compresionCilindros.get(i).getObra().getNombre(),
                     compresionCilindros.get(i).getSeccion(),
                     compresionCilindros.get(i).getFechaToma(),
-                    compresionCilindros.get(i).getEnsayo().getNombreLegible()
+                    compresionCilindros.get(i).getEnsayo().getNombreLegible(),
+                    compresionCilindros.get(i).getCodigo()
             ));
         }
-
         return cilindrosListsDTOS;
     }
 

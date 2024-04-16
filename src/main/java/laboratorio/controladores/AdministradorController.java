@@ -268,4 +268,10 @@ public class AdministradorController {
         List<TipoMuestraCilindro> seccion = administradorServicio.listarSeccion();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
     }
+
+    @GetMapping("/listarEdades/{id}")
+    public ResponseEntity<MensajeDTO<List<EdadesDto>>> listarEdades(@PathVariable int id)throws Exception{
+        List<EdadesDto> seccion = administradorServicio.listarEdades(id);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
 }

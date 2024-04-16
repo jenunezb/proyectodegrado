@@ -79,4 +79,6 @@ public interface AdministradorServicio {
     Optional<Cuenta> buscarAdministrador(String correo) throws Exception;
 
     List<TipoMuestraCilindro> listarSeccion() throws Exception;
+
+    List<EdadesDto> listarEdades(int id);
 }

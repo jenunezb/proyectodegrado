@@ -1,7 +1,9 @@
 package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
 import laboratorio.modelo.*;
+import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.repositorios.*;
+import laboratorio.repositorios.ensayo.CilindroRepo;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -30,6 +32,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final AdministradorRepo administradorRepo;
     private final SedeRepo sedeRepo;
     private final CuentaRepo cuentaRepo;
+    private final CilindroRepo cilindroRepo;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -504,6 +507,20 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     public List<TipoMuestraCilindro> listarSeccion() {
         List<TipoMuestraCilindro> secciones = Arrays.asList(TipoMuestraCilindro.values());
         return secciones;
+    }
+
+    @Override
+    public List<EdadesDto> listarEdades(int id) {
+        List<Cilindro> cilindro = cilindroRepo.buscarPorIdCompresion(id);
+        List<EdadesDto> edades = new ArrayList<>();
+
+        for (int i = 0; i<cilindro.size();i++){
+            edades.add(new EdadesDto(
+               cilindro.get(i).getEdad(),
+               cilindro.get(i).getCompresionCilindros().getNumeroMuestra()
+            ));
+        }
+        return edades;
     }
 
     public void eliminarEmpresa(String nombre) throws Exception {

@@ -9,7 +9,9 @@ public record CilindrosList(
         String nombreObra,
         String seccion,
         LocalDate fechaToma,
-        String tipoMuestraCilindro
+        String tipoMuestraCilindro,
+
+        int id
 ) {
 
 }
