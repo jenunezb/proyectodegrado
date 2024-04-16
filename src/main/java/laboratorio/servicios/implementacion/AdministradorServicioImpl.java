@@ -180,7 +180,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
 
         Obra obra = new Obra();
-        Optional<Empresa> empresa = empresaRepo.findById(obraDTO.empresa());
+
+        Optional<Empresa> empresa = empresaRepo.findByNombre(obraDTO.empresa());
         obra.setEmpresa(empresa.get());
         obra.setDireccion(obraDTO.direccion());
         obra.setFecha_inicio(LocalDate.now());
@@ -356,7 +357,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                     obraList.get(i).getNombre(),
                     obraList.get(i).getTelefono(),
                     obraList.get(i).getCiudad().getNombre(),
-                    obraList.get(i).getEmpresa().getNit(),
+                    obraList.get(i).getEmpresa().getNombre(),
                     obraList.get(i).getCR()
             ));
         }
@@ -499,7 +500,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return adminBuscado;
     }
     public void eliminarEmpresa(String nombre) throws Exception {
-        Empresa empresa = empresaRepo.findByNombre(nombre);
+        Optional<Empresa> empresa = empresaRepo.findByNombre(nombre);
 
         if (empresa != null) {
             empresaRepo.deleteByNombre(nombre);

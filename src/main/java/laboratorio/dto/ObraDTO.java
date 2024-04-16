@@ -10,7 +10,7 @@ public record ObraDTO(
         String nombre,
         String telefono,
         String ciudad,
-        int empresa,
+        String empresa,
         String cr
 ) {
 }

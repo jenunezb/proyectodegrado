@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface EmpresaRepo extends JpaRepository<Empresa, Integer>
 {
 
     @Query("SELECT e FROM Empresa e WHERE e.nombre = :nombre")
-    Empresa findByNombre(@Param("nombre") String nombre);
+    Optional<Empresa> findByNombre(@Param("nombre") String nombre);
 
     @Query("SELECT e FROM Empresa e WHERE e.nit = :nit")
     Empresa findByNit(@Param("nit") String nit);
