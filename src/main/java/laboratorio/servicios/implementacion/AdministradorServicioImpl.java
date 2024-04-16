@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -482,7 +483,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     }
 
-
     public Ciudad buscarCiudad(String ciudad) throws Exception {
         Ciudad ciudadBuscada = ciudadRepo.findByNombre(ciudad);
 
@@ -499,6 +499,13 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return adminBuscado;
     }
+
+    @Override
+    public List<TipoMuestraCilindro> listarSeccion() {
+        List<TipoMuestraCilindro> secciones = Arrays.asList(TipoMuestraCilindro.values());
+        return secciones;
+    }
+
     public void eliminarEmpresa(String nombre) throws Exception {
         Optional<Empresa> empresa = empresaRepo.findByNombre(nombre);
 

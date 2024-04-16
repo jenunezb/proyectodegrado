@@ -262,4 +262,10 @@ public class AdministradorController {
         List<CilindrosList> cilindros = digitadorServicio.listarCilindros();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
+
+    @GetMapping("/listarSeccion")
+    public ResponseEntity<MensajeDTO<List<TipoMuestraCilindro>>> listarSeccion()throws Exception{
+        List<TipoMuestraCilindro> seccion = administradorServicio.listarSeccion();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
 }

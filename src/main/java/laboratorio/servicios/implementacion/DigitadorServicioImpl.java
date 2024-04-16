@@ -30,7 +30,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         compresionCilindros.setEnsayo(compresionCilindrosDTO.tipoMuestraCilindro());
         compresionCilindros.setSeccion(compresionCilindrosDTO.seccion());
         compresionCilindros.setNumeroMuestra(compresionCilindrosDTO.numeroMuestra());
-        compresionCilindros.setFechaToma(LocalDate.from(LocalDateTime.now()));
+        compresionCilindros.setFechaToma(LocalDate.from(compresionCilindrosDTO.fechaToma()));
         compresionCilindros.setResistencia(compresionCilindrosDTO.resistencia());
         compresionCilindros.setCantMuestras(compresionCilindrosDTO.cantidad());
         compresionCilindros.setDescripcion(compresionCilindrosDTO.descripcion());
@@ -113,7 +113,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     compresionCilindros.get(i).getNumeroMuestra(),
                     compresionCilindros.get(i).getObra().getNombre(),
                     compresionCilindros.get(i).getSeccion(),
-                    compresionCilindros.get(i).getFechaToma()
+                    compresionCilindros.get(i).getFechaToma(),
+                    compresionCilindros.get(i).getEnsayo().getNombreLegible()
             ));
         }
 

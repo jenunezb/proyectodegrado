@@ -77,4 +77,6 @@ public interface AdministradorServicio {
     void eliminarIngeniero(String correo) throws Exception;
 
     Optional<Cuenta> buscarAdministrador(String correo) throws Exception;
+
+    List<TipoMuestraCilindro> listarSeccion() throws Exception;
 }

@@ -27,6 +27,7 @@ public class CompresionCilindros implements Serializable {
     private Obra obra;
 
     @Enumerated(EnumType.STRING)
+
     private TipoMuestraCilindro ensayo;
 
     @Column

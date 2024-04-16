@@ -12,6 +12,7 @@ public record CompresionCilindrosDTO(
         int resistencia,
         int cantidad,
         String descripcion,
-        String observaciones
+        String observaciones,
+        LocalDate fechaToma
 ) {
 }
