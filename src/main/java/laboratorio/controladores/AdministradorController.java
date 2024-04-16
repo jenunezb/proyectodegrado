@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import laboratorio.dto.*;
 import laboratorio.modelo.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
+import laboratorio.servicios.interfaces.DigitadorServicio;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class AdministradorController {
 
 
     private final AdministradorServicio administradorServicio;
+    private final DigitadorServicio digitadorServicio;
 
     @PostMapping("/agregarDigitador")
     public ResponseEntity<MensajeDTO<String>> crearDigitador(@Valid @RequestBody UsuarioDTO usuarioDTO)throws Exception{
@@ -247,5 +249,17 @@ public class AdministradorController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"" + e.getMessage() + "\"}");
         }
+    }
+
+    @PostMapping("/agregarCilindros")
+    public ResponseEntity<MensajeDTO<String>> agregarMuestra(@Valid @RequestBody CompresionCilindrosDTO compresionCilindrosDTO){
+        digitadorServicio.agregarMuestra(compresionCilindrosDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la muestra correctamente"));
+    }
+
+    @GetMapping("/listarCilindros")
+    public ResponseEntity<MensajeDTO<List<CilindrosList>>> listarCilindros()throws Exception{
+        List<CilindrosList> cilindros = digitadorServicio.listarCilindros();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 }

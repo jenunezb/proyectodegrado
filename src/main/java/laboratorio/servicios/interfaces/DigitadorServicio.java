@@ -1,7 +1,9 @@
 package laboratorio.servicios.interfaces;
 
 import laboratorio.dto.CilindroDTO;
+import laboratorio.dto.CilindrosList;
 import laboratorio.dto.CompresionCilindrosDTO;
+import laboratorio.dto.CompresionCilindrosGetDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,5 +14,7 @@ public interface DigitadorServicio {
     void digitarInformeCompresion(int codigoEnsayo);
     void eliminarEnsayos(int codigoEnsayo);
     List<CilindroDTO> MostrarResultados(String cr, LocalDate fecha) throws Exception;
+
+    List<CilindrosList> listarCilindros() throws Exception;
 
 }

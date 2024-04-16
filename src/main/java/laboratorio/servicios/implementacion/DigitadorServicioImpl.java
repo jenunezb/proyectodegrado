@@ -1,7 +1,5 @@
 package laboratorio.servicios.implementacion;
-import laboratorio.dto.CilindroDTO;
-import laboratorio.dto.CompresionCilindrosDTO;
-import laboratorio.dto.FormaFalla;
+import laboratorio.dto.*;
 import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.CompresionCilindros;
 import laboratorio.repositorios.ObraRepo;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +26,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     @Override
     public int agregarMuestra(CompresionCilindrosDTO compresionCilindrosDTO) {
         CompresionCilindros compresionCilindros = new CompresionCilindros();
-
         compresionCilindros.setObra(obraRepo.findByCR(compresionCilindrosDTO.cr()));
         compresionCilindros.setEnsayo(compresionCilindrosDTO.tipoMuestraCilindro());
         compresionCilindros.setSeccion(compresionCilindrosDTO.seccion());
@@ -102,5 +100,28 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     FormaFalla.DOS));
         }
         return cilindroDTOS;
+    }
+
+    @Override
+    public List<CilindrosList> listarCilindros() throws Exception {
+        List<CompresionCilindros> compresionCilindros = compresionCilindrosRepo.findAll();
+        List<CilindrosList> cilindrosListsDTOS = new ArrayList<>();
+
+        for (int i=0; i< compresionCilindros.size(); i++){
+            cilindrosListsDTOS.add(new CilindrosList(
+                    compresionCilindros.get(i).getObra().getCR(),
+                    compresionCilindros.get(i).getNumeroMuestra(),
+                    compresionCilindros.get(i).getObra().getNombre(),
+                    compresionCilindros.get(i).getSeccion(),
+                    compresionCilindros.get(i).getFechaToma()
+            ));
+        }
+
+        return cilindrosListsDTOS;
+    }
+
+    public  String nombreObra(String cr) throws Exception{
+        String nombreObra = obraRepo.findByCR(cr).getNombre();
+        return nombreObra;
     }
 }
