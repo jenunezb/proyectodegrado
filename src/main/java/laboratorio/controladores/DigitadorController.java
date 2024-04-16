@@ -22,7 +22,7 @@ public class DigitadorController {
     private final DigitadorServicio digitadorServicio;
 
     @PostMapping("/agregarCilindros")
-    public ResponseEntity<MensajeDTO<String>> agregarMuestra(@Valid @RequestBody CompresionCilindrosDTO compresionCilindrosDTO){
+    public ResponseEntity<MensajeDTO<String>> agregarMuestra(@Valid @RequestBody CompresionCilindrosDTO compresionCilindrosDTO) throws Exception{
         digitadorServicio.agregarMuestra(compresionCilindrosDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la muestra correctamente"));
     }

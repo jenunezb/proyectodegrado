@@ -24,8 +24,12 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     private final CilindroRepo cilindroRepo;
 
     @Override
-    public int agregarMuestra(CompresionCilindrosDTO compresionCilindrosDTO) {
+    public int agregarMuestra(CompresionCilindrosDTO compresionCilindrosDTO) throws Exception{
         CompresionCilindros compresionCilindros = new CompresionCilindros();
+        if (obraRepo.findByCR(compresionCilindrosDTO.cr()) == null) {
+            throw new Exception("El CR ingresado no existe");
+        }
+
         compresionCilindros.setObra(obraRepo.findByCR(compresionCilindrosDTO.cr()));
         compresionCilindros.setEnsayo(compresionCilindrosDTO.tipoMuestraCilindro());
         compresionCilindros.setSeccion(compresionCilindrosDTO.seccion());
