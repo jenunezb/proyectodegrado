@@ -292,5 +292,6 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<String>> guardarEdades(@RequestBody List<EdadesDto> listaEdades) throws Exception {
         String seccion = administradorServicio.guardarEdades(listaEdades);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+
     }
 }
