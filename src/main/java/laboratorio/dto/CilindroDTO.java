@@ -11,6 +11,7 @@ public record CilindroDTO(
         int edad,
         float peso,
         float carga,
-        FormaFalla formaFalla
+        FormaFalla formaFalla,
+        String obra
 ) {
 }

@@ -67,7 +67,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     }
 
     @Override
-    public List<CilindroDTO> MostrarResultados(String cr, LocalDate fecha) throws Exception {
+    public List<CilindroDTO> mostrarResultados(String cr, LocalDate fecha) throws Exception {
 
         if (!cr.isBlank()){
                 List<Cilindro> compresionCilindros = cilindroRepo.findByCr(cr, fecha);
@@ -85,7 +85,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                         cilindro.getEdad(),
                         cilindro.getPeso(),
                         cilindro.getCarga(),
-                        FormaFalla.DOS));
+                        FormaFalla.DOS,
+                        cilindro.getCompresionCilindros().getObra().getNombre()));
             }
             return cilindroDTOS;
         }
@@ -101,7 +102,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     cilindro.getEdad(),
                     cilindro.getPeso(),
                     cilindro.getCarga(),
-                    FormaFalla.DOS));
+                    FormaFalla.DOS,
+                    cilindro.getCompresionCilindros().getObra().getNombre()));
         }
         return cilindroDTOS;
     }

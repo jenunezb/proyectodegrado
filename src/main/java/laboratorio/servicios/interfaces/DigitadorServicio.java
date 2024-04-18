@@ -13,7 +13,7 @@ public interface DigitadorServicio {
     void agregarEnsayos(int codigoMuestra);
     void digitarInformeCompresion(int codigoEnsayo);
     void eliminarEnsayos(int codigoEnsayo);
-    List<CilindroDTO> MostrarResultados(String cr, LocalDate fecha) throws Exception;
+    List<CilindroDTO> mostrarResultados(String cr, LocalDate fecha) throws Exception;
 
     List<CilindrosList> listarCilindros() throws Exception;
 

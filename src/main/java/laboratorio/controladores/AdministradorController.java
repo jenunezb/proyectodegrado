@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.webjars.NotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -281,4 +282,11 @@ public class AdministradorController {
         List<EdadesDto> seccion = administradorServicio.listarEdades(id);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
     }
+
+    @GetMapping("/listarOrden/{fecha}/{cr}")
+    public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarOrden(@PathVariable LocalDate fecha, @PathVariable String cr) throws Exception {
+        List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(cr, fecha);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
+    }
+
 }
