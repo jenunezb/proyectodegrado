@@ -83,4 +83,6 @@ public interface AdministradorServicio {
     List<EdadesDto> listarEdades(int id);
 
     void eliminarCompresionCilindro(int codigo) throws Exception;
+
+    String guardarEdades(List<EdadesDto> edadesDto) throws Exception;
 }

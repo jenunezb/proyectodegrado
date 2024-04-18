@@ -538,7 +538,8 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         for (int i = 0; i<cilindro.size();i++){
             edades.add(new EdadesDto(
                cilindro.get(i).getEdad(),
-               cilindro.get(i).getCompresionCilindros().getNumeroMuestra()
+               cilindro.get(i).getCompresionCilindros().getNumeroMuestra(),
+               cilindro.get(i).getCompresionCilindros().getCodigo()
             ));
         }
         return edades;
@@ -645,5 +646,18 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             throw new Exception("No se ha encontrado la empresa con el nombre: " + ciudad);
         }
         return sede;
+    }
+
+    public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
+        List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
+
+        if(cilindrosBuscados.isEmpty()){
+            new Exception("No se ha podido guardar la edad correctamente");
+        }
+    for (int i=0; i<edadesDto.size(); i++){
+        cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
+        cilindroRepo.save(cilindrosBuscados.get(i));
+    }
+    return "Se han cargado las edades correctamente";
     }
 }

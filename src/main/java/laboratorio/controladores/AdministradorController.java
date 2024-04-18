@@ -288,5 +288,9 @@ public class AdministradorController {
         List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(cr, fecha);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
-
+    @PostMapping("/guardarEdades")
+    public ResponseEntity<MensajeDTO<String>> guardarEdades(@RequestBody List<EdadesDto> listaEdades) throws Exception {
+        String seccion = administradorServicio.guardarEdades(listaEdades);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
 }
