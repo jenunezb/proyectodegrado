@@ -2,8 +2,10 @@ package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.Cilindro;
+import laboratorio.modelo.ensayo.CompresionCilindros;
 import laboratorio.repositorios.*;
 import laboratorio.repositorios.ensayo.CilindroRepo;
+import laboratorio.repositorios.ensayo.CompresionCilindrosRepo;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -33,6 +35,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final SedeRepo sedeRepo;
     private final CuentaRepo cuentaRepo;
     private final CilindroRepo cilindroRepo;
+    private final CompresionCilindrosRepo compresionCilindrosRepo;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -480,6 +483,14 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             throw new Exception("No se puede eliminar el ingeniero '" + correo + "' porque está en uso.");
         }
     }
+    public void eliminarCompresionCilindro(int codigo) throws Exception {
+        Optional<CompresionCilindros> buscarCilindro = buscarCilindro(codigo);
+        try {
+           compresionCilindrosRepo.deleteById(buscarCilindro.get().getCodigo());
+        } catch (DataIntegrityViolationException e) {
+            throw new Exception("No se puede eliminar la muestra porque está en uso.");
+        }
+    }
 
     @Override
     public void editarAdministrador(String correo) throws Exception {
@@ -503,6 +514,16 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return adminBuscado;
     }
 
+    public Optional<CompresionCilindros> buscarCilindro(int codigo) throws Exception{
+
+        compresionCilindrosRepo.DeleteByCompresionCilindrosCodigo(codigo);
+
+        Optional<CompresionCilindros> compresionCilindrosBuscado = compresionCilindrosRepo.findById(codigo);
+        if(compresionCilindrosBuscado.isEmpty()){
+throw new Exception("No se ha encontrado el cilindro buscado");
+        }
+        return compresionCilindrosBuscado;
+    }
     @Override
     public List<TipoMuestraCilindro> listarSeccion() {
         List<TipoMuestraCilindro> secciones = Arrays.asList(TipoMuestraCilindro.values());

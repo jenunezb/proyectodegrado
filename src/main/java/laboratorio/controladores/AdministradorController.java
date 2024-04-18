@@ -194,6 +194,13 @@ public class AdministradorController {
         administradorServicio.eliminarSede(ciudad);
         return ResponseEntity.ok().body(new MensajeDTO<>(false,"Se eliminó la ciudad correctamente" ));
     }
+
+    @DeleteMapping("/eliminarCilindro/{codigo}")
+    public ResponseEntity<MensajeDTO<String>>eliminarCilindro(@PathVariable int codigo) throws Exception {
+        administradorServicio.eliminarCompresionCilindro(codigo);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false,"Se eliminó el cilindro correctamente" ));
+    }
+
     @GetMapping("/buscarSede/{ciudad}")
     public ResponseEntity<?> buscarSede(@PathVariable String ciudad) {
         try {

@@ -81,4 +81,6 @@ public interface AdministradorServicio {
     List<TipoMuestraCilindro> listarSeccion() throws Exception;
 
     List<EdadesDto> listarEdades(int id);
+
+    void eliminarCompresionCilindro(int codigo) throws Exception;
 }
