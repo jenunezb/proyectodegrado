@@ -28,7 +28,7 @@ public class DigitadorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la muestra correctamente"));
     }
 
-    @GetMapping("/listarOrden")
+    @PostMapping("/listarOrden")
     public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarOrden(@RequestBody OrdenDTO ordenDtos) throws Exception {
         List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(ordenDtos);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));

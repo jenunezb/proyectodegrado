@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CilindroRepo extends JpaRepository<Cilindro, Integer> {
 
-    @Query("select c from Cilindro c where c.compresionCilindros.obra.CR=:cr and c.compresionCilindros.fechaToma=:fecha")
+    @Query("select c from Cilindro c where c.compresionCilindros.obra.CR=:cr and c.fechaFalla=:fecha")
     List<Cilindro> findByCr(String cr, LocalDate fecha);
 
     @Query("select c from Cilindro c where c.fechaFalla=:fecha")

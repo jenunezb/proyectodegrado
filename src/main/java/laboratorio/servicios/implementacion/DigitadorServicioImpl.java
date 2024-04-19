@@ -70,13 +70,10 @@ public class DigitadorServicioImpl implements DigitadorServicio {
 
         if (!ordenDTO.cr().isBlank()){
                 List<Cilindro> compresionCilindros = cilindroRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
-                System.out.println(compresionCilindros);
                 if(compresionCilindros.isEmpty()){
                     throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
                 }
-
                 List<CilindroDTO> cilindroDTOS = new ArrayList<>();
-
             for (Cilindro cilindro: compresionCilindros) {
                 cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
                         cilindro.getCompresionCilindros().getNumeroMuestra(),
