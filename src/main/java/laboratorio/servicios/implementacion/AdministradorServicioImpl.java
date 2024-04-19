@@ -625,9 +625,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         return ingenieroRepo.save(ingenieroExistente);
     }
 
-
-
-
     @Override
     public Sede editarSede(Sede sede) {
         String sedeCiudad = sede.getCiudad();
@@ -656,6 +653,10 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
     for (int i=0; i<edadesDto.size(); i++){
         cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
+        LocalDate fechaToma = cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma();
+        int edad = edadesDto.get(i).edad();
+        LocalDate fechaFalla = fechaToma.plusDays(edad);
+        cilindrosBuscados.get(i).setFechaFalla(fechaFalla);
         cilindroRepo.save(cilindrosBuscados.get(i));
     }
     return "Se han cargado las edades correctamente";

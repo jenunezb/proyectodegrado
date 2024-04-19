@@ -39,7 +39,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         compresionCilindros.setCantMuestras(compresionCilindrosDTO.cantidad());
         compresionCilindros.setDescripcion(compresionCilindrosDTO.descripcion());
         compresionCilindros.setObservaciones(compresionCilindrosDTO.observaciones());
-
         compresionCilindrosRepo.save(compresionCilindros);
 
         for(int i=0;i< compresionCilindrosDTO.cantidad();i++){

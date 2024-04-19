@@ -5,6 +5,7 @@ import laboratorio.dto.FormaFalla;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -35,4 +36,7 @@ public class Cilindro implements Serializable {
 
     @Column
     int edad;
+
+    @Column
+    LocalDate fechaFalla;
 }
