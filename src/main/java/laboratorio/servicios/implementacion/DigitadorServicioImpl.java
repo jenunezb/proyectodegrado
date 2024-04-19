@@ -77,7 +77,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
             for (Cilindro cilindro: compresionCilindros) {
                 cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
                         cilindro.getCompresionCilindros().getNumeroMuestra(),
-                        cilindro.getCompresionCilindros().getSeccion(),
+                        cilindro.getCompresionCilindros().getEnsayo().getNombreLegible(),
                         cilindro.getCompresionCilindros().getFechaToma(),
                         cilindro.getCompresionCilindros().getFechaToma().plusDays(cilindro.getEdad()),
                         cilindro.getEdad(),
@@ -94,7 +94,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         for (Cilindro cilindro: compresionCilindros) {
             cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
                     cilindro.getCompresionCilindros().getNumeroMuestra(),
-                    cilindro.getCompresionCilindros().getSeccion(),
+                    cilindro.getCompresionCilindros().getEnsayo().getNombreLegible(),
                     cilindro.getCompresionCilindros().getFechaToma(),
                     cilindro.getCompresionCilindros().getFechaToma().plusDays(cilindro.getEdad()),
                     cilindro.getEdad(),

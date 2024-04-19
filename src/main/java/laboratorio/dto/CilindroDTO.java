@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public record CilindroDTO(
         String cr,
         String muestra,
-        String seccion,
+        String ensayo,
         LocalDate fechaToma,
         LocalDate fechaFalla,
         int edad,
