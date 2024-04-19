@@ -67,15 +67,17 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     }
 
     @Override
-    public List<CilindroDTO> mostrarResultados(String cr, LocalDate fecha) throws Exception {
+    public List<CilindroDTO> mostrarResultados(OrdenDTO ordenDTO) throws Exception {
 
-        if (!cr.isBlank()){
-                List<Cilindro> compresionCilindros = cilindroRepo.findByCr(cr, fecha);
+        if (!ordenDTO.cr().isBlank()){
+                List<Cilindro> compresionCilindros = cilindroRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
+                System.out.println(compresionCilindros);
                 if(compresionCilindros.isEmpty()){
-                    throw new Exception("no existe el cr "+cr+" o pertenece a otra sucursal");
+                    throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
                 }
 
                 List<CilindroDTO> cilindroDTOS = new ArrayList<>();
+
             for (Cilindro cilindro: compresionCilindros) {
                 cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
                         cilindro.getCompresionCilindros().getNumeroMuestra(),
@@ -91,7 +93,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
             return cilindroDTOS;
         }
 
-        List<Cilindro> compresionCilindros = cilindroRepo.findByDate(fecha);
+        List<Cilindro> compresionCilindros = cilindroRepo.findByDate(ordenDTO.fecha());
         List<CilindroDTO> cilindroDTOS = new ArrayList<>();
         for (Cilindro cilindro: compresionCilindros) {
             cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),

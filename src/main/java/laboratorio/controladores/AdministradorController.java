@@ -282,16 +282,15 @@ public class AdministradorController {
         List<EdadesDto> seccion = administradorServicio.listarEdades(id);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
     }
-
-    @GetMapping("/listarOrden/{fecha}/{cr}")
-    public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarOrden(@PathVariable LocalDate fecha, @PathVariable String cr) throws Exception {
-        List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(cr, fecha);
-        return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
-    }
     @PostMapping("/guardarEdades")
     public ResponseEntity<MensajeDTO<String>> guardarEdades(@RequestBody List<EdadesDto> listaEdades) throws Exception {
         String seccion = administradorServicio.guardarEdades(listaEdades);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
 
+    }
+    @PostMapping("/listarOrden")
+    public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarOrden(@RequestBody OrdenDTO ordenDtos) throws Exception {
+        List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(ordenDtos);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 }
