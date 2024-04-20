@@ -10,7 +10,6 @@ public record CilindrosList(
         String seccion,
         LocalDate fechaToma,
         String tipoMuestraCilindro,
-
         int id
 ) {
 

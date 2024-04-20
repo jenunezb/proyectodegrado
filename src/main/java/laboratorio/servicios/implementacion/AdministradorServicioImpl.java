@@ -676,7 +676,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
                 cilindro.setCarga(cilindroDTO.carga());
                 cilindro.setPeso(cilindroDTO.peso());
                 cilindro.setFormaFalla(obtenerFormaFalla(cilindroDTO.formaFalla()));
-
                 // Guardar la obra asociada al cilindro
                 Obra obra = cilindro.getCompresionCilindros().getObra();
                 obraRepo.save(obra);
