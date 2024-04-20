@@ -14,7 +14,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -665,5 +664,35 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         cilindroRepo.save(cilindrosBuscados.get(i));
     }
     return "Se han cargado las edades correctamente";
+    }
+
+    @Override
+    public String subirResultados(List<CilindroDTO> cilindroDTOList) throws Exception {
+
+        for (CilindroDTO cilindroDTO : cilindroDTOList) {
+            Optional<Cilindro> cilindroOptional = cilindroRepo.findById(cilindroDTO.id());
+            if (cilindroOptional.isPresent()) {
+                Cilindro cilindro = cilindroOptional.get();
+                cilindro.setCarga(cilindroDTO.carga());
+                cilindro.setPeso(cilindroDTO.peso());
+                cilindro.setFormaFalla(obtenerFormaFalla(cilindroDTO.formaFalla()));
+
+                // Guardar la obra asociada al cilindro
+                Obra obra = cilindro.getCompresionCilindros().getObra();
+                obraRepo.save(obra);
+            } else {
+                throw new Exception("No se encontró el cilindro con ID: " + cilindroDTO.id());
+            }
+        }
+        return "Se han cargado los resultados exitosamente";
+    }
+
+    private FormaFalla obtenerFormaFalla(int valor) throws Exception {
+        for (FormaFalla formaFalla : FormaFalla.values()) {
+            if (formaFalla.getValor() == valor) {
+                return formaFalla;
+            }
+        }
+        throw new Exception("Valor de FormaFalla no válido: " + valor);
     }
 }

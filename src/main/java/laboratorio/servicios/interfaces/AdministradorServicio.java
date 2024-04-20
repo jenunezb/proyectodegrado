@@ -85,4 +85,7 @@ public interface AdministradorServicio {
     void eliminarCompresionCilindro(int codigo) throws Exception;
 
     String guardarEdades(List<EdadesDto> edadesDto) throws Exception;
+
+    String subirResultados (List<CilindroDTO> cilindroDTOList) throws Exception;
+
 }
