@@ -178,7 +178,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return sedeGuardada.getCiudad();
     }
 
-
     @Override
     public int crearObra(ObraDTO obraDTO) throws Exception {
 
@@ -205,6 +204,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     @Override
     public String asignarObra(AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception {
+        System.out.println(asignarObrasRequestDTO);
         Optional<Ingeniero> ingenieroBuscado = ingenieroRepo.findById(asignarObrasRequestDTO.codigoUsuario());
         List<Ingeniero> ingenieroList = new ArrayList<>();
 
@@ -223,7 +223,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                 throw new Exception("La obra con CR " + obraDTO.cr() + " no fue encontrada");
             }
 
-            System.out.println("pasa");
+            System.out.println("pasa asignando la obra");
             obra.setIngenieros(ingenieroList);
             obraRepo.save(obra);
             obras.add(obra);
