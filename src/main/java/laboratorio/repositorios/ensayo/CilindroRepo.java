@@ -17,4 +17,7 @@ public interface CilindroRepo extends JpaRepository<Cilindro, Integer> {
 
     @Query("select c from Cilindro c where c.compresionCilindros.codigo=:id")
     List<Cilindro> buscarPorIdCompresion(int id);
+
+    @Query("select c from Cilindro c where c.fechaFalla<=:fecha")
+    List<Cilindro> BuscarHastaLaFecha(LocalDate fecha);
 }

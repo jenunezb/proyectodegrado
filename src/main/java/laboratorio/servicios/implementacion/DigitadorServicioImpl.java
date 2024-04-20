@@ -66,7 +66,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     }
 
     @Override
-    public List<CilindroDTO> mostrarResultados(OrdenDTO ordenDTO) throws Exception {
+    public List<CilindroDTO> mostrarOden(OrdenDTO ordenDTO) throws Exception {
 
         if (!ordenDTO.cr().isBlank()){
                 List<Cilindro> compresionCilindros = cilindroRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
@@ -123,6 +123,46 @@ public class DigitadorServicioImpl implements DigitadorServicio {
             ));
         }
         return cilindrosListsDTOS;
+    }
+
+    @Override
+    public List<CilindroDTO> listarResultados(OrdenDTO ordenDTO) throws Exception {
+        if (!ordenDTO.cr().isBlank()){
+            List<Cilindro> compresionCilindros = cilindroRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
+            if(compresionCilindros.isEmpty()){
+                throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
+            }
+            List<CilindroDTO> cilindroDTOS = new ArrayList<>();
+            for (Cilindro cilindro: compresionCilindros) {
+                cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
+                        cilindro.getCompresionCilindros().getNumeroMuestra(),
+                        cilindro.getCompresionCilindros().getEnsayo().getNombreLegible(),
+                        cilindro.getCompresionCilindros().getFechaToma(),
+                        cilindro.getCompresionCilindros().getFechaToma().plusDays(cilindro.getEdad()),
+                        cilindro.getEdad(),
+                        cilindro.getPeso(),
+                        cilindro.getCarga(),
+                        FormaFalla.DOS,
+                        cilindro.getCompresionCilindros().getObra().getNombre()));
+            }
+            return cilindroDTOS;
+        }
+
+        List<Cilindro> compresionCilindros = cilindroRepo.BuscarHastaLaFecha(ordenDTO.fecha());
+        List<CilindroDTO> cilindroDTOS = new ArrayList<>();
+        for (Cilindro cilindro: compresionCilindros) {
+            cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
+                    cilindro.getCompresionCilindros().getNumeroMuestra(),
+                    cilindro.getCompresionCilindros().getEnsayo().getNombreLegible(),
+                    cilindro.getCompresionCilindros().getFechaToma(),
+                    cilindro.getCompresionCilindros().getFechaToma().plusDays(cilindro.getEdad()),
+                    cilindro.getEdad(),
+                    cilindro.getPeso(),
+                    cilindro.getCarga(),
+                    FormaFalla.DOS,
+                    cilindro.getCompresionCilindros().getObra().getNombre()));
+        }
+        return cilindroDTOS;
     }
 
     public  String nombreObra(String cr) throws Exception{

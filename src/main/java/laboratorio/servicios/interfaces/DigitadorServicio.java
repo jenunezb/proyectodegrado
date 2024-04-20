@@ -10,8 +10,8 @@ public interface DigitadorServicio {
     void agregarEnsayos(int codigoMuestra);
     void digitarInformeCompresion(int codigoEnsayo);
     void eliminarEnsayos(int codigoEnsayo);
-    List<CilindroDTO> mostrarResultados(OrdenDTO ordenDTO) throws Exception;
-
+    List<CilindroDTO> mostrarOden(OrdenDTO ordenDTO) throws Exception;
     List<CilindrosList> listarCilindros() throws Exception;
+    List<CilindroDTO> listarResultados(OrdenDTO ordenDTO) throws Exception;
 
 }

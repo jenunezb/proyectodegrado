@@ -287,7 +287,7 @@ public class AdministradorController {
 
     @PostMapping("/listarOrden")
     public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarOrden(@RequestBody OrdenDTO ordenDtos) throws Exception {
-        List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(ordenDtos);
+        List<CilindroDTO> cilindros = digitadorServicio.mostrarOden(ordenDtos);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
@@ -295,6 +295,11 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<String>> asignarObras(@RequestBody AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception {
         String seccion = administradorServicio.asignarObra(asignarObrasRequestDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
+    @PostMapping("/listarResultados")
+    public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarResultados(@RequestBody OrdenDTO ordenDtos) throws Exception {
+        List<CilindroDTO> cilindros = digitadorServicio.listarResultados(ordenDtos);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
 }
