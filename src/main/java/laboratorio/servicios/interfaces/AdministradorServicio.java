@@ -23,7 +23,7 @@ public interface AdministradorServicio {
 
     int crearObra(ObraDTO obraDTO) throws Exception;
 
-    int asignarObra(PersonaDTO personaDTO) throws Exception;
+    String asignarObra(AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception;
 
     int eliminarMuestra (int codigoMuestra) throws Exception;
 
@@ -37,7 +37,7 @@ public interface AdministradorServicio {
 
     List<ClienteGetDTO> listarClientes();
 
-    int buscarObra(int codigoObra) throws Exception;
+    boolean buscarObra(String cr) throws Exception;
 
     List<ObraDTO> listarObras ();
 
@@ -55,7 +55,7 @@ public interface AdministradorServicio {
 
     Empresa buscarEmpresa(String nit) throws Exception;
 
-    Ingeniero buscarIngenieroPorCedula(String cedula) throws Exception;
+    IngenieroGetDTO buscarIngeniero(int id) throws Exception;
 
     Digitador buscarDigitadorPorCedula(String cedula) throws Exception;
 

@@ -62,6 +62,7 @@ public class AdministradorController {
         List<ObraDTO> obraDTO = administradorServicio.listarObras();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, obraDTO));
     }
+
     @GetMapping("/listarSedes")
     public ResponseEntity<MensajeDTO<List<SedeDTO>>> listarSedes()throws Exception{
         List<SedeDTO> sedeDTOS = administradorServicio.listarSedes();
@@ -155,14 +156,10 @@ public class AdministradorController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la empresa: " + e.getMessage());
         }
     }
-    @GetMapping("/buscarIngenieros/{cedula}")
-    public ResponseEntity<?> buscarIngenieroPorCedula(@PathVariable String cedula) {
-        try {
-            Ingeniero ingeniero = administradorServicio.buscarIngenieroPorCedula(cedula);
-            return ResponseEntity.ok(ingeniero);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+    @GetMapping("/buscarIngenieros/{id}")
+    public ResponseEntity<IngenieroGetDTO> buscarIngenieroPorCedula(@PathVariable int id) throws Exception{
+            IngenieroGetDTO ingeniero = administradorServicio.buscarIngeniero(id);
+        return ResponseEntity.ok().body(ingeniero);
     }
 
     @GetMapping("/buscarDigitador/{cedula}")
@@ -286,11 +283,18 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<String>> guardarEdades(@RequestBody List<EdadesDto> listaEdades) throws Exception {
         String seccion = administradorServicio.guardarEdades(listaEdades);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
-
     }
+
     @PostMapping("/listarOrden")
     public ResponseEntity<MensajeDTO<List<CilindroDTO>>> listarOrden(@RequestBody OrdenDTO ordenDtos) throws Exception {
         List<CilindroDTO> cilindros = digitadorServicio.mostrarResultados(ordenDtos);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
+
+    @PostMapping("/asignarObras")
+    public ResponseEntity<MensajeDTO<String>> asignarObras(@RequestBody AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception {
+        String seccion = administradorServicio.asignarObra(asignarObrasRequestDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
+
 }

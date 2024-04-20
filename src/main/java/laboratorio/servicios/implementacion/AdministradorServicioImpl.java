@@ -204,37 +204,35 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public int asignarObra(PersonaDTO personaDTO) throws Exception {
-        int retorno = 0;
-        Optional<Ingeniero> ingenieroBuscado = ingenieroRepo.findByCedula(personaDTO.cedula());
-        Optional<Obra> obraBuscada = obraRepo.findById(personaDTO.codigoObra());
-        List<Obra> obras = new ArrayList<>();
+    public String asignarObra(AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception {
+        Optional<Ingeniero> ingenieroBuscado = ingenieroRepo.findById(asignarObrasRequestDTO.codigoUsuario());
+        List<Ingeniero> ingenieroList = new ArrayList<>();
+
         if (ingenieroBuscado.isEmpty()) {
-            Optional<Digitador> digitador = digitadorRepo.findByCedula(personaDTO.cedula());
-            if (digitador.isEmpty()) {
-                throw new Exception("La persona no fue encontrada");
-            } else {
-                if (obraBuscada.isEmpty()) {
-                    throw new Exception("La obra no fue encontrada");
-                } else {
-                    obras.add(obraBuscada.get());
-                    digitador.get().setObras(obras);
-                    Digitador digitador1 = digitadorRepo.save(digitador.get());
-                    retorno = digitador1.getCodigo();
-                }
-            }
+            throw new Exception("El usuario no fue encontrado");
         } else {
-            if (obraBuscada.isEmpty()) {
-                throw new Exception("La obra no fue encontrada");
-            } else {
-                obras.add(obraBuscada.get());
-                ingenieroBuscado.get().setObras(obras);
-                Ingeniero ingeniero = ingenieroRepo.save(ingenieroBuscado.get());
-                retorno = ingeniero.getCodigo();
-            }
+            ingenieroList.add(ingenieroBuscado.get());
         }
 
-        return retorno;
+        List<Obra> obras = new ArrayList<>();
+
+        for (ObraDTO obraDTO : asignarObrasRequestDTO.listaObras()) {
+            Obra obra = obraRepo.findByCR(obraDTO.cr());
+
+            if (obra == null) {
+                throw new Exception("La obra con CR " + obraDTO.cr() + " no fue encontrada");
+            }
+
+            System.out.println("pasa");
+            obra.setIngenieros(ingenieroList);
+            obraRepo.save(obra);
+            obras.add(obra);
+        }
+
+        ingenieroBuscado.get().setObras(obras);
+        ingenieroRepo.save(ingenieroBuscado.get());
+
+        return "Se han asignado las obras correctamente";
     }
 
     @Override
@@ -255,7 +253,8 @@ public class AdministradorServicioImpl implements AdministradorServicio {
                     ingenieroList.get(i).getNombre(),
                     ingenieroList.get(i).getCiudad().getNombre(),
                     ingenieroList.get(i).getTelefono(),
-                    ingenieroList.get(i).getCorreo()
+                    ingenieroList.get(i).getCorreo(),
+                    ingenieroList.get(i).getCodigo()
             ));
         }
         return ingenieroGetDTOS;
@@ -348,8 +347,12 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public int buscarObra(int codigoObra) throws Exception {
-        return 0;
+    public boolean buscarObra(String cr) throws Exception {
+        Obra obraBuscada = obraRepo.findByCR(cr);
+        if(obraBuscada==null){
+            new Exception("no se ha encontrado la obra"+ cr);
+        }
+        return true;
     }
 
     @Override
@@ -576,12 +579,14 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         return empresa;
     }
     @Override
-    public Ingeniero buscarIngenieroPorCedula(String cedula) throws Exception {
-        Ingeniero ingeniero = ingenieroRepo.findBycedula(cedula);
-        if (ingeniero == null) {
-            throw new Exception("No se encontró ningún ingeniero con la cédula: " + cedula);
+    public IngenieroGetDTO buscarIngeniero(int id) throws Exception {
+        Optional<Ingeniero> ingeniero = ingenieroRepo.findById(id);
+        if (ingeniero.isEmpty()) {
+            throw new Exception("No se encontró ningún ingeniero con la cédula: " + id);
         }
-        return ingeniero;
+        IngenieroGetDTO ingenieroGetDTO = new IngenieroGetDTO(ingeniero.get().getCedula(),
+                ingeniero.get().getNombre(), ingeniero.get().getCiudad().getNombre(), ingeniero.get().getTelefono(), ingeniero.get().getTelefono(), ingeniero.get().getCodigo());
+        return ingenieroGetDTO;
     }
     @Override
     public Digitador buscarDigitadorPorCedula(String cedula) throws Exception {

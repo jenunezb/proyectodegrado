@@ -7,6 +7,7 @@ public record IngenieroGetDTO(
         String nombre,
         String ciudad,
         String telefono,
-        String correo
+        String correo,
+        int id
 ) {
 }
