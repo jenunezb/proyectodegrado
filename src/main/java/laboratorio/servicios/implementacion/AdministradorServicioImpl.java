@@ -694,15 +694,15 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
             List<ReporteDTO> reporteDTOS = new ArrayList<>();
 
-            double volumen = 3.141516 * (20*20) * 40 * 100;
+            double volumen = 1645;
 
             for(int i=0; i< cilindrosBuscados.size();i++){
 
                 double densidad= cilindrosBuscados.get(i).getPeso() / volumen;
-                double esfuerzo = (cilindrosBuscados.get(i).getCarga() * 1000) / (3.141516 * Math.pow(3.81, 2))/2; // Convertir kN a kg y calcular el esfuerzo en kg/cm²
-                double psi = esfuerzo * 98006.5 * 0.0001453773773;
-                double mpa = psi *0.00689476;
-                double desarrollo = cilindrosBuscados.get(i).getCompresionCilindros().getResistencia()/mpa;
+                double esfuerzo = (cilindrosBuscados.get(i).getCarga() * 1000) / 79/10-2; // Convertir kN a kg y calcular el esfuerzo en kg/cm²
+                double psi = esfuerzo * 14.272;
+                double mpa = psi / 145;
+                double desarrollo = mpa/cilindrosBuscados.get(i).getCompresionCilindros().getResistencia()*100;
                 String obs = "B";
                 if(desarrollo<70){
                     obs = "N";
