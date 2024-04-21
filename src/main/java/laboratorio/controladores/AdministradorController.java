@@ -307,5 +307,9 @@ public class AdministradorController {
         String mensaje = administradorServicio.subirResultados(cilindroDTOList);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
     }
-
+    @PostMapping("/listarReportes")
+    public ResponseEntity<MensajeDTO<List<ReporteDTO>>> listarReportes(@RequestBody FechasReporteDTO fechasReporte)throws Exception{
+        List<ReporteDTO> reporte = administradorServicio.listarReportes(fechasReporte);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, reporte));
+    }
 }

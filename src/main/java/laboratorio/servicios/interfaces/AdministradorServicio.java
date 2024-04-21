@@ -88,4 +88,6 @@ public interface AdministradorServicio {
 
     String subirResultados (List<CilindroDTO> cilindroDTOList) throws Exception;
 
+    List<ReporteDTO> listarReportes(FechasReporteDTO fechasReporteDTO) throws Exception;
+
 }

@@ -14,5 +14,6 @@ public record CilindroDTO(
         int formaFalla,
         String obra,
         int id
+
 ) {
 }

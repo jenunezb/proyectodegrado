@@ -346,7 +346,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public boolean buscarObra(String cr) throws Exception {
+    public boolean buscarObra(String cr) {
         Obra obraBuscada = obraRepo.findByCR(cr);
         if(obraBuscada==null){
             new Exception("no se ha encontrado la obra"+ cr);
@@ -684,6 +684,53 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             }
         }
         return "Se han cargado los resultados exitosamente";
+    }
+
+    @Override
+    public List<ReporteDTO> listarReportes(FechasReporteDTO fechasReporteDTO) throws Exception {
+
+        if(buscarObra(fechasReporteDTO.cr())){
+            List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIntervalo(fechasReporteDTO.fechaInicio(), fechasReporteDTO.fechaFin(), fechasReporteDTO.cr());
+
+            List<ReporteDTO> reporteDTOS = new ArrayList<>();
+
+            double volumen = 3.141516 * (20*20) * 40 * 100;
+
+            for(int i=0; i< cilindrosBuscados.size();i++){
+
+                double densidad= cilindrosBuscados.get(i).getPeso() / volumen;
+                double esfuerzo = (cilindrosBuscados.get(i).getCarga() * 1000) / (3.141516 * Math.pow(3.81, 2))/2; // Convertir kN a kg y calcular el esfuerzo en kg/cm²
+                double psi = esfuerzo * 98006.5 * 0.0001453773773;
+                double mpa = psi *0.00689476;
+                double desarrollo = cilindrosBuscados.get(i).getCompresionCilindros().getResistencia()/mpa;
+                String obs = "B";
+                if(desarrollo<70){
+                    obs = "N";
+                }
+                reporteDTOS.add(new ReporteDTO(
+                        cilindrosBuscados.get(i).getCompresionCilindros().getObra().getCR(),
+                        cilindrosBuscados.get(i).getCompresionCilindros().getNumeroMuestra(),
+                        cilindrosBuscados.get(i).getCompresionCilindros().getEnsayo().getNombreLegible(),
+                        cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma(),
+                        cilindrosBuscados.get(i).getFechaFalla(),
+                        cilindrosBuscados.get(i).getEdad(),
+                        cilindrosBuscados.get(i).getPeso(),
+                        cilindrosBuscados.get(i).getCarga(),
+                        cilindrosBuscados.get(i).getFormaFalla().getValor(),
+                        cilindrosBuscados.get(i).getCompresionCilindros().getObra().getNombre(),
+                        cilindrosBuscados.get(i).getCodigo(),
+                        densidad,
+                        esfuerzo,
+                        psi,
+                        mpa,
+                        desarrollo,
+                        obs,
+                        cilindrosBuscados.get(i).getCompresionCilindros().getDescripcion(),
+                        cilindrosBuscados.get(i).getCompresionCilindros().getResistencia()));
+            }
+            return reporteDTOS;
+        }
+        return null;
     }
 
     private FormaFalla obtenerFormaFalla(int valor) throws Exception {
