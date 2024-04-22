@@ -14,7 +14,6 @@ public record ReporteDTO(
         int edad,
         float peso,
         float carga,
-        int formaFalla,
         String obra,
         int id,
         double densidad,

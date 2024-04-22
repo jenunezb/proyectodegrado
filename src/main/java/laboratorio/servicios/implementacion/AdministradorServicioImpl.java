@@ -715,7 +715,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
                         cilindrosBuscados.get(i).getEdad(),
                         cilindrosBuscados.get(i).getPeso(),
                         cilindrosBuscados.get(i).getCarga(),
-                        cilindrosBuscados.get(i).getFormaFalla().getValor(),
                         cilindrosBuscados.get(i).getCompresionCilindros().getObra().getNombre(),
                         cilindrosBuscados.get(i).getCodigo(),
                         densidad,
