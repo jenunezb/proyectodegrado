@@ -83,7 +83,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                         cilindro.getEdad(),
                         cilindro.getPeso(),
                         cilindro.getCarga(),
-                        cilindro.getFormaFalla().getValor(),
                         cilindro.getCompresionCilindros().getObra().getNombre(),
                         cilindro.getCodigo()));
             }
@@ -101,7 +100,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     cilindro.getEdad(),
                     cilindro.getPeso(),
                     cilindro.getCarga(),
-                   cilindro.getFormaFalla().getValor(),
                     cilindro.getCompresionCilindros().getObra().getNombre(),cilindro.getCodigo()));
         }
         return cilindroDTOS;
@@ -143,7 +141,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                         cilindro.getEdad(),
                         cilindro.getPeso(),
                         cilindro.getCarga(),
-                        cilindro.getFormaFalla().getValor(),
                         cilindro.getCompresionCilindros().getObra().getNombre(),cilindro.getCodigo()));
             }
             return cilindroDTOS;
@@ -160,7 +157,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     cilindro.getEdad(),
                     cilindro.getPeso(),
                     cilindro.getCarga(),
-                    cilindro.getFormaFalla().getValor(),
                     cilindro.getCompresionCilindros().getObra().getNombre(),
                     cilindro.getCodigo()));
         }
