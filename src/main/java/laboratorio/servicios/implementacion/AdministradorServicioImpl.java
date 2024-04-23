@@ -1,11 +1,14 @@
 package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
+import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.CompresionCilindros;
+import laboratorio.modelo.ensayo.MuestraSuelos;
 import laboratorio.repositorios.*;
 import laboratorio.repositorios.ensayo.CilindroRepo;
 import laboratorio.repositorios.ensayo.CompresionCilindrosRepo;
+import laboratorio.repositorios.ensayo.SueloRepo;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,6 +38,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final CuentaRepo cuentaRepo;
     private final CilindroRepo cilindroRepo;
     private final CompresionCilindrosRepo compresionCilindrosRepo;
+    private final SueloRepo sueloRepo;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -346,13 +350,14 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public boolean buscarObra(String cr) {
+    public boolean buscarObra(String cr) throws Exception{
         Obra obraBuscada = obraRepo.findByCR(cr);
-        if(obraBuscada==null){
-            new Exception("no se ha encontrado la obra"+ cr);
+        if (obraBuscada == null || obraBuscada.getNombre() == null) {
+            throw new Exception("No se ha encontrado la obra con el CR: " + cr);
         }
         return true;
     }
+
 
     @Override
     public List<ObraDTO> listarObras() {
@@ -738,5 +743,25 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             }
         }
         throw new Exception("Valor de FormaFalla no válido: " + valor);
+    }
+
+    @Override
+    public  String registrarSuelo(RegistroSuelosDto registroSuelosDto) throws Exception{
+
+        if(buscarObra(registroSuelosDto.cr())){
+            MuestraSuelos muestraSuelos = new MuestraSuelos();
+            muestraSuelos.setObra(obraRepo.findByCR(registroSuelosDto.cr()));
+            muestraSuelos.setMaterial(registroSuelosDto.material());
+            muestraSuelos.setLocalizacion(registroSuelosDto.localizacion());
+            muestraSuelos.setCantera(registroSuelosDto.cantera());
+            muestraSuelos.setFechaToma(registroSuelosDto.fechaToma());
+            muestraSuelos.setFechaRecibido(registroSuelosDto.fechaRecibido());
+            muestraSuelos.setDescripcion(registroSuelosDto.descripcion());
+            sueloRepo.save(muestraSuelos);
+
+            return "La muestra se ha agregado correctamente";
+        }else{
+            throw new Exception ("El CR ingresado no se encuentra registrado o pertenece a otra sede");
+        }
     }
 }

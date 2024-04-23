@@ -27,12 +27,12 @@ public class MuestraSuelos {
 
     private String localizacion;
 
+    @Column(nullable = false)
     private String cantera;
-
+    @Column(nullable = false)
     private LocalDate fechaToma;
-
+    @Column(nullable = false)
     private LocalDate fechaRecibido;
-
     @ManyToOne
     @JoinColumn(nullable = false)
     private Obra obra;
