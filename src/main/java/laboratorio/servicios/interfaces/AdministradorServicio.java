@@ -1,6 +1,7 @@
 package laboratorio.servicios.interfaces;
 import laboratorio.dto.*;
 import laboratorio.dto.suelos.RegistroSuelosDto;
+import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
 
 import java.util.List;
@@ -66,5 +67,6 @@ public interface AdministradorServicio {
     String subirResultados (List<CilindroDTO> cilindroDTOList) throws Exception;
     List<ReporteDTO> listarReportes(FechasReporteDTO fechasReporteDTO) throws Exception;
     public  String registrarSuelo(RegistroSuelosDto registroSuelosDto) throws Exception;
+    public List<SuelosDTO> listarSuelos();
 
 }

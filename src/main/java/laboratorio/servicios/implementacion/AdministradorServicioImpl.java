@@ -1,6 +1,7 @@
 package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
 import laboratorio.dto.suelos.RegistroSuelosDto;
+import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.CompresionCilindros;
@@ -537,6 +538,20 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         return secciones;
     }
 
+    public List<SuelosDTO> listarSuelos(){
+        List<MuestraSuelos> muestraSuelos = sueloRepo.findAll();
+        List<SuelosDTO> listaregistroSuelosDto= new ArrayList<>();
+        for (int i=0;i<muestraSuelos.size();i++){
+            SuelosDTO registroSuelosDto = new SuelosDTO(
+                    muestraSuelos.get(i).getObra().getCR(),
+                    muestraSuelos.get(i).getCodigo(),
+                    muestraSuelos.get(i).getObra().getNombre(),
+                    muestraSuelos.get(i).getFechaRecibido());
+            listaregistroSuelosDto.add(registroSuelosDto);
+        }
+        return listaregistroSuelosDto;
+    }
+
     @Override
     public List<EdadesDto> listarEdades(int id) {
         List<Cilindro> cilindro = cilindroRepo.buscarPorIdCompresion(id);
@@ -764,4 +779,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             throw new Exception ("El CR ingresado no se encuentra registrado o pertenece a otra sede");
         }
     }
+
+
 }

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import laboratorio.dto.*;
 import laboratorio.dto.suelos.RegistroSuelosDto;
+import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import laboratorio.servicios.interfaces.DigitadorServicio;
@@ -319,4 +320,10 @@ public class AdministradorController {
         String mensaje = administradorServicio.registrarSuelo(registroSuelosDto);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
     }
+    @GetMapping("/listarSuelos")
+    public ResponseEntity<MensajeDTO<List<SuelosDTO>>> listarSuelos()throws Exception{
+        List<SuelosDTO> seccion = administradorServicio.listarSuelos();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
+
 }
