@@ -614,7 +614,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return digitador;
     }
-
     @Override
     public Empresa editarEmpresa(Empresa empresa) throws Exception {
         int empresaId = empresa.getNit();
@@ -647,7 +646,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         // Guarda y devuelve el ingeniero actualizado
         return ingenieroRepo.save(ingenieroExistente);
     }
-
     @Override
     public Sede editarSede(Sede sede) {
         String sedeCiudad = sede.getCiudad();
@@ -667,7 +665,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return sede;
     }
-
     public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
         List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
 
@@ -684,7 +681,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
     }
     return "Se han cargado las edades correctamente";
     }
-
     @Override
     public String subirResultados(List<CilindroDTO> cilindroDTOList) throws Exception {
 
@@ -703,7 +699,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return "Se han cargado los resultados exitosamente";
     }
-
     @Override
     public List<ReporteDTO> listarReportes(FechasReporteDTO fechasReporteDTO) throws Exception {
 
@@ -749,7 +744,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return null;
     }
-
     private FormaFalla obtenerFormaFalla(int valor) throws Exception {
         for (FormaFalla formaFalla : FormaFalla.values()) {
             if (formaFalla.getValor() == valor) {
@@ -758,7 +752,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         throw new Exception("Valor de FormaFalla no válido: " + valor);
     }
-
     @Override
     public  String registrarSuelo(RegistroSuelosDto registroSuelosDto) throws Exception{
 
@@ -782,7 +775,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             throw new Exception ("El CR ingresado no se encuentra registrado o pertenece a otra sede");
         }
     }
-
     @Override
     public String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception {
         // Verificar si la obra existe
@@ -827,7 +819,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
         return "La granulometría ha sido subida exitosamente";
     }
-
     @Override
     public GradacionDTO mostrarGranulometria(int codigo) throws Exception{
         Optional<Gradacion> gradacionBuscada = gradacionRepo.findById(codigo);
