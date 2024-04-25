@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAmount;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class JWTUtils {
                 .addClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(5L, ChronoUnit.DAYS)))
+                .setExpiration(Date.from(Instant.from(LocalDate.now().plusDays(1).atStartOfDay())))
                 .signWith( getKey() )
                 .compact();
     }
