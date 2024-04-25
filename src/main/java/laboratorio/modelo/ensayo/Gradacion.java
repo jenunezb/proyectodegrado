@@ -34,4 +34,5 @@ public class Gradacion implements Serializable {
     @Column
     private double peso1;
 
+
 }
