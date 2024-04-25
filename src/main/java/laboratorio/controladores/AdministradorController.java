@@ -53,14 +53,14 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la empresa correctamente"));
     }
     @GetMapping("/listarEmpresas")
-    public ResponseEntity<MensajeDTO<List<EmpresaDTO>>> listarEmpresas()throws Exception{
+    public ResponseEntity<MensajeDTO<List<EmpresaDTO>>> listarEmpresas(){
         System.out.println("pasa");
         List<EmpresaDTO> empresaGetDTOS = administradorServicio.listarEmpresas();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, empresaGetDTOS));
     }
 
     @GetMapping("/listarObras")
-    public ResponseEntity<MensajeDTO<List<ObraDTO>>> listarObras()throws Exception{
+    public ResponseEntity<MensajeDTO<List<ObraDTO>>> listarObras(){
         System.out.println("pasa");
         List<ObraDTO> obraDTO = administradorServicio.listarObras();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, obraDTO));
