@@ -3,6 +3,7 @@ package laboratorio.controladores;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import laboratorio.dto.*;
+import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
@@ -326,4 +327,15 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
     }
 
+    @PostMapping("/subirGradacion")
+    public ResponseEntity<MensajeDTO<String>> registrarSuelo(@RequestBody GradacionDTO gradacionDTO)throws Exception{
+        String mensaje = administradorServicio.subirGranulometria(gradacionDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
+    }
+
+    @PostMapping("/mostrarGradacion/{codigo}")
+    public ResponseEntity<MensajeDTO<GradacionDTO>> mostrarGradacion(@PathVariable int codigo)throws Exception{
+        GradacionDTO seccion = administradorServicio.mostrarGranulometria(codigo);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
 }

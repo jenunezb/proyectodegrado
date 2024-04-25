@@ -1,15 +1,12 @@
 package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
+import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
-import laboratorio.modelo.ensayo.Cilindro;
-import laboratorio.modelo.ensayo.CompresionCilindros;
-import laboratorio.modelo.ensayo.MuestraSuelos;
+import laboratorio.modelo.ensayo.*;
 import laboratorio.repositorios.*;
-import laboratorio.repositorios.ensayo.CilindroRepo;
-import laboratorio.repositorios.ensayo.CompresionCilindrosRepo;
-import laboratorio.repositorios.ensayo.SueloRepo;
+import laboratorio.repositorios.ensayo.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -40,7 +37,9 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final CilindroRepo cilindroRepo;
     private final CompresionCilindrosRepo compresionCilindrosRepo;
     private final SueloRepo sueloRepo;
-
+    private final GradacionRepo gradacionRepo;
+    private final MuestraRepo muestraRepo;
+    private final TamicesMasasRepo tamicesMasasRepo;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -774,11 +773,78 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             muestraSuelos.setDescripcion(registroSuelosDto.descripcion());
             sueloRepo.save(muestraSuelos);
 
+            Gradacion gradacion = new Gradacion();
+            gradacion.setMuestraSuelos(muestraSuelos);
+            gradacionRepo.save(gradacion);
+
             return "La muestra se ha agregado correctamente";
         }else{
             throw new Exception ("El CR ingresado no se encuentra registrado o pertenece a otra sede");
         }
     }
 
+    @Override
+    public String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception {
+        // Verificar si la obra existe
+        Obra obra = obraRepo.findByCR(granulometriaDTO.cr());
+        if (obra == null) {
+            throw new Exception("No se encontró la obra con el CR especificado");
+        }
 
+        MuestraSuelos muestraSuelos = muestraRepo.getById(granulometriaDTO.codigoMuestra());
+
+        if (muestraSuelos == null) {
+            throw new Exception("No se encontró la obra con el la muestra especificada");
+        }
+
+        Gradacion gradacion = new Gradacion();
+        gradacion.setFechaFalla(granulometriaDTO.fechaEnsayo());
+        gradacion.setMuestraSuelos(muestraSuelos);
+
+        gradacionRepo.save(gradacion);
+
+        List<TamicesMasas> tamicesMasasList = new ArrayList<>();
+
+        // Iterar sobre los resultados y los tamices del DTO
+        List<Double> resultados = granulometriaDTO.resultados();
+        List<String> tamices = granulometriaDTO.tamices();
+        for (int i = 0; i < resultados.size() && i < tamices.size(); i++) {
+            TamicesMasas tamicesMasas = new TamicesMasas();
+            // Redondear a 4 decimales
+            float masaRedondeada = Math.round(resultados.get(i) * 10000.0f) / 10000.0f;
+            tamicesMasas.setMasaRetenida(masaRedondeada);
+            tamicesMasas.setTamiz(tamices.get(i));
+            tamicesMasas.setGradacion(gradacion);
+
+            tamicesMasasList.add(tamicesMasas);
+            tamicesMasasRepo.save(tamicesMasas);
+        }
+
+
+        gradacion.setTamicesMasasList(tamicesMasasList);
+
+        gradacionRepo.save(gradacion);
+
+        return "La granulometría ha sido subida exitosamente";
+    }
+
+    @Override
+    public GradacionDTO mostrarGranulometria(int codigo) throws Exception{
+        Optional<Gradacion> gradacionBuscada = gradacionRepo.findById(codigo);
+        if(gradacionBuscada.isEmpty()){
+            throw new Exception("No se ha encontrado la gradación buscada");
+        }
+
+        List<Double> resultados = new ArrayList<>();
+        List<String> tamices = new ArrayList<>();
+
+        for (int i=0; i< gradacionBuscada.get().getTamicesMasasList().size();i++){
+            resultados.add(gradacionBuscada.get().getTamicesMasasList().get(i).getMasaRetenida());
+            tamices.add(gradacionBuscada.get().getTamicesMasasList().get(i).getTamiz());
+        }
+        GradacionDTO gradacionDTO = new GradacionDTO(gradacionBuscada.get().getMuestraSuelos().getObra().getCR(),
+                gradacionBuscada.get().getMuestraSuelos().getCodigo(),gradacionBuscada.get().getFechaFalla(), resultados,tamices);
+
+        return gradacionDTO;
+    }
 }
