@@ -1,5 +1,6 @@
 package laboratorio.repositorios.ensayo;
 
+import laboratorio.controladores.ImagenesController;
 import laboratorio.modelo.ensayo.Cilindro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,5 @@ public interface CilindroRepo extends JpaRepository<Cilindro, Integer> {
 
     @Query("select c from Cilindro c where c.fechaFalla<=:fecha")
     List<Cilindro> BuscarHastaLaFecha(LocalDate fecha);
+
 }

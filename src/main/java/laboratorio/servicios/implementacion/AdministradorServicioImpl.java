@@ -277,6 +277,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
         return administradorGetDTOS;
     }
+
     @Override
     public List<EmpresaDTO> listarEmpresas() {
         List<Empresa> empresaList = empresaRepo.findAll();
@@ -358,7 +359,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return true;
     }
 
-
     @Override
     public List<ObraDTO> listarObras() {
         List<Obra> obraList = obraRepo.findAll();
@@ -435,6 +435,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         Optional<Cuenta> cuenta = cuentaRepo.findByCorreo(correo);
         return cuenta.isPresent(); // Devuelve true si la cuenta está presente (correo repetido), false si no está presente
     }
+
     public boolean estaRepetidaCiudad(String ciudad) {
         Ciudad ciudad1 = ciudadRepo.findByNombre(ciudad);
 
@@ -490,6 +491,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             throw new Exception("No se puede eliminar el ingeniero '" + correo + "' porque está en uso.");
         }
     }
+
     public void eliminarCompresionCilindro(int codigo) throws Exception {
         Optional<CompresionCilindros> buscarCilindro = buscarCilindro(codigo);
         try {
@@ -531,6 +533,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return compresionCilindrosBuscado;
     }
+
     @Override
     public List<TipoMuestraCilindro> listarSeccion() {
         List<TipoMuestraCilindro> secciones = Arrays.asList(TipoMuestraCilindro.values());
@@ -596,6 +599,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return empresa;
     }
+
     @Override
     public IngenieroGetDTO buscarIngeniero(int id) throws Exception {
         Optional<Ingeniero> ingeniero = ingenieroRepo.findById(id);
@@ -606,6 +610,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
                 ingeniero.get().getNombre(), ingeniero.get().getCiudad().getNombre(), ingeniero.get().getTelefono(), ingeniero.get().getTelefono(), ingeniero.get().getCodigo());
         return ingenieroGetDTO;
     }
+
     @Override
     public Digitador buscarDigitadorPorCedula(String cedula) throws Exception {
         Digitador digitador = digitadorRepo.findBycedula(cedula);
@@ -614,6 +619,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return digitador;
     }
+
     @Override
     public Empresa editarEmpresa(Empresa empresa) throws Exception {
         int empresaId = empresa.getNit();
@@ -626,6 +632,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
         return empresaRepo.save(empresaExistente);
     }
+
     @Override
     public Ingeniero editarIngeniero(Ingeniero ingeniero) throws Exception {
         String ingenieroCedulaId = ingeniero.getCedula();
@@ -646,6 +653,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         // Guarda y devuelve el ingeniero actualizado
         return ingenieroRepo.save(ingenieroExistente);
     }
+
     @Override
     public Sede editarSede(Sede sede) {
         String sedeCiudad = sede.getCiudad();
@@ -657,6 +665,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
         return sedeRepo.save(sedeExistente);
     }
+
     @Override
     public Sede buscarSede(String ciudad) throws Exception {
         Sede sede = sedeRepo.findByCiudad(ciudad);
@@ -665,6 +674,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return sede;
     }
+
     public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
         List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
 
@@ -681,6 +691,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
     }
     return "Se han cargado las edades correctamente";
     }
+
     @Override
     public String subirResultados(List<CilindroDTO> cilindroDTOList) throws Exception {
 
@@ -699,17 +710,28 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         return "Se han cargado los resultados exitosamente";
     }
+
     @Override
     public List<ReporteDTO> listarReportes(FechasReporteDTO fechasReporteDTO) throws Exception {
 
         if(buscarObra(fechasReporteDTO.cr())){
             List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIntervalo(fechasReporteDTO.fechaInicio(), fechasReporteDTO.fechaFin(), fechasReporteDTO.cr());
-
             List<ReporteDTO> reporteDTOS = new ArrayList<>();
 
             double volumen = 1645;
 
             for(int i=0; i< cilindrosBuscados.size();i++){
+
+                double h=0;
+                double h1=0;
+                double d=0;
+
+                if ("Nucleo de 4".equals(cilindrosBuscados.get(i).getCompresionCilindros().getEnsayo().getNombreLegible())) {
+                    System.out.println("pasa por compresion de 4");
+                    h=2;
+                    h1=2;
+                    d=2;
+                }
 
                 double densidad= cilindrosBuscados.get(i).getPeso() / volumen;
                 double esfuerzo = (cilindrosBuscados.get(i).getCarga() * 1000) / 79/10-2; // Convertir kN a kg y calcular el esfuerzo en kg/cm²
@@ -738,12 +760,16 @@ throw new Exception("No se ha encontrado el cilindro buscado");
                         desarrollo,
                         obs,
                         cilindrosBuscados.get(i).getCompresionCilindros().getDescripcion(),
-                        cilindrosBuscados.get(i).getCompresionCilindros().getResistencia()));
+                        cilindrosBuscados.get(i).getCompresionCilindros().getResistencia(),
+                        cilindrosBuscados.get(i).getH(),
+                        cilindrosBuscados.get(i).getH1(),
+                        cilindrosBuscados.get(i).getD()));
             }
             return reporteDTOS;
         }
         return null;
     }
+
     private FormaFalla obtenerFormaFalla(int valor) throws Exception {
         for (FormaFalla formaFalla : FormaFalla.values()) {
             if (formaFalla.getValor() == valor) {
@@ -752,6 +778,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         }
         throw new Exception("Valor de FormaFalla no válido: " + valor);
     }
+
     @Override
     public  String registrarSuelo(RegistroSuelosDto registroSuelosDto) throws Exception{
 
@@ -775,6 +802,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             throw new Exception ("El CR ingresado no se encuentra registrado o pertenece a otra sede");
         }
     }
+
     @Override
     public String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception {
         // Verificar si la obra existe
@@ -819,6 +847,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
         return "La granulometría ha sido subida exitosamente";
     }
+
     @Override
     public GradacionDTO mostrarGranulometria(int codigo) throws Exception{
         Optional<Gradacion> gradacionBuscada = gradacionRepo.findById(codigo);

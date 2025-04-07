@@ -23,9 +23,10 @@ public record ReporteDTO(
         double desarrollo,
         String obs,
         String descripcion,
-
-        int resistencia
-
+        int resistencia,
+        float h,
+        float h1,
+        float d
 ) {
 }
 

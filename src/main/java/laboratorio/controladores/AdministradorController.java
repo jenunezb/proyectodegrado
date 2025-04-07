@@ -26,7 +26,6 @@ import java.util.Optional;
 
 public class AdministradorController {
 
-
     private final AdministradorServicio administradorServicio;
     private final DigitadorServicio digitadorServicio;
 

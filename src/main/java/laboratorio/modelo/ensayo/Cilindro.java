@@ -39,4 +39,14 @@ public class Cilindro implements Serializable {
 
     @Column
     LocalDate fechaFalla;
+
+    @Column
+    private Float h;
+
+    @Column
+    private Float h1;
+
+    @Column
+    private Float D;
+
 }

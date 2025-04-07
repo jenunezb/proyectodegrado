@@ -12,7 +12,10 @@ public record CilindroDTO(
         float peso,
         float carga,
         String obra,
-        int id
+        int id,
+        float h,
+        float h1,
+        float d
 
 ) {
 }
