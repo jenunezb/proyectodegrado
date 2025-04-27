@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class MuestraSuelos {
+public class Muestra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

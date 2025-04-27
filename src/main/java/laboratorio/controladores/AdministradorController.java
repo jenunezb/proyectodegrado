@@ -5,10 +5,12 @@ import jakarta.validation.Valid;
 import laboratorio.dto.*;
 import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
+import laboratorio.dto.suelos.ResaltesDTO;
 import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import laboratorio.servicios.interfaces.DigitadorServicio;
+import laboratorio.servicios.interfaces.ResalteServicio;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ public class AdministradorController {
 
     private final AdministradorServicio administradorServicio;
     private final DigitadorServicio digitadorServicio;
+    private final ResalteServicio resalteServicio;
 
     @PostMapping("/agregarDigitador")
     public ResponseEntity<MensajeDTO<String>> crearDigitador(@Valid @RequestBody UsuarioDTO usuarioDTO)throws Exception{
@@ -336,5 +339,37 @@ public class AdministradorController {
     public ResponseEntity<MensajeDTO<GradacionDTO>> mostrarGradacion(@PathVariable int codigo)throws Exception{
         GradacionDTO seccion = administradorServicio.mostrarGranulometria(codigo);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
+    }
+
+    // Crear un nuevo resalte
+    @PostMapping("/crearResalte")
+    public ResponseEntity<MensajeDTO<String>> crearResalte(@Valid @RequestBody ResaltesDTO resaltesDTO) throws Exception {
+        int codigoResalte = resalteServicio.crearResalte(resaltesDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Resalte creado correctamente con código: " + codigoResalte));
+    }
+
+    // Listar todos los resaltes
+    @GetMapping("/listarResaltes")
+    public ResponseEntity<List<ResaltesDTO>> listarResaltes() {
+        List<ResaltesDTO> resaltes = resalteServicio.listarResaltes();
+        return new ResponseEntity<>(resaltes, HttpStatus.OK);
+    }
+
+    // Obtener un resalte por su código
+    @GetMapping("/obtenerResaltes/{codigoResalte}")
+    public ResponseEntity<ResaltesDTO> obtenerResalte(@PathVariable int codigoResalte) throws Exception {
+        ResaltesDTO resalte = resalteServicio.obtenerResalte(codigoResalte);
+        return ResponseEntity.ok().body(resalte);
+    }
+
+    //modificar un resalte
+    @PutMapping("/resaltes/{codigoResalte}")
+    public ResponseEntity<MensajeDTO<String>> actualizarResalte(
+            @PathVariable int codigoResalte,
+            @Valid @RequestBody ResaltesDTO resaltesDTO) throws Exception {
+
+        resalteServicio.actualizarResalte(codigoResalte, resaltesDTO);
+
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "Resalte actualizado correctamente"));
     }
 }

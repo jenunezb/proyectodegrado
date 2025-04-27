@@ -541,7 +541,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
     }
 
     public List<SuelosDTO> listarSuelos(){
-        List<MuestraSuelos> muestraSuelos = sueloRepo.findAll();
+        List<Muestra> muestraSuelos = sueloRepo.findAll();
         List<SuelosDTO> listaregistroSuelosDto= new ArrayList<>();
         for (int i=0;i<muestraSuelos.size();i++){
             SuelosDTO registroSuelosDto = new SuelosDTO(
@@ -783,18 +783,18 @@ throw new Exception("No se ha encontrado el cilindro buscado");
     public  String registrarSuelo(RegistroSuelosDto registroSuelosDto) throws Exception{
 
         if(buscarObra(registroSuelosDto.cr())){
-            MuestraSuelos muestraSuelos = new MuestraSuelos();
-            muestraSuelos.setObra(obraRepo.findByCR(registroSuelosDto.cr()));
-            muestraSuelos.setMaterial(registroSuelosDto.material());
-            muestraSuelos.setLocalizacion(registroSuelosDto.localizacion());
-            muestraSuelos.setCantera(registroSuelosDto.cantera());
-            muestraSuelos.setFechaToma(registroSuelosDto.fechaToma());
-            muestraSuelos.setFechaRecibido(registroSuelosDto.fechaRecibido());
-            muestraSuelos.setDescripcion(registroSuelosDto.descripcion());
-            sueloRepo.save(muestraSuelos);
+            Muestra muestra = new Muestra();
+            muestra.setObra(obraRepo.findByCR(registroSuelosDto.cr()));
+            muestra.setMaterial(registroSuelosDto.material());
+            muestra.setLocalizacion(registroSuelosDto.localizacion());
+            muestra.setCantera(registroSuelosDto.cantera());
+            muestra.setFechaToma(registroSuelosDto.fechaToma());
+            muestra.setFechaRecibido(registroSuelosDto.fechaRecibido());
+            muestra.setDescripcion(registroSuelosDto.descripcion());
+            sueloRepo.save(muestra);
 
             Gradacion gradacion = new Gradacion();
-            gradacion.setMuestraSuelos(muestraSuelos);
+            gradacion.setMuestra(muestra);
             gradacionRepo.save(gradacion);
 
             return "La muestra se ha agregado correctamente";
@@ -811,15 +811,15 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             throw new Exception("No se encontró la obra con el CR especificado");
         }
 
-        MuestraSuelos muestraSuelos = muestraRepo.getById(granulometriaDTO.codigoMuestra());
+        Muestra muestra = muestraRepo.getById(granulometriaDTO.codigoMuestra());
 
-        if (muestraSuelos == null) {
+        if (muestra == null) {
             throw new Exception("No se encontró la obra con el la muestra especificada");
         }
 
         Gradacion gradacion = new Gradacion();
         gradacion.setFechaFalla(granulometriaDTO.fechaEnsayo());
-        gradacion.setMuestraSuelos(muestraSuelos);
+        gradacion.setMuestra(muestra);
 
         gradacionRepo.save(gradacion);
 
@@ -862,8 +862,8 @@ throw new Exception("No se ha encontrado el cilindro buscado");
             resultados.add(gradacionBuscada.get().getTamicesMasasList().get(i).getMasaRetenida());
             tamices.add(gradacionBuscada.get().getTamicesMasasList().get(i).getTamiz());
         }
-        GradacionDTO gradacionDTO = new GradacionDTO(gradacionBuscada.get().getMuestraSuelos().getObra().getCR(),
-                gradacionBuscada.get().getMuestraSuelos().getCodigo(),gradacionBuscada.get().getFechaFalla(), resultados,tamices);
+        GradacionDTO gradacionDTO = new GradacionDTO(gradacionBuscada.get().getMuestra().getObra().getCR(),
+                gradacionBuscada.get().getMuestra().getCodigo(),gradacionBuscada.get().getFechaFalla(), resultados,tamices);
 
         return gradacionDTO;
     }

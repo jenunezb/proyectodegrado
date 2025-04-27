@@ -3,7 +3,7 @@ import laboratorio.dto.*;
 import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.CompresionCilindros;
-import laboratorio.modelo.ensayo.MuestraSuelos;
+import laboratorio.modelo.ensayo.Muestra;
 import laboratorio.repositorios.*;
 import laboratorio.repositorios.ensayo.CompresionCilindrosRepo;
 import laboratorio.repositorios.ensayo.SueloRepo;
@@ -144,7 +144,7 @@ public class AutenticacionServicioImpl implements AutenticacionServicio {
     }
 
     public List<SuelosDTO> listarSuelos(){
-        List<MuestraSuelos> muestraSuelos = sueloRepo.findAll();
+        List<Muestra> muestraSuelos = sueloRepo.findAll();
         List<SuelosDTO> listaregistroSuelosDto= new ArrayList<>();
         for (int i=0;i<muestraSuelos.size();i++){
             SuelosDTO registroSuelosDto = new SuelosDTO(

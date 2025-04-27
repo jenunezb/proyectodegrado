@@ -11,18 +11,11 @@ import java.util.Optional;
 public interface AdministradorServicio {
 
     int crearAdministrador(AdministradorDTO administradorDTO) throws Exception;
-
     int crearDigitador (UsuarioDTO usuarioDTO) throws Exception;
-
     int crearIngeniero(UsuarioDTO usuarioDTO) throws Exception;
-
     int crearCliente(ClienteDTO clienteDTO) throws Exception;
-
-
     int crearEmpresa(EmpresaDTO empresaDTO) throws Exception;
-
     String crearSede(SedeDTO sedeDTO) throws Exception;
-
 
     int crearObra(ObraDTO obraDTO) throws Exception;
 

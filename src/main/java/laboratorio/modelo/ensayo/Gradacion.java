@@ -23,7 +23,7 @@ public class Gradacion implements Serializable {
 
     @OneToOne
     @JoinColumn(nullable = false)
-    private MuestraSuelos muestraSuelos;
+    private Muestra muestra;
 
     @Column
     private LocalDate fechaFalla;
