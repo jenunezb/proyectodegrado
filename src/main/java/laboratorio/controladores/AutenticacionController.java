@@ -75,6 +75,4 @@ public class AutenticacionController {
         List<ReporteDTO> reporte = administradorServicio.listarReportes(fechasReporte);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, reporte));
     }
-
-
 }
