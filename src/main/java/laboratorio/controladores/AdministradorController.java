@@ -361,7 +361,7 @@ public class AdministradorController {
         return ResponseEntity.ok(lista);
     }
 
-    @GetMapping("/{codigo}")
+    @GetMapping("/tension/{codigo}")
     public ResponseEntity<TensionDTO> buscar(@PathVariable int codigo) {
         Optional<Tension> encontrado = tensionService.buscarPorId(codigo);
         return encontrado.map(t -> ResponseEntity.ok(toDTO(t)))
