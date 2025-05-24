@@ -49,4 +49,10 @@ public class Tension implements Serializable {
 
     @Column(name = "carga_fluencia", precision = 10, scale = 4)
     private BigDecimal cargaFluencia;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private MuestraAcero muestraAcero;
+
+    
 }
