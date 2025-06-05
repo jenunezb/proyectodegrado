@@ -64,5 +64,6 @@ public interface AdministradorServicio {
     public List<SuelosDTO> listarSuelos();
     String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception;
     GradacionDTO mostrarGranulometria(int codigo) throws Exception;
+    ObraDTO buscarObraa(String cr) throws Exception;
 
 }

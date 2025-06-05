@@ -65,4 +65,7 @@ public class Obra implements Serializable {
     @JoinColumn
     private List<Digitador> digitadores;
 
+    @ManyToOne
+    @JoinColumn
+    private Sede sede;
 }

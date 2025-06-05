@@ -804,6 +804,19 @@ throw new Exception("No se ha encontrado el cilindro buscado");
     }
 
     @Override
+    public ObraDTO buscarObraa(String cr) throws Exception{
+        Obra obraBuscada = obraRepo.findByCR(cr);
+        if (obraBuscada == null) {
+            throw new Exception("No se ha encontrado la obra con el CR: " + cr);
+        }
+        ObraDTO obraDTO = new ObraDTO(obraBuscada.getDireccion(), obraBuscada.getNombre(), obraBuscada.getTelefono(),
+                obraBuscada.getCiudad().getNombre(),obraBuscada.getEmpresa().getNombre(),obraBuscada.getCR());
+
+        return obraDTO;
+    }
+
+
+    @Override
     public String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception {
         // Verificar si la obra existe
         Obra obra = obraRepo.findByCR(granulometriaDTO.cr());

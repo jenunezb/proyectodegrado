@@ -144,6 +144,13 @@ public class AdministradorController {
         administradorServicio.eliminarAdministrador(correo);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Se eliminó el administrador correctamente"));
     }
+
+    @GetMapping("/buscarObra/{cr}")
+    public ResponseEntity<ObraDTO> buscarObra(@PathVariable String cr) throws Exception {
+        ObraDTO obraEncontrada = administradorServicio.buscarObraa(cr);
+        return ResponseEntity.ok().body(obraEncontrada);
+    }
+
     @DeleteMapping("/eliminarIngeniero{correo}")
     public ResponseEntity<MensajeDTO<String>> eliminarIngeniero(@PathVariable String correo) throws Exception {
         administradorServicio.eliminarIngeniero(correo);
