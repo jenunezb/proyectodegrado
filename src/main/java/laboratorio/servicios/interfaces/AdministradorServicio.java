@@ -41,6 +41,7 @@ public interface AdministradorServicio {
     List<ClienteGetDTO> listarClientes();
 
     boolean buscarObra(String cr) throws Exception;
+    ObraDTO buscarObraa(String cr) throws Exception;
     List<ObraDTO> listarObras ();
     DetallePersonaDTO detalleIngeniero(int codigoIngeniero) throws Exception;
     DetallePersonaDTO detalleDigitador (int codigoDigitador) throws Exception;

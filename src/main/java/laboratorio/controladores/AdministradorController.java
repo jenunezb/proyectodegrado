@@ -179,6 +179,12 @@ public class AdministradorController {
         }
     }
 
+    @GetMapping("/buscarObra/{cr}")
+    public ResponseEntity<ObraDTO> buscarObra(@PathVariable String cr) throws Exception {
+        ObraDTO obraEncontrada = administradorServicio.buscarObraa(cr);
+        return ResponseEntity.ok().body(obraEncontrada);
+    }
+
     @PutMapping("/editarEmpresa{nit}")
     public ResponseEntity<Empresa> editarEmpresa(@RequestBody Empresa empresa) {
         try {

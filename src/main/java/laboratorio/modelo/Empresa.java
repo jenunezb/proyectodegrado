@@ -1,5 +1,6 @@
 package laboratorio.modelo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -26,6 +27,7 @@ public class Empresa {
     @Column(nullable = false, length = 50)
     private String telefono;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "empresa")
     private List<Obra> obras;
 
