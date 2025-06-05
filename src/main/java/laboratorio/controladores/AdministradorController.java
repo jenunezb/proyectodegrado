@@ -32,7 +32,13 @@ public class AdministradorController {
     private final DigitadorServicio digitadorServicio;
     private final ResalteServicio resalteServicio;
 
-    @PostMapping("/agregarDigitador")
+    @PostMapping("/crearAdministrador")
+    public ResponseEntity<MensajeDTO<String>> crearAdministrador(@Valid @RequestBody AdministradorDTO usuarioDTO)throws Exception{
+        administradorServicio.crearAdministrador(usuarioDTO);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el digitador correctamente"));
+    }
+
+    @PostMapping("/agregarAdministrador")
     public ResponseEntity<MensajeDTO<String>> crearDigitador(@Valid @RequestBody UsuarioDTO usuarioDTO)throws Exception{
         administradorServicio.crearDigitador(usuarioDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó el digitador correctamente"));
