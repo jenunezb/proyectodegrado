@@ -571,16 +571,30 @@ throw new Exception("No se ha encontrado la muestra buscada");
 
     @Override
     public List<EdadesDto> listarEdades(int id) {
-        List<Cilindro> cilindro = cilindroRepo.buscarPorIdCompresion(id);
+        Optional<CompresionCilindros> compresionCilindros = compresionCilindrosRepo.findById(id);
         List<EdadesDto> edades = new ArrayList<>();
 
-        for (int i = 0; i<cilindro.size();i++){
-            edades.add(new EdadesDto(
-               cilindro.get(i).getEdad(),
-               cilindro.get(i).getCompresionCilindros().getNumeroMuestra(),
-               cilindro.get(i).getCompresionCilindros().getCodigo()
-            ));
+        if(compresionCilindros.get().getEnsayo().getNombreLegible().equals("Compresión de 6")){
+            List<Cilindro> cilindro = cilindroRepo.buscarPorIdCompresion(id);
+            for (int i = 0; i<cilindro.size();i++){
+                edades.add(new EdadesDto(
+                        cilindro.get(i).getEdad(),
+                        cilindro.get(i).getCompresionCilindros().getNumeroMuestra(),
+                        cilindro.get(i).getCompresionCilindros().getCodigo()
+                ));
+            }
         }
+        else{
+            List<Viga> vigas = vigaRepo.buscarPorIdCompresion(id);
+            for (int i = 0; i<vigas.size();i++){
+                edades.add(new EdadesDto(
+                        vigas.get(i).getEdad(),
+                        vigas.get(i).getCompresionCilindros().getNumeroMuestra(),
+                        vigas.get(i).getCompresionCilindros().getCodigo()
+                ));
+            }
+        }
+
         return edades;
     }
 
@@ -693,18 +707,30 @@ throw new Exception("No se ha encontrado la muestra buscada");
     @Override
     public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
         List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
-
+        List<Viga> vigasBuscadas = vigaRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
         if(cilindrosBuscados.isEmpty()){
-            new Exception("No se ha podido guardar la edad correctamente");
+            if(vigasBuscadas.isEmpty()){
+                throw new Exception("No se ha podido guardar la edad correctamente");
+            }
+            for (int i=0; i<edadesDto.size(); i++){
+                vigasBuscadas.get(i).setEdad(edadesDto.get(i).edad());
+                LocalDate fechaToma = vigasBuscadas.get(i).getCompresionCilindros().getFechaToma();
+                int edad = edadesDto.get(i).edad();
+                LocalDate fechaFalla = fechaToma.plusDays(edad);
+                vigasBuscadas.get(i).setFechaFalla(fechaFalla);
+                vigaRepo.save(vigasBuscadas.get(i));
+            }
+        }else{
+            for (int i=0; i<edadesDto.size(); i++){
+                cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
+                LocalDate fechaToma = cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma();
+                int edad = edadesDto.get(i).edad();
+                LocalDate fechaFalla = fechaToma.plusDays(edad);
+                cilindrosBuscados.get(i).setFechaFalla(fechaFalla);
+                cilindroRepo.save(cilindrosBuscados.get(i));
+            }
         }
-    for (int i=0; i<edadesDto.size(); i++){
-        cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
-        LocalDate fechaToma = cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma();
-        int edad = edadesDto.get(i).edad();
-        LocalDate fechaFalla = fechaToma.plusDays(edad);
-        cilindrosBuscados.get(i).setFechaFalla(fechaFalla);
-        cilindroRepo.save(cilindrosBuscados.get(i));
-    }
+
     return "Se han cargado las edades correctamente";
     }
 
