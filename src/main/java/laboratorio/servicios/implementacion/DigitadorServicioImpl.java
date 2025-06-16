@@ -89,9 +89,12 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     public List<CilindroDTO> mostrarOden(OrdenDTO ordenDTO) throws Exception {
 
         if (!ordenDTO.cr().isBlank()){
+            if(cilindroRepo.findByCrOnly(ordenDTO.cr()).isEmpty()){
+                throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
+            }
                 List<Cilindro> compresionCilindros = cilindroRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
                 if(compresionCilindros.isEmpty()){
-                    throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
+                    throw new Exception("No hay ordenes pendientes para el CR: "+ ordenDTO.cr());
                 }
                 List<CilindroDTO> cilindroDTOS = new ArrayList<>();
             for (Cilindro cilindro: compresionCilindros) {
