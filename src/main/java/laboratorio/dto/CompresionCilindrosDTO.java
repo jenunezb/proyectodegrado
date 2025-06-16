@@ -6,8 +6,8 @@ import java.time.LocalDate;
 
 public record CompresionCilindrosDTO(
         String cr,
-        TipoMuestraCilindro tipoMuestraCilindro,
         String seccion,
+        TipoMuestraCilindro ensayo,
         String numeroMuestra,
         int resistencia,
         int cantidad,

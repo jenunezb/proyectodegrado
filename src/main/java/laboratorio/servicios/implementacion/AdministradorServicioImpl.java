@@ -192,8 +192,10 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         Obra obra = new Obra();
 
-        Optional<Empresa> empresa = empresaRepo.findByNombre(obraDTO.empresa());
-        obra.setEmpresa(empresa.get());
+        Empresa empresa = empresaRepo.findByNombre(obraDTO.empresa())
+                .orElseThrow(() -> new RuntimeException("La empresa '" + obraDTO.empresa() + "' no fue encontrada"));
+
+        obra.setEmpresa(empresa);
         obra.setDireccion(obraDTO.direccion());
         obra.setFecha_inicio(LocalDate.now());
         obra.setNombre(obraDTO.nombre());

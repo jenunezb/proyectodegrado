@@ -60,6 +60,7 @@ public class AutenticacionController {
         List<CilindrosList> cilindros = digitadorServicio.listarCilindros();
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
+
     @GetMapping("/listarSuelos")
     public ResponseEntity<MensajeDTO<List<SuelosDTO>>> listarSuelos()throws Exception{
         List<SuelosDTO> seccion = administradorServicio.listarSuelos();

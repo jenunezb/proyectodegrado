@@ -270,7 +270,7 @@ public class AdministradorController {
         }
     }
 
-    @PostMapping("/agregarCilindros")
+    @PostMapping("/agregarConcretos")
     public ResponseEntity<MensajeDTO<String>> agregarMuestra(@Valid @RequestBody CompresionCilindrosDTO compresionCilindrosDTO) throws Exception{
         digitadorServicio.agregarMuestra(compresionCilindrosDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la muestra correctamente"));

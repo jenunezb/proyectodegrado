@@ -2,9 +2,11 @@ package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
 import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.CompresionCilindros;
+import laboratorio.modelo.ensayo.Viga;
 import laboratorio.repositorios.ObraRepo;
 import laboratorio.repositorios.ensayo.CilindroRepo;
 import laboratorio.repositorios.ensayo.CompresionCilindrosRepo;
+import laboratorio.repositorios.ensayo.VigaRepo;
 import laboratorio.servicios.interfaces.DigitadorServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     private final CompresionCilindrosRepo compresionCilindrosRepo;
     private final ObraRepo obraRepo;
     private final CilindroRepo cilindroRepo;
+    private final VigaRepo vigaRepo;
 
     @Override
     public int agregarMuestra(CompresionCilindrosDTO compresionCilindrosDTO) throws Exception{
@@ -31,7 +34,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         }
 
         compresionCilindros.setObra(obraRepo.findByCR(compresionCilindrosDTO.cr()));
-        compresionCilindros.setEnsayo(compresionCilindrosDTO.tipoMuestraCilindro());
+        compresionCilindros.setEnsayo(compresionCilindrosDTO.ensayo());
         compresionCilindros.setSeccion(compresionCilindrosDTO.seccion());
         compresionCilindros.setNumeroMuestra(compresionCilindrosDTO.numeroMuestra());
         compresionCilindros.setFechaToma(LocalDate.from(compresionCilindrosDTO.fechaToma()));
@@ -41,13 +44,27 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         compresionCilindros.setObservaciones(compresionCilindrosDTO.observaciones());
         compresionCilindrosRepo.save(compresionCilindros);
 
-        for(int i=0;i< compresionCilindrosDTO.cantidad();i++){
-            Cilindro cilindro = new Cilindro();
-            cilindro.setCompresionCilindros(compresionCilindros);
-            cilindro.setH(0f);
-            cilindro.setH1(0f);
-            cilindro.setD(0f);
-            cilindroRepo.save(cilindro);
+        System.out.println(compresionCilindrosDTO.ensayo());
+        //Si la muestra es cilindro de 6"
+        if(compresionCilindros.getEnsayo().getNombreLegible().equals("Compresión de 6")){
+            for(int i=0;i< compresionCilindrosDTO.cantidad();i++){
+                Cilindro cilindro = new Cilindro();
+                cilindro.setCompresionCilindros(compresionCilindros);
+                cilindro.setH(0f);
+                cilindro.setH1(0f);
+                cilindro.setD(0f);
+                cilindroRepo.save(cilindro);
+            }
+        }
+        else if(compresionCilindros.getEnsayo().getNombreLegible().equals("Flexión")){
+            for(int i=0;i< compresionCilindrosDTO.cantidad();i++){
+                Viga viga = new Viga();
+                viga.setCompresionCilindros(compresionCilindros);
+                vigaRepo.save(viga);
+            }
+        }
+        else {
+            throw new Exception("no funciona el tipo de muestra");
         }
 
         return compresionCilindros.getCodigo();
