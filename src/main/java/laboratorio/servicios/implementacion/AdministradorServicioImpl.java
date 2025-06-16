@@ -3,6 +3,7 @@ import laboratorio.dto.*;
 import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.SuelosDTO;
+import laboratorio.dto.vigas.VigasGetDTO;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.*;
 import laboratorio.repositorios.*;
@@ -40,6 +41,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final GradacionRepo gradacionRepo;
     private final MuestraRepo muestraRepo;
     private final TamicesMasasRepo tamicesMasasRepo;
+    private final VigaRepo vigaRepo;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -296,7 +298,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return empresaGetDTOS;
     }
 
-
     @Override
     public List<SedeDTO> listarSedes() {
         List<Sede> sedeList = sedeRepo.findAll();
@@ -541,7 +542,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         Optional<CompresionCilindros> compresionCilindrosBuscado = compresionCilindrosRepo.findById(codigo);
         if(compresionCilindrosBuscado.isEmpty()){
-throw new Exception("No se ha encontrado el cilindro buscado");
+throw new Exception("No se ha encontrado la muestra buscada");
         }
         return compresionCilindrosBuscado;
     }
@@ -687,6 +688,7 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         return sede;
     }
 
+    @Override
     public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
         List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
 
@@ -706,7 +708,6 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
     @Override
     public String subirResultados(List<CilindroDTO> cilindroDTOList) throws Exception {
-
         for (CilindroDTO cilindroDTO : cilindroDTOList) {
             Optional<Cilindro> cilindroOptional = cilindroRepo.findById(cilindroDTO.id());
             if (cilindroOptional.isPresent()) {
@@ -878,5 +879,45 @@ throw new Exception("No se ha encontrado el cilindro buscado");
                 gradacionBuscada.get().getMuestraSuelos().getCodigo(),gradacionBuscada.get().getFechaFalla(), resultados,tamices);
 
         return gradacionDTO;
+    }
+
+    @Override
+    public String guardarEdadesVigas(List<EdadesDto> edadesDto) throws Exception{
+        List<Viga> vigasBuscadas = vigaRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
+
+        if(vigasBuscadas.isEmpty()){
+            new Exception("No se ha podido guardar la edad correctamente");
+        }
+        for (int i=0; i<edadesDto.size(); i++){
+            vigasBuscadas.get(i).setEdad(edadesDto.get(i).edad());
+            LocalDate fechaToma = vigasBuscadas.get(i).getCompresionCilindros().getFechaToma();
+            int edad = edadesDto.get(i).edad();
+            LocalDate fechaFalla = fechaToma.plusDays(edad);
+            vigasBuscadas.get(i).setFechaFalla(fechaFalla);
+            vigaRepo.save(vigasBuscadas.get(i));
+        }
+        return "Se han cargado las edades correctamente";
+    }
+
+    @Override
+    public String subirResultadosVigas(List<VigasGetDTO> vigasGetDTOList) throws Exception {
+        for (VigasGetDTO vigasGetDTO : vigasGetDTOList){
+            Optional<Viga> vigaOptional = vigaRepo.findById(vigasGetDTO.id());
+            if(vigaOptional.isPresent()){
+                Viga viga = vigaOptional.get();
+                viga.setCarga(vigasGetDTO.carga());
+                viga.setA(vigasGetDTO.a());
+                viga.setL(vigasGetDTO.l());
+                viga.setAncho(vigasGetDTO.ancho());
+                viga.setFondo(vigasGetDTO.fondo());
+
+                // Guardar la obra asociada al cilindro
+                Obra obra = viga.getCompresionCilindros().getObra();
+                obraRepo.save(obra);
+            }else {
+                throw new Exception("No se encontró la viga con ID: " + vigasGetDTO.id());
+            }
+        }
+        return "Se han cargado los resultados exitosamente";
     }
 }

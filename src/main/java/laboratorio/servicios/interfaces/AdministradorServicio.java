@@ -3,6 +3,7 @@ import laboratorio.dto.*;
 import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.SuelosDTO;
+import laboratorio.dto.vigas.VigasGetDTO;
 import laboratorio.modelo.*;
 
 import java.util.List;
@@ -72,5 +73,7 @@ public interface AdministradorServicio {
     public List<SuelosDTO> listarSuelos();
     String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception;
     GradacionDTO mostrarGranulometria(int codigo) throws Exception;
+    String guardarEdadesVigas(List<EdadesDto> edadesDto) throws Exception;
+    String subirResultadosVigas(List<VigasGetDTO> cilindroDTOList) throws Exception;
 
 }

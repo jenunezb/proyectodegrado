@@ -7,6 +7,7 @@ import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.SuelosDTO;
 import laboratorio.dto.suelos.TensionDTO;
+import laboratorio.dto.vigas.VigasGetDTO;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.aceros.Tension;
 import laboratorio.servicios.interfaces.AdministradorServicio;
@@ -320,6 +321,13 @@ public class AdministradorController {
         String mensaje = administradorServicio.subirResultados(cilindroDTOList);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
     }
+
+    @PostMapping("/subirResultadosVigas")
+    public ResponseEntity<MensajeDTO<String>> subirRultadosVigas(@RequestBody List<VigasGetDTO> vigasGetDTOList) throws Exception {
+        String mensaje = administradorServicio.subirResultadosVigas(vigasGetDTOList);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
+    }
+
     @PostMapping("/listarReportes")
     public ResponseEntity<MensajeDTO<List<ReporteDTO>>> listarReportes(@RequestBody FechasReporteDTO fechasReporte)throws Exception{
         List<ReporteDTO> reporte = administradorServicio.listarReportes(fechasReporte);

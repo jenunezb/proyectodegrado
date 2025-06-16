@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -41,4 +42,7 @@ public class Viga implements Serializable {
 
     @Column
     private int a; //distancia desde el apoyo hasta la carga (mm)
+
+    @Column
+    private LocalDate fechaFalla;
 }
