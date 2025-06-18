@@ -305,6 +305,12 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
+    @PostMapping("/listarOrdenVigas")
+    public ResponseEntity<MensajeDTO<List<VigasGetDTO>>> listarOrdenVigas(@RequestBody OrdenDTO ordenDtos) throws Exception {
+        List<VigasGetDTO> vigas = digitadorServicio.mostrarOdenVigas(ordenDtos);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, vigas));
+    }
+
     @PostMapping("/asignarObras")
     public ResponseEntity<MensajeDTO<String>> asignarObras(@RequestBody AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception {
         String seccion = administradorServicio.asignarObra(asignarObrasRequestDTO);

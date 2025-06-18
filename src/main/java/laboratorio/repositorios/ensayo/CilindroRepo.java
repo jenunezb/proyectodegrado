@@ -1,6 +1,5 @@
 package laboratorio.repositorios.ensayo;
 
-import laboratorio.controladores.ImagenesController;
 import laboratorio.modelo.ensayo.Cilindro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

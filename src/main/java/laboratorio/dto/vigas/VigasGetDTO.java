@@ -8,13 +8,13 @@ public record VigasGetDTO(
         String ensayo,
         LocalDate fechaToma,
         LocalDate fechaFalla,
-        int edad,
-        float carga,
+        Integer edad,
+        Float carga,
         String obra,
-        int id,
-        float ancho,
-        float fondo,
-        int l,
-        int a
+        Integer id,
+        Float ancho,
+        Float fondo,
+        Integer l,
+        Integer a
 ) {
 }

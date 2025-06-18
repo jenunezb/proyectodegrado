@@ -1,5 +1,6 @@
 package laboratorio.servicios.implementacion;
 import laboratorio.dto.*;
+import laboratorio.dto.vigas.VigasGetDTO;
 import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.CompresionCilindros;
 import laboratorio.modelo.ensayo.Viga;
@@ -12,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -234,4 +233,43 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         String nombreObra = obraRepo.findByCR(cr).getNombre();
         return nombreObra;
     }
+
+    @Override
+    public List<VigasGetDTO> mostrarOdenVigas(OrdenDTO ordenDTO) throws Exception {
+
+        if (!ordenDTO.cr().isBlank()){
+            if(vigaRepo.findByCrOnly(ordenDTO.cr()).isEmpty()){
+                throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
+            }
+            List<Viga> compresionVigas = vigaRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
+            if(compresionVigas.isEmpty()){
+                throw new Exception("No hay ordenes pendientes para el CR: "+ ordenDTO.cr());
+            }
+            return getVigasGetDTOS(compresionVigas);
+        }
+
+        List<Viga> compresionVigas = vigaRepo.findByDate(ordenDTO.fecha());
+        return getVigasGetDTOS(compresionVigas);
+    }
+
+    private List<VigasGetDTO> getVigasGetDTOS(List<Viga> compresionVigas) {
+        List<VigasGetDTO> vigasGetDTOList = new ArrayList<>();
+        for (Viga viga: compresionVigas) {
+            vigasGetDTOList.add( new VigasGetDTO(viga.getCompresionCilindros().getObra().getCR(),
+                    viga.getCompresionCilindros().getNumeroMuestra(),
+                    viga.getCompresionCilindros().getEnsayo().getNombreLegible(),
+                    viga.getCompresionCilindros().getFechaToma(),
+                    viga.getCompresionCilindros().getFechaToma().plusDays(viga.getEdad()),
+                    viga.getEdad(),
+                    viga.getCarga(),
+                    viga.getCompresionCilindros().getObra().getNombre(),
+                    viga.getCodigo(),
+                    viga.getAncho(),
+                    viga.getFondo(),
+                    viga.getL(),
+                    viga.getA()));
+        }
+        return vigasGetDTOList;
+    }
+
 }
