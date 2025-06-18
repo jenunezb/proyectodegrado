@@ -254,7 +254,26 @@ public class DigitadorServicioImpl implements DigitadorServicio {
 
     private List<VigasGetDTO> getVigasGetDTOS(List<Viga> compresionVigas) {
         List<VigasGetDTO> vigasGetDTOList = new ArrayList<>();
-        for (Viga viga: compresionVigas) {
+        return getVigasGetDTOS(vigasGetDTOList, compresionVigas);
+    }
+
+    @Override
+    public List<VigasGetDTO> listarResultadosVigas(OrdenDTO ordenDTO) throws Exception {
+        List<VigasGetDTO> vigasGetDTOList = new ArrayList<>();
+        if (!ordenDTO.cr().isBlank()){
+            List<Viga> flexionVigas = vigaRepo.buscarResultados(ordenDTO.cr(), ordenDTO.fecha());
+            if(flexionVigas.isEmpty()){
+                throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
+            }
+            return getVigasGetDTOS(vigasGetDTOList, flexionVigas);
+        }
+
+        List<Viga> flexionVigas = vigaRepo.BuscarHastaLaFecha(ordenDTO.fecha());
+        return getVigasGetDTOS(vigasGetDTOList, flexionVigas);
+    }
+
+    private List<VigasGetDTO> getVigasGetDTOS(List<VigasGetDTO> vigasGetDTOList, List<Viga> flexionVigas) {
+        for (Viga viga: flexionVigas) {
             vigasGetDTOList.add( new VigasGetDTO(viga.getCompresionCilindros().getObra().getCR(),
                     viga.getCompresionCilindros().getNumeroMuestra(),
                     viga.getCompresionCilindros().getEnsayo().getNombreLegible(),
@@ -270,36 +289,6 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     viga.getA()));
         }
         return vigasGetDTOList;
-    }
-
-    @Override
-    public List<VigasGetDTO> listarResultadosVigas(OrdenDTO ordenDTO) throws Exception {
-        List<VigasGetDTO> vigasGetDTOList = new ArrayList<>();
-
-        if (!ordenDTO.cr().isBlank()){
-            List<Viga> flexionVigas = vigaRepo.buscarResultados(ordenDTO.cr(), ordenDTO.fecha());
-            if(flexionVigas.isEmpty()){
-                throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
-            }
-            for (Viga viga: flexionVigas) {
-
-                vigasGetDTOList.add( new VigasGetDTO(viga.getCompresionCilindros().getObra().getCR(),
-                        viga.getCompresionCilindros().getNumeroMuestra(),
-                        viga.getCompresionCilindros().getEnsayo().getNombreLegible(),
-                        viga.getCompresionCilindros().getFechaToma(),
-                        viga.getCompresionCilindros().getFechaToma().plusDays(viga.getEdad()),
-                        viga.getEdad(),
-                        viga.getCarga(),
-                        viga.getCompresionCilindros().getObra().getNombre(),
-                        viga.getCodigo(),
-                        viga.getAncho(),
-                        viga.getFondo(),
-                        viga.getL(),
-                        viga.getA()));
-            }
-        }
-        return vigasGetDTOList;
-
     }
 
 }
