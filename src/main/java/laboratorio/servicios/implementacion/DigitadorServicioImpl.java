@@ -139,16 +139,40 @@ public class DigitadorServicioImpl implements DigitadorServicio {
         List<CompresionCilindros> compresionCilindros = compresionCilindrosRepo.findAll();
         List<CilindrosList> cilindrosListsDTOS = new ArrayList<>();
 
-        for (int i=0; i< compresionCilindros.size(); i++){
-            cilindrosListsDTOS.add(new CilindrosList(
-                    compresionCilindros.get(i).getObra().getCR(),
-                    compresionCilindros.get(i).getNumeroMuestra(),
-                    compresionCilindros.get(i).getObra().getNombre(),
-                    compresionCilindros.get(i).getSeccion(),
-                    compresionCilindros.get(i).getFechaToma(),
-                    compresionCilindros.get(i).getEnsayo().getNombreLegible(),
-                    compresionCilindros.get(i).getCodigo()
-            ));
+        for (CompresionCilindros cilindros : compresionCilindros) {
+            if (cilindros.getEnsayo().getNombreLegible().equals("Compresión de 6")) {
+                cilindrosListsDTOS.add(new CilindrosList(
+                        cilindros.getObra().getCR(),
+                        cilindros.getNumeroMuestra(),
+                        cilindros.getObra().getNombre(),
+                        cilindros.getSeccion(),
+                        cilindros.getFechaToma(),
+                        cilindros.getEnsayo().getNombreLegible(),
+                        cilindros.getCodigo()
+                ));
+            }
+        }
+            return cilindrosListsDTOS;
+        }
+
+    @Override
+    public List<CilindrosList> listarVigas() throws Exception {
+        List<CompresionCilindros> compresionCilindros = compresionCilindrosRepo.findAll();
+        List<CilindrosList> cilindrosListsDTOS = new ArrayList<>();
+
+
+        for (CompresionCilindros compresionCilindro : compresionCilindros) {
+            if (compresionCilindro.getEnsayo().getNombreLegible().equals("Flexión")) {
+                cilindrosListsDTOS.add(new CilindrosList(
+                        compresionCilindro.getObra().getCR(),
+                        compresionCilindro.getNumeroMuestra(),
+                        compresionCilindro.getObra().getNombre(),
+                        compresionCilindro.getSeccion(),
+                        compresionCilindro.getFechaToma(),
+                        compresionCilindro.getEnsayo().getNombreLegible(),
+                        compresionCilindro.getCodigo()
+                ));
+            }
         }
         return cilindrosListsDTOS;
     }
@@ -156,7 +180,7 @@ public class DigitadorServicioImpl implements DigitadorServicio {
     @Override
     public List<CilindroDTO> listarResultados(OrdenDTO ordenDTO) throws Exception {
         if (!ordenDTO.cr().isBlank()){
-            List<Cilindro> compresionCilindros = cilindroRepo.findByCr(ordenDTO.cr(), ordenDTO.fecha());
+            List<Cilindro> compresionCilindros = cilindroRepo.buscarResultados(ordenDTO.cr(), ordenDTO.fecha());
             if(compresionCilindros.isEmpty()){
                 throw new Exception("no existe el cr "+ordenDTO.cr()+" o pertenece a otra sucursal");
             }

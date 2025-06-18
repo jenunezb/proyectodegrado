@@ -10,8 +10,13 @@ import java.util.List;
 
 public interface CilindroRepo extends JpaRepository<Cilindro, Integer> {
 
-    @Query("select c from Cilindro c where c.compresionCilindros.obra.CR=:cr and c.fechaFalla<=:fecha")
+    //Se usa para mostrar la orden
+    @Query("select c from Cilindro c where c.compresionCilindros.obra.CR=:cr and c.fechaFalla=:fecha")
     List<Cilindro> findByCr(String cr, LocalDate fecha);
+
+    //Se usa para mostrar los resultados
+    @Query("select c from Cilindro c where c.compresionCilindros.obra.CR=:cr and c.fechaFalla<=:fecha")
+    List<Cilindro> buscarResultados(String cr, LocalDate fecha);
 
     @Query("select c from Cilindro c where c.compresionCilindros.obra.CR=:cr")
     List<Cilindro> findByCrOnly(String cr);

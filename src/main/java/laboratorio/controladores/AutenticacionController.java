@@ -61,6 +61,12 @@ public class AutenticacionController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
+    @GetMapping("/listarVigas")
+    public ResponseEntity<MensajeDTO<List<CilindrosList>>> listarVigas()throws Exception{
+        List<CilindrosList> cilindros = digitadorServicio.listarVigas();
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
+    }
+
     @GetMapping("/listarSuelos")
     public ResponseEntity<MensajeDTO<List<SuelosDTO>>> listarSuelos()throws Exception{
         List<SuelosDTO> seccion = administradorServicio.listarSuelos();
