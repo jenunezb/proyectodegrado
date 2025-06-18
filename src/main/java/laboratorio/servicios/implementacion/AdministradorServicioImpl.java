@@ -510,10 +510,21 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
     public void eliminarCompresionCilindro(int codigo) throws Exception {
         Optional<CompresionCilindros> buscarCilindro = buscarCilindro(codigo);
+
+        if (buscarCilindro.isEmpty()) {
+            throw new Exception("Cilindro no encontrado.");
+        }
+        CompresionCilindros cilindro = buscarCilindro.get();
         try {
-           compresionCilindrosRepo.deleteById(buscarCilindro.get().getCodigo());
+            // Primero eliminar las vigas asociadas
+            List<Viga> vigas = vigaRepo.findByCompresionCilindrosCodigo(cilindro.getCodigo());
+            vigaRepo.deleteAll(vigas);
+
+            // Luego eliminar el cilindro
+            compresionCilindrosRepo.deleteById(cilindro.getCodigo());
+
         } catch (DataIntegrityViolationException e) {
-            throw new Exception("No se puede eliminar la muestra porque está en uso.");
+            throw new Exception("No se puede eliminar el cilindro porque está en uso.");
         }
     }
 

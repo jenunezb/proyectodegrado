@@ -31,4 +31,8 @@ public interface VigaRepo extends JpaRepository<Viga, Integer> {
     //Se usa para mostrar los resultados
     @Query("select c from Viga c where c.compresionCilindros.obra.CR=:cr and c.fechaFalla<=:fecha")
     List<Viga> buscarResultados(String cr, LocalDate fecha);
+
+
+    List<Viga> findByCompresionCilindrosCodigo(Integer codigo);
+
 }
