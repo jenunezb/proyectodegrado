@@ -15,6 +15,7 @@ public record CilindroDTO(
         int id,
         float h,
         float h1,
-        float d
+        float d,
+        Integer formaFalla
 ) {
 }

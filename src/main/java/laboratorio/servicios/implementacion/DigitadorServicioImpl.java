@@ -110,7 +110,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                         cilindro.getCodigo(),
                         cilindro.getD(),
                         cilindro.getH1(),
-                        cilindro.getD()));
+                        cilindro.getD(),
+                        cilindro.getFormaFalla().getValor()));
             }
             return cilindroDTOS;
         }
@@ -129,7 +130,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     cilindro.getCompresionCilindros().getObra().getNombre(),cilindro.getCodigo(),
                     cilindro.getD(),
                     cilindro.getH1(),
-                    cilindro.getD()));
+                    cilindro.getD(),
+                    cilindro.getFormaFalla().getValor()));
         }
         return cilindroDTOS;
     }
@@ -186,6 +188,11 @@ public class DigitadorServicioImpl implements DigitadorServicio {
             }
             List<CilindroDTO> cilindroDTOS = new ArrayList<>();
             for (Cilindro cilindro: compresionCilindros) {
+
+                Integer formaFallaValor = (cilindro.getFormaFalla() != null)
+                        ? cilindro.getFormaFalla().getValor()
+                        : null;
+
                 cilindroDTOS.add( new CilindroDTO(cilindro.getCompresionCilindros().getObra().getCR(),
                         cilindro.getCompresionCilindros().getNumeroMuestra(),
                         cilindro.getCompresionCilindros().getEnsayo().getNombreLegible(),
@@ -197,8 +204,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                         cilindro.getCompresionCilindros().getObra().getNombre(),cilindro.getCodigo(),
                         cilindro.getD(),
                         cilindro.getH1(),
-                        cilindro.getD()));
-            }
+                        cilindro.getD(),
+                        formaFallaValor));            }
             return cilindroDTOS;
         }
 
@@ -217,7 +224,8 @@ public class DigitadorServicioImpl implements DigitadorServicio {
                     cilindro.getCodigo(),
                     cilindro.getD(),
                     cilindro.getH1(),
-                    cilindro.getD()));
+                    cilindro.getD(),
+                    cilindro.getFormaFalla().getValor()));
         }
         return cilindroDTOS;
     }

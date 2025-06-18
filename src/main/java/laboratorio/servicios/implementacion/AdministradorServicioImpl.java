@@ -44,6 +44,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final VigaRepo vigaRepo;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
+
     @Override
     public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception {
 
@@ -742,6 +743,7 @@ throw new Exception("No se ha encontrado la muestra buscada");
                 Cilindro cilindro = cilindroOptional.get();
                 cilindro.setCarga(cilindroDTO.carga());
                 cilindro.setPeso(cilindroDTO.peso());
+                cilindro.setFormaFalla(FormaFalla.desdeValor(cilindroDTO.formaFalla()));
                 // Guardar la obra asociada al cilindro
                 Obra obra = cilindro.getCompresionCilindros().getObra();
                 obraRepo.save(obra);
