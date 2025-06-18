@@ -1,5 +1,6 @@
 package laboratorio.repositorios.ensayo;
 
+import laboratorio.modelo.ensayo.Cilindro;
 import laboratorio.modelo.ensayo.Viga;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,4 +27,8 @@ public interface VigaRepo extends JpaRepository<Viga, Integer> {
 
     @Query("select c from Viga c where c.compresionCilindros.obra.CR=:cr")
     List<Viga> findByCrOnly(String cr);
+
+    //Se usa para mostrar los resultados
+    @Query("select c from Viga c where c.compresionCilindros.obra.CR=:cr and c.fechaFalla<=:fecha")
+    List<Viga> buscarResultados(String cr, LocalDate fecha);
 }

@@ -322,6 +322,12 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
+    @PostMapping("/listarResultadosVigas")
+    public ResponseEntity<MensajeDTO<List<VigasGetDTO>>> listarResultadosVigas(@RequestBody OrdenDTO ordenDtos) throws Exception {
+        List<VigasGetDTO> vigas = digitadorServicio.listarResultadosVigas(ordenDtos);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, vigas));
+    }
+
     @PostMapping("/subirResultados")
     public ResponseEntity<MensajeDTO<String>> subirRultados(@RequestBody List<CilindroDTO> cilindroDTOList) throws Exception {
         String mensaje = administradorServicio.subirResultados(cilindroDTOList);

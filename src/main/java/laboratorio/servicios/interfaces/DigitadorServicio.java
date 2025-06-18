@@ -16,4 +16,5 @@ public interface DigitadorServicio {
     List<CilindroDTO> listarResultados(OrdenDTO ordenDTO) throws Exception;
     List<CilindrosList> listarVigas() throws Exception;
     List<VigasGetDTO> mostrarOdenVigas(OrdenDTO ordenDTO) throws Exception;
+    List<VigasGetDTO> listarResultadosVigas(OrdenDTO ordenDTO) throws Exception;
 }
