@@ -364,18 +364,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     }
 
     @Override
-    public ObraDTO buscarObraa(String cr) throws Exception{
-        Obra obraBuscada = obraRepo.findByCR(cr);
-        if (obraBuscada == null) {
-            throw new Exception("No se ha encontrado la obra con el CR: " + cr);
-        }
-        ObraDTO obraDTO = new ObraDTO(obraBuscada.getDireccion(), obraBuscada.getNombre(), obraBuscada.getTelefono(),
-                obraBuscada.getCiudad().getNombre(),obraBuscada.getEmpresa().getNombre(),obraBuscada.getCR());
-
-        return obraDTO;
-    }
-
-    @Override
     public List<ObraDTO> listarObras() {
         List<Obra> obraList = obraRepo.findAll();
         List<ObraDTO> obraGetDTOS = new ArrayList<>();

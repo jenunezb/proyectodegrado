@@ -66,11 +66,7 @@ public interface AdministradorServicio {
     public List<SuelosDTO> listarSuelos();
     String subirGranulometria(GradacionDTO granulometriaDTO) throws Exception;
     GradacionDTO mostrarGranulometria(int codigo) throws Exception;
-<<<<<<< HEAD
-    ObraDTO buscarObraa(String cr) throws Exception;
-=======
     String guardarEdadesVigas(List<EdadesDto> edadesDto) throws Exception;
     String subirResultadosVigas(List<VigasGetDTO> cilindroDTOList) throws Exception;
->>>>>>> main
 
 }
