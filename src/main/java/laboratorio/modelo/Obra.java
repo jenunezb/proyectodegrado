@@ -68,8 +68,4 @@ public class Obra implements Serializable {
     @ManyToOne
     @JoinColumn
     private Sede sede;
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 }

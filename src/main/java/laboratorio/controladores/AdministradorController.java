@@ -13,11 +13,7 @@ import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.aceros.Tension;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import laboratorio.servicios.interfaces.DigitadorServicio;
-<<<<<<< HEAD
 import laboratorio.servicios.interfaces.ResalteServicio;
-=======
-import laboratorio.servicios.interfaces.TensionService;
->>>>>>> main
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,11 +34,7 @@ public class AdministradorController {
 
     private final AdministradorServicio administradorServicio;
     private final DigitadorServicio digitadorServicio;
-<<<<<<< HEAD
     private final ResalteServicio resalteServicio;
-=======
-    private final TensionService tensionService;
->>>>>>> main
 
     @PostMapping("/crearAdministrador")
     public ResponseEntity<MensajeDTO<String>> crearAdministrador(@Valid @RequestBody AdministradorDTO usuarioDTO)throws Exception{
@@ -200,12 +192,6 @@ public class AdministradorController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-    }
-
-    @GetMapping("/buscarObra/{cr}")
-    public ResponseEntity<ObraDTO> buscarObra(@PathVariable String cr) throws Exception {
-        ObraDTO obraEncontrada = administradorServicio.buscarObraa(cr);
-        return ResponseEntity.ok().body(obraEncontrada);
     }
 
     @PutMapping("/editarEmpresa{nit}")
@@ -391,7 +377,6 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
     }
 
-<<<<<<< HEAD
     // Crear un nuevo resalte
     @PostMapping("/crearResalte")
     public ResponseEntity<MensajeDTO<String>> crearResalte(@Valid @RequestBody ResaltesDTO resaltesDTO) throws Exception {
@@ -422,75 +407,6 @@ public class AdministradorController {
         resalteServicio.actualizarResalte(codigoResalte, resaltesDTO);
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Resalte actualizado correctamente"));
-=======
-    //CONTROLADOR DE TENSION
 
-    @PostMapping("/tension/registrar")
-    public ResponseEntity<TensionDTO> crear(@RequestBody TensionDTO dto) {
-        Tension t = fromDTO(dto);
-        Tension guardado = tensionService.guardar(t);
-        return ResponseEntity.ok(toDTO(guardado));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<TensionDTO>> listar() {
-        List<TensionDTO> lista = tensionService.listarTodos()
-                .stream()
-                .map(this::toDTO)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(lista);
-    }
-
-    @GetMapping("/tension/{codigo}")
-    public ResponseEntity<TensionDTO> buscar(@PathVariable int codigo) {
-        Optional<Tension> encontrado = tensionService.buscarPorId(codigo);
-        return encontrado.map(t -> ResponseEntity.ok(toDTO(t)))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{codigo}")
-    public ResponseEntity<TensionDTO> actualizar(@PathVariable int codigo, @RequestBody TensionDTO dto) {
-        Tension actualizado = tensionService.actualizar(codigo, fromDTO(dto));
-        return ResponseEntity.ok(toDTO(actualizado));
-    }
-
-    @DeleteMapping("/{codigo}")
-    public ResponseEntity<Void> eliminar(@PathVariable int codigo) {
-        tensionService.eliminarPorId(codigo);
-        return ResponseEntity.noContent().build();
-    }
-
-    // Conversión manual entre entidad y DTO
-    private TensionDTO toDTO(Tension t) {
-        return new TensionDTO(
-                t.getCodigo(),
-                t.getLongProbeta(),
-                t.getPesoProbeta(),
-                t.getDiamInicial(),
-                t.getDiamFinal(),
-                t.getAreaInicial(),
-                t.getAreaFinal(),
-                t.getLongCalibradaInicial(),
-                t.getLongCalibradaFinal(),
-                t.getCargaMax(),
-                t.getCargaFluencia()
-        );
-    }
-
-    private Tension fromDTO(TensionDTO dto) {
-        Tension t = new Tension();
-        t.setCodigo(dto.codigo());
-        t.setLongProbeta(dto.longProbeta());
-        t.setPesoProbeta(dto.pesoProbeta());
-        t.setDiamInicial(dto.diamInicial());
-        t.setDiamFinal(dto.diamFinal());
-        t.setAreaInicial(dto.areaInicial());
-        t.setAreaFinal(dto.areaFinal());
-        t.setLongCalibradaInicial(dto.longCalibradaInicial());
-        t.setLongCalibradaFinal(dto.longCalibradaFinal());
-        t.setCargaMax(dto.cargaMax());
-        t.setCargaFluencia(dto.cargaFluencia());
-        return t;
->>>>>>> main
     }
 }
