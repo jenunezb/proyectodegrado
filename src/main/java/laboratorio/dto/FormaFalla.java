@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum FormaFalla {
+    CERO(0),
     UNO(1),
     DOS(2),
     TRES(3),
@@ -15,5 +16,14 @@ public enum FormaFalla {
 
     FormaFalla(int valor) {
         this.valor = valor;
+    }
+
+    public static FormaFalla desdeValor(int valor) {
+        for (FormaFalla forma : FormaFalla.values()) {
+            if (forma.getValor() == valor) {
+                return forma;
+            }
+        }
+        throw new IllegalArgumentException("Valor inválido para FormaFalla: " + valor);
     }
 }

@@ -3,6 +3,7 @@ import laboratorio.dto.*;
 import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.SuelosDTO;
+import laboratorio.dto.vigas.VigasGetDTO;
 import laboratorio.modelo.*;
 import laboratorio.modelo.ensayo.*;
 import laboratorio.repositorios.*;
@@ -40,7 +41,9 @@ public class AdministradorServicioImpl implements AdministradorServicio {
     private final GradacionRepo gradacionRepo;
     private final MuestraRepo muestraRepo;
     private final TamicesMasasRepo tamicesMasasRepo;
+    private final VigaRepo vigaRepo;
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     @Override
     public int crearAdministrador(AdministradorDTO administradorDTO) throws Exception {
@@ -190,8 +193,10 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         Obra obra = new Obra();
 
-        Optional<Empresa> empresa = empresaRepo.findByNombre(obraDTO.empresa());
-        obra.setEmpresa(empresa.get());
+        Empresa empresa = empresaRepo.findByNombre(obraDTO.empresa())
+                .orElseThrow(() -> new RuntimeException("La empresa '" + obraDTO.empresa() + "' no fue encontrada"));
+
+        obra.setEmpresa(empresa);
         obra.setDireccion(obraDTO.direccion());
         obra.setFecha_inicio(LocalDate.now());
         obra.setNombre(obraDTO.nombre());
@@ -296,7 +301,6 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         return empresaGetDTOS;
     }
 
-
     @Override
     public List<SedeDTO> listarSedes() {
         List<Sede> sedeList = sedeRepo.findAll();
@@ -357,6 +361,18 @@ public class AdministradorServicioImpl implements AdministradorServicio {
             throw new Exception("No se ha encontrado la obra con el CR: " + cr);
         }
         return true;
+    }
+
+    @Override
+    public ObraDTO buscarObraa(String cr) throws Exception{
+        Obra obraBuscada = obraRepo.findByCR(cr);
+        if (obraBuscada == null) {
+            throw new Exception("No se ha encontrado la obra con el CR: " + cr);
+        }
+        ObraDTO obraDTO = new ObraDTO(obraBuscada.getDireccion(), obraBuscada.getNombre(), obraBuscada.getTelefono(),
+                obraBuscada.getCiudad().getNombre(),obraBuscada.getEmpresa().getNombre(),obraBuscada.getCR());
+
+        return obraDTO;
     }
 
     @Override
@@ -492,12 +508,24 @@ public class AdministradorServicioImpl implements AdministradorServicio {
         }
     }
 
+
     public void eliminarCompresionCilindro(int codigo) throws Exception {
         Optional<CompresionCilindros> buscarCilindro = buscarCilindro(codigo);
+
+        if (buscarCilindro.isEmpty()) {
+            throw new Exception("Cilindro no encontrado.");
+        }
+        CompresionCilindros cilindro = buscarCilindro.get();
         try {
-           compresionCilindrosRepo.deleteById(buscarCilindro.get().getCodigo());
+            // Primero eliminar las vigas asociadas
+            List<Viga> vigas = vigaRepo.findByCompresionCilindrosCodigo(cilindro.getCodigo());
+            vigaRepo.deleteAll(vigas);
+
+            // Luego eliminar el cilindro
+            compresionCilindrosRepo.deleteById(cilindro.getCodigo());
+
         } catch (DataIntegrityViolationException e) {
-            throw new Exception("No se puede eliminar la muestra porque está en uso.");
+            throw new Exception("No se puede eliminar el cilindro porque está en uso.");
         }
     }
 
@@ -529,7 +557,7 @@ public class AdministradorServicioImpl implements AdministradorServicio {
 
         Optional<CompresionCilindros> compresionCilindrosBuscado = compresionCilindrosRepo.findById(codigo);
         if(compresionCilindrosBuscado.isEmpty()){
-throw new Exception("No se ha encontrado el cilindro buscado");
+throw new Exception("No se ha encontrado la muestra buscada");
         }
         return compresionCilindrosBuscado;
     }
@@ -556,16 +584,30 @@ throw new Exception("No se ha encontrado el cilindro buscado");
 
     @Override
     public List<EdadesDto> listarEdades(int id) {
-        List<Cilindro> cilindro = cilindroRepo.buscarPorIdCompresion(id);
+        Optional<CompresionCilindros> compresionCilindros = compresionCilindrosRepo.findById(id);
         List<EdadesDto> edades = new ArrayList<>();
 
-        for (int i = 0; i<cilindro.size();i++){
-            edades.add(new EdadesDto(
-               cilindro.get(i).getEdad(),
-               cilindro.get(i).getCompresionCilindros().getNumeroMuestra(),
-               cilindro.get(i).getCompresionCilindros().getCodigo()
-            ));
+        if(compresionCilindros.get().getEnsayo().getNombreLegible().equals("Compresión de 6")){
+            List<Cilindro> cilindro = cilindroRepo.buscarPorIdCompresion(id);
+            for (int i = 0; i<cilindro.size();i++){
+                edades.add(new EdadesDto(
+                        cilindro.get(i).getEdad(),
+                        cilindro.get(i).getCompresionCilindros().getNumeroMuestra(),
+                        cilindro.get(i).getCompresionCilindros().getCodigo()
+                ));
+            }
         }
+        else{
+            List<Viga> vigas = vigaRepo.buscarPorIdCompresion(id);
+            for (int i = 0; i<vigas.size();i++){
+                edades.add(new EdadesDto(
+                        vigas.get(i).getEdad(),
+                        vigas.get(i).getCompresionCilindros().getNumeroMuestra(),
+                        vigas.get(i).getCompresionCilindros().getCodigo()
+                ));
+            }
+        }
+
         return edades;
     }
 
@@ -675,32 +717,45 @@ throw new Exception("No se ha encontrado el cilindro buscado");
         return sede;
     }
 
+    @Override
     public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
         List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
-
+        List<Viga> vigasBuscadas = vigaRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
         if(cilindrosBuscados.isEmpty()){
-            new Exception("No se ha podido guardar la edad correctamente");
+            if(vigasBuscadas.isEmpty()){
+                throw new Exception("No se ha podido guardar la edad correctamente");
+            }
+            for (int i=0; i<edadesDto.size(); i++){
+                vigasBuscadas.get(i).setEdad(edadesDto.get(i).edad());
+                LocalDate fechaToma = vigasBuscadas.get(i).getCompresionCilindros().getFechaToma();
+                int edad = edadesDto.get(i).edad();
+                LocalDate fechaFalla = fechaToma.plusDays(edad);
+                vigasBuscadas.get(i).setFechaFalla(fechaFalla);
+                vigaRepo.save(vigasBuscadas.get(i));
+            }
+        }else{
+            for (int i=0; i<edadesDto.size(); i++){
+                cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
+                LocalDate fechaToma = cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma();
+                int edad = edadesDto.get(i).edad();
+                LocalDate fechaFalla = fechaToma.plusDays(edad);
+                cilindrosBuscados.get(i).setFechaFalla(fechaFalla);
+                cilindroRepo.save(cilindrosBuscados.get(i));
+            }
         }
-    for (int i=0; i<edadesDto.size(); i++){
-        cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
-        LocalDate fechaToma = cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma();
-        int edad = edadesDto.get(i).edad();
-        LocalDate fechaFalla = fechaToma.plusDays(edad);
-        cilindrosBuscados.get(i).setFechaFalla(fechaFalla);
-        cilindroRepo.save(cilindrosBuscados.get(i));
-    }
+
     return "Se han cargado las edades correctamente";
     }
 
     @Override
     public String subirResultados(List<CilindroDTO> cilindroDTOList) throws Exception {
-
         for (CilindroDTO cilindroDTO : cilindroDTOList) {
             Optional<Cilindro> cilindroOptional = cilindroRepo.findById(cilindroDTO.id());
             if (cilindroOptional.isPresent()) {
                 Cilindro cilindro = cilindroOptional.get();
                 cilindro.setCarga(cilindroDTO.carga());
                 cilindro.setPeso(cilindroDTO.peso());
+                cilindro.setFormaFalla(FormaFalla.desdeValor(cilindroDTO.formaFalla()));
                 // Guardar la obra asociada al cilindro
                 Obra obra = cilindro.getCompresionCilindros().getObra();
                 obraRepo.save(obra);
@@ -879,5 +934,45 @@ throw new Exception("No se ha encontrado el cilindro buscado");
                 gradacionBuscada.get().getMuestra().getCodigo(),gradacionBuscada.get().getFechaFalla(), resultados,tamices);
 
         return gradacionDTO;
+    }
+
+    @Override
+    public String guardarEdadesVigas(List<EdadesDto> edadesDto) throws Exception{
+        List<Viga> vigasBuscadas = vigaRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
+
+        if(vigasBuscadas.isEmpty()){
+            new Exception("No se ha podido guardar la edad correctamente");
+        }
+        for (int i=0; i<edadesDto.size(); i++){
+            vigasBuscadas.get(i).setEdad(edadesDto.get(i).edad());
+            LocalDate fechaToma = vigasBuscadas.get(i).getCompresionCilindros().getFechaToma();
+            int edad = edadesDto.get(i).edad();
+            LocalDate fechaFalla = fechaToma.plusDays(edad);
+            vigasBuscadas.get(i).setFechaFalla(fechaFalla);
+            vigaRepo.save(vigasBuscadas.get(i));
+        }
+        return "Se han cargado las edades correctamente";
+    }
+
+    @Override
+    public String subirResultadosVigas(List<VigasGetDTO> vigasGetDTOList) throws Exception {
+        for (VigasGetDTO vigasGetDTO : vigasGetDTOList){
+            Optional<Viga> vigaOptional = vigaRepo.findById(vigasGetDTO.id());
+            if(vigaOptional.isPresent()){
+                Viga viga = vigaOptional.get();
+                viga.setCarga(vigasGetDTO.carga());
+                viga.setA(vigasGetDTO.a());
+                viga.setL(vigasGetDTO.l());
+                viga.setAncho(vigasGetDTO.ancho());
+                viga.setFondo(vigasGetDTO.fondo());
+
+                // Guardar la obra asociada al cilindro
+                Obra obra = viga.getCompresionCilindros().getObra();
+                obraRepo.save(obra);
+            }else {
+                throw new Exception("No se encontró la viga con ID: " + vigasGetDTO.id());
+            }
+        }
+        return "Se han cargado los resultados exitosamente";
     }
 }

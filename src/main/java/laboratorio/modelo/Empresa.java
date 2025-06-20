@@ -31,5 +31,4 @@ public class Empresa {
     @OneToMany(mappedBy = "empresa")
     private List<Obra> obras;
 
-
 }

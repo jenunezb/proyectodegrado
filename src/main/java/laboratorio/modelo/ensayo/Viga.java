@@ -1,8 +1,6 @@
 package laboratorio.modelo.ensayo;
 
 import jakarta.persistence.*;
-import laboratorio.modelo.Obra;
-import laboratorio.modelo.TipoMuestraCilindro;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @ToString
-public class CompresionCilindros implements Serializable {
+public class Viga implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,32 +22,27 @@ public class CompresionCilindros implements Serializable {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private Obra obra;
-
-    @Enumerated(EnumType.STRING)
+    private CompresionCilindros compresionCilindros;
 
     @Column
-    private TipoMuestraCilindro ensayo;
+    private int edad;
 
     @Column
-    private String seccion;
+    private Float ancho;
 
     @Column
-    String numeroMuestra;
+    private Float fondo;
 
     @Column
-    LocalDate fechaToma;
+    private float carga; // p(kN) calculado así
+    //ejemplo: 51,72 = 51720
 
     @Column
-    int resistencia;
+    private int l;//L= luz entre apoyos
 
     @Column
-    int cantMuestras;
+    private int a; //distancia desde el apoyo hasta la carga (mm)
 
-    @Column(columnDefinition = "TEXT")
-    String descripcion;
-
-    @Column(columnDefinition = "TEXT")
-    String observaciones;
-
+    @Column
+    private LocalDate fechaFalla;
 }

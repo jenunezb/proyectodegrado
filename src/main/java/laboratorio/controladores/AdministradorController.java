@@ -7,10 +7,17 @@ import laboratorio.dto.suelos.GradacionDTO;
 import laboratorio.dto.suelos.RegistroSuelosDto;
 import laboratorio.dto.suelos.ResaltesDTO;
 import laboratorio.dto.suelos.SuelosDTO;
+import laboratorio.dto.suelos.TensionDTO;
+import laboratorio.dto.vigas.VigasGetDTO;
 import laboratorio.modelo.*;
+import laboratorio.modelo.ensayo.aceros.Tension;
 import laboratorio.servicios.interfaces.AdministradorServicio;
 import laboratorio.servicios.interfaces.DigitadorServicio;
+<<<<<<< HEAD
 import laboratorio.servicios.interfaces.ResalteServicio;
+=======
+import laboratorio.servicios.interfaces.TensionService;
+>>>>>>> main
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +27,7 @@ import org.webjars.NotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @SecurityRequirement(name = "bearerAuth")
@@ -30,7 +38,11 @@ public class AdministradorController {
 
     private final AdministradorServicio administradorServicio;
     private final DigitadorServicio digitadorServicio;
+<<<<<<< HEAD
     private final ResalteServicio resalteServicio;
+=======
+    private final TensionService tensionService;
+>>>>>>> main
 
     @PostMapping("/crearAdministrador")
     public ResponseEntity<MensajeDTO<String>> crearAdministrador(@Valid @RequestBody AdministradorDTO usuarioDTO)throws Exception{
@@ -190,6 +202,12 @@ public class AdministradorController {
         }
     }
 
+    @GetMapping("/buscarObra/{cr}")
+    public ResponseEntity<ObraDTO> buscarObra(@PathVariable String cr) throws Exception {
+        ObraDTO obraEncontrada = administradorServicio.buscarObraa(cr);
+        return ResponseEntity.ok().body(obraEncontrada);
+    }
+
     @PutMapping("/editarEmpresa{nit}")
     public ResponseEntity<Empresa> editarEmpresa(@RequestBody Empresa empresa) {
         try {
@@ -274,7 +292,7 @@ public class AdministradorController {
         }
     }
 
-    @PostMapping("/agregarCilindros")
+    @PostMapping("/agregarConcretos")
     public ResponseEntity<MensajeDTO<String>> agregarMuestra(@Valid @RequestBody CompresionCilindrosDTO compresionCilindrosDTO) throws Exception{
         digitadorServicio.agregarMuestra(compresionCilindrosDTO);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "se agregó la muestra correctamente"));
@@ -309,6 +327,12 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
+    @PostMapping("/listarOrdenVigas")
+    public ResponseEntity<MensajeDTO<List<VigasGetDTO>>> listarOrdenVigas(@RequestBody OrdenDTO ordenDtos) throws Exception {
+        List<VigasGetDTO> vigas = digitadorServicio.mostrarOdenVigas(ordenDtos);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, vigas));
+    }
+
     @PostMapping("/asignarObras")
     public ResponseEntity<MensajeDTO<String>> asignarObras(@RequestBody AsignarObrasRequestDTO asignarObrasRequestDTO) throws Exception {
         String seccion = administradorServicio.asignarObra(asignarObrasRequestDTO);
@@ -320,11 +344,24 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, cilindros));
     }
 
+    @PostMapping("/listarResultadosVigas")
+    public ResponseEntity<MensajeDTO<List<VigasGetDTO>>> listarResultadosVigas(@RequestBody OrdenDTO ordenDtos) throws Exception {
+        List<VigasGetDTO> vigas = digitadorServicio.listarResultadosVigas(ordenDtos);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, vigas));
+    }
+
     @PostMapping("/subirResultados")
     public ResponseEntity<MensajeDTO<String>> subirRultados(@RequestBody List<CilindroDTO> cilindroDTOList) throws Exception {
         String mensaje = administradorServicio.subirResultados(cilindroDTOList);
         return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
     }
+
+    @PostMapping("/subirResultadosVigas")
+    public ResponseEntity<MensajeDTO<String>> subirRultadosVigas(@RequestBody List<VigasGetDTO> vigasGetDTOList) throws Exception {
+        String mensaje = administradorServicio.subirResultadosVigas(vigasGetDTOList);
+        return ResponseEntity.ok().body(new MensajeDTO<>(false, mensaje));
+    }
+
     @PostMapping("/listarReportes")
     public ResponseEntity<MensajeDTO<List<ReporteDTO>>> listarReportes(@RequestBody FechasReporteDTO fechasReporte)throws Exception{
         List<ReporteDTO> reporte = administradorServicio.listarReportes(fechasReporte);
@@ -354,6 +391,7 @@ public class AdministradorController {
         return ResponseEntity.ok().body(new MensajeDTO<>(false, seccion));
     }
 
+<<<<<<< HEAD
     // Crear un nuevo resalte
     @PostMapping("/crearResalte")
     public ResponseEntity<MensajeDTO<String>> crearResalte(@Valid @RequestBody ResaltesDTO resaltesDTO) throws Exception {
@@ -384,5 +422,75 @@ public class AdministradorController {
         resalteServicio.actualizarResalte(codigoResalte, resaltesDTO);
 
         return ResponseEntity.ok().body(new MensajeDTO<>(false, "Resalte actualizado correctamente"));
+=======
+    //CONTROLADOR DE TENSION
+
+    @PostMapping("/tension/registrar")
+    public ResponseEntity<TensionDTO> crear(@RequestBody TensionDTO dto) {
+        Tension t = fromDTO(dto);
+        Tension guardado = tensionService.guardar(t);
+        return ResponseEntity.ok(toDTO(guardado));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TensionDTO>> listar() {
+        List<TensionDTO> lista = tensionService.listarTodos()
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/tension/{codigo}")
+    public ResponseEntity<TensionDTO> buscar(@PathVariable int codigo) {
+        Optional<Tension> encontrado = tensionService.buscarPorId(codigo);
+        return encontrado.map(t -> ResponseEntity.ok(toDTO(t)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping("/{codigo}")
+    public ResponseEntity<TensionDTO> actualizar(@PathVariable int codigo, @RequestBody TensionDTO dto) {
+        Tension actualizado = tensionService.actualizar(codigo, fromDTO(dto));
+        return ResponseEntity.ok(toDTO(actualizado));
+    }
+
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<Void> eliminar(@PathVariable int codigo) {
+        tensionService.eliminarPorId(codigo);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Conversión manual entre entidad y DTO
+    private TensionDTO toDTO(Tension t) {
+        return new TensionDTO(
+                t.getCodigo(),
+                t.getLongProbeta(),
+                t.getPesoProbeta(),
+                t.getDiamInicial(),
+                t.getDiamFinal(),
+                t.getAreaInicial(),
+                t.getAreaFinal(),
+                t.getLongCalibradaInicial(),
+                t.getLongCalibradaFinal(),
+                t.getCargaMax(),
+                t.getCargaFluencia()
+        );
+    }
+
+    private Tension fromDTO(TensionDTO dto) {
+        Tension t = new Tension();
+        t.setCodigo(dto.codigo());
+        t.setLongProbeta(dto.longProbeta());
+        t.setPesoProbeta(dto.pesoProbeta());
+        t.setDiamInicial(dto.diamInicial());
+        t.setDiamFinal(dto.diamFinal());
+        t.setAreaInicial(dto.areaInicial());
+        t.setAreaFinal(dto.areaFinal());
+        t.setLongCalibradaInicial(dto.longCalibradaInicial());
+        t.setLongCalibradaFinal(dto.longCalibradaFinal());
+        t.setCargaMax(dto.cargaMax());
+        t.setCargaFluencia(dto.cargaFluencia());
+        return t;
+>>>>>>> main
     }
 }
