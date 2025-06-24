@@ -35,7 +35,7 @@ public class Cilindro implements Serializable {
     FormaFalla formaFalla;
 
     @Column
-    int edad;
+    Integer edad;
 
     @Column
     LocalDate fechaFalla;

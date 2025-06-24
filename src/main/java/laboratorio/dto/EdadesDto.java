@@ -1,8 +1,8 @@
 package laboratorio.dto;
 
 public record EdadesDto(
-        int edad,
+        Integer edad,
         String muestra,
-        int codigo
+        Integer codigo
 ) {
 }

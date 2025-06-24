@@ -718,34 +718,51 @@ throw new Exception("No se ha encontrado la muestra buscada");
     }
 
     @Override
-    public String guardarEdades(List<EdadesDto> edadesDto) throws Exception{
+    public String guardarEdades(List<EdadesDto> edadesDto) throws Exception {
         List<Cilindro> cilindrosBuscados = cilindroRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
         List<Viga> vigasBuscadas = vigaRepo.buscarPorIdCompresion(edadesDto.get(0).codigo());
-        if(cilindrosBuscados.isEmpty()){
-            if(vigasBuscadas.isEmpty()){
+
+        if (cilindrosBuscados.isEmpty()) {
+            if (vigasBuscadas.isEmpty()) {
                 throw new Exception("No se ha podido guardar la edad correctamente");
             }
-            for (int i=0; i<edadesDto.size(); i++){
-                vigasBuscadas.get(i).setEdad(edadesDto.get(i).edad());
-                LocalDate fechaToma = vigasBuscadas.get(i).getCompresionCilindros().getFechaToma();
-                int edad = edadesDto.get(i).edad();
-                LocalDate fechaFalla = fechaToma.plusDays(edad);
-                vigasBuscadas.get(i).setFechaFalla(fechaFalla);
-                vigaRepo.save(vigasBuscadas.get(i));
+
+            for (int i = 0; i < edadesDto.size(); i++) {
+                Integer edad = edadesDto.get(i).edad();
+                Viga viga = vigasBuscadas.get(i);
+                viga.setEdad(edad);
+
+                if (edad != null) {
+                    LocalDate fechaToma = viga.getCompresionCilindros().getFechaToma();
+                    LocalDate fechaFalla = fechaToma.plusDays(edad);
+                    viga.setFechaFalla(fechaFalla);
+                } else {
+                    viga.setFechaFalla(null);
+                }
+
+                vigaRepo.save(viga);
             }
-        }else{
-            for (int i=0; i<edadesDto.size(); i++){
-                cilindrosBuscados.get(i).setEdad(edadesDto.get(i).edad());
-                LocalDate fechaToma = cilindrosBuscados.get(i).getCompresionCilindros().getFechaToma();
-                int edad = edadesDto.get(i).edad();
-                LocalDate fechaFalla = fechaToma.plusDays(edad);
-                cilindrosBuscados.get(i).setFechaFalla(fechaFalla);
-                cilindroRepo.save(cilindrosBuscados.get(i));
+        } else {
+            for (int i = 0; i < edadesDto.size(); i++) {
+                Integer edad = edadesDto.get(i).edad();
+                Cilindro cilindro = cilindrosBuscados.get(i);
+                cilindro.setEdad(edad);
+
+                if (edad != null) {
+                    LocalDate fechaToma = cilindro.getCompresionCilindros().getFechaToma();
+                    LocalDate fechaFalla = fechaToma.plusDays(edad);
+                    cilindro.setFechaFalla(fechaFalla);
+                } else {
+                    cilindro.setFechaFalla(null);
+                }
+
+                cilindroRepo.save(cilindro);
             }
         }
 
-    return "Se han cargado las edades correctamente";
+        return "Se han cargado las edades correctamente";
     }
+
 
     @Override
     public String subirResultados(List<CilindroDTO> cilindroDTOList) throws Exception {
