@@ -25,7 +25,7 @@ public class Viga implements Serializable {
     private CompresionCilindros compresionCilindros;
 
     @Column
-    private int edad;
+    private Integer edad;
 
     @Column
     private Float ancho;
